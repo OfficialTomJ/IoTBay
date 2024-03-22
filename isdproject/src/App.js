@@ -1,47 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
 import {useState, useEffect} from "react";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './Login';
+import Signup from './SignUp';
+import ErrorPage from './ErrorPage';
+import Profile from './Profile';
 
 function App() {
-  const [data, setData] = useState("Searching...");
-
-  useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await fetch('http://localhost:8080/test', {
-        method: 'GET',
-        headers: {
-          Accept: 'application/json',
-          "Content-Type": "application/json",
-        },
-      });
-      const responseData = await res.json();
-      setData(responseData.message);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  fetchData();
-}, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          {data}
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+        <Routes>
+          {/* Define routes */}
+          <Route exact path="/" element={<ErrorPage/>} />
+          <Route exact path="/signup" element={<Signup/>} />
+          <Route exact path="/login" element={<Login/>} />
+          <Route exact path="/profile" element={<Profile/>} />
+          {/* 404 Not Found route */}
+        </Routes>
+    </Router>
   );
 }
 
