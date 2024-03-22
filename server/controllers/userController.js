@@ -1,13 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcryptjs');
 const User = require('../models/User');
-
+const bcrypt = require('bcryptjs');
 // @route   POST api/users/register
 // @desc    Register new user
 // @access  Public
-router.post('/register', async (req, res) => {
-    const { username, email, password } = req.body;
+exports.registerUser = async (req, res) => {
+  // Logic for user registration
+  const { username, email, password } = req.body;
 
     try {
         // Check if user already exists
@@ -35,6 +33,16 @@ router.post('/register', async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
-});
+};
 
-module.exports = router;
+exports.getUserProfile = async (req, res) => {
+  // Logic for retrieving user profile
+  try {
+    // Fetch user profile based on user ID stored in req.user.id from auth middleware
+    const user = await User.findById(req.user.id).select('-password');
+    res.json({ user });
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+};

@@ -1,15 +1,9 @@
-const express = require('express');
-const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 const User = require('../models/User');
 
-// @route   POST api/auth/login
-// @desc    Login user
-// @access  Public
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
 
     try {
         // Check if user exists
@@ -46,6 +40,4 @@ router.post('/login', async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server Error');
     }
-});
-
-module.exports = router;
+};

@@ -21,9 +21,6 @@ module.exports = function(req, res, next) {
     // Set user ID from decoded token to request object
     req.user = decoded.user;
 
-    // Logging decoded token
-    console.log('Decoded token:', decoded);
-
     next();
   } catch (err) {
     console.error('Token verification error:', err);

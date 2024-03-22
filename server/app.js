@@ -24,12 +24,9 @@ app.use(cors({ origin : true, credentials : true }));
 
 
 // routes
-const testRoutes = require('./routes/test');
-app.use('/', testRoutes);
 
-app.use('/api/users', require('./routes/users'));
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/user', require('./routes/profile'));
+app.use('/api/user', require('./routes/userRoutes'));
+app.use('/api/auth', require('./routes/authRoutes'));
 
 // port
 const port = process.env.PORT || 8080;
