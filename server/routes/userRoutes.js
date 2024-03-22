@@ -7,5 +7,6 @@ const userController = require('../controllers/userController');
 router.post('/register', userController.registerUser);
 router.get('/profile', auth, userController.getUserProfile);
 router.delete('/', auth, userController.deleteAccount);
+router.put('/profile', auth, userController.updateUserProfile);
 
 module.exports = router;

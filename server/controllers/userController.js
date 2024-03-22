@@ -63,3 +63,30 @@ exports.deleteAccount = async (req, res) => {
     res.status(500).json({ msg: 'Server Error' });
   }
 };
+
+exports.updateUserProfile = async (req, res) => {
+  const { fullName, email, phone } = req.body;
+  const userId = req.user.id;
+
+  try {
+    // Find the user by ID
+    let user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Update user profile fields
+    if (fullName) user.fullName = fullName;
+    if (email) user.email = email;
+    if (phone) user.phone = phone;
+
+    // Save the updated user profile
+    await user.save();
+
+    res.json({ msg: 'User profile updated successfully' });
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+};
