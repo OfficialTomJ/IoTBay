@@ -48,3 +48,28 @@ exports.loginUser = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+
+exports.resetPassword = async (req, res) => {
+    const { email } = req.body;
+  
+    try {
+        // Check if user exists
+        const user = await User.findOne({ email });
+        if (!user) {
+        return res.status(404).json({ msg: 'User not found' });
+        }
+
+        // Generate a reset password token
+        const resetToken = jwt.sign({ email }, process.env.jwtSecret, { expiresIn: '1h' });
+        resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+
+        // Send email with reset password link
+        // You can use a library like Nodemailer to send emails
+        // Include the resetToken in the URL sent in the email
+
+        res.json({ msg: 'Password reset link sent to your email', link: resetLink });
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        res.status(500).json({ msg: 'Server Error' });
+    }
+};
