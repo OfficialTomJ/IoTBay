@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const AccessLog = require('../models/AccessLog');
 const bcrypt = require('bcryptjs');
 // @route   POST api/users/register
 // @desc    Register new user
@@ -27,6 +28,11 @@ exports.registerUser = async (req, res) => {
 
         // Save user to database
         await user.save();
+
+        await AccessLog.create({
+          eventType: 'account_created',
+          userId: user._id,
+        });
 
         res.json({ msg: 'User registered successfully' });
     } catch (err) {

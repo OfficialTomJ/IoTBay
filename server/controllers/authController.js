@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const AccessLog = require('../models/AccessLog');
 
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
@@ -18,6 +19,11 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ msg: 'Invalid credentials' });
         }
 
+        await AccessLog.create({
+            eventType: 'login',
+            userId: user._id,
+         });
+
         // Create JWT token
         const payload = {
             user: {
@@ -33,6 +39,7 @@ exports.loginUser = async (req, res) => {
             { expiresIn: 3600 }, // 1 hour
             (err, token) => {
                 if (err) throw err;
+                
                 res.json({ token });
             }
         );
