@@ -122,6 +122,11 @@ exports.resetPassword = async (req, res) => {
     user.password = await bcrypt.hash(newPassword, salt);
     await user.save();
 
+    AccessLog.create({
+      eventType: 'password_reset',
+      userId: user.id, // Assuming req.user.id contains the user's ID
+    });
+
     // Send response
     res.json({ msg: 'Password reset successfully' });
   } catch (error) {
