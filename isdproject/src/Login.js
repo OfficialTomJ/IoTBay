@@ -31,7 +31,7 @@ const Login = () => {
   const handleForgotPassword = async () => {
     try {
       // Send request to server to generate reset password token
-      const response = await axios.post('http://localhost:8080/api/auth/reset-password', { email });
+      const response = await axios.post('http://localhost:8080/api/auth/generate-password-token', { email });
       const resetLinkURL = response.data;
 
       // Display the custom URL in the UI

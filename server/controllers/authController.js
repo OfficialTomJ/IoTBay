@@ -49,7 +49,7 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-exports.resetPassword = async (req, res) => {
+exports.generatePasswordToken = async (req, res) => {
     const { email } = req.body;
   
     try {
@@ -69,7 +69,7 @@ exports.resetPassword = async (req, res) => {
 
         res.json({ msg: 'Password reset link sent to your email', link: resetLink });
     } catch (error) {
-        console.error('Error resetting password:', error);
+        console.error('Error generating token:', error);
         res.status(500).json({ msg: 'Server Error' });
     }
 };
@@ -96,5 +96,36 @@ exports.validateResetToken = async (req, res) => {
   } catch (error) {
     console.error('Error validating reset password token:', error);
     res.status(400).json({ msg: 'Invalid token' });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    // Verify the reset token
+    const decodedToken = jwt.verify(token, process.env.jwtSecret);
+
+    // Check if the token is valid and not expired
+    if (!decodedToken || !decodedToken.email) {
+      return res.status(400).json({ msg: 'Invalid or expired reset token' });
+    }
+
+    // Find the user by email and update the password
+    const user = await User.findOne({ email: decodedToken.email });
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found' });
+    }
+
+    // Update the user's password
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(newPassword, salt);
+    await user.save();
+
+    // Send response
+    res.json({ msg: 'Password reset successfully' });
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(500).json({ msg: 'Server Error' });
   }
 };
