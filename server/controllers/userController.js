@@ -52,3 +52,13 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ msg: 'Server Error' });
   }
 };
+
+exports.deleteAccount = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user.id);
+    res.json({ msg: 'Account deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting account:', error);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+};
