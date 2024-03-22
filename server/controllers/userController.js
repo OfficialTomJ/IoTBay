@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 // @access  Public
 exports.registerUser = async (req, res) => {
   // Logic for user registration
-  const { username, email, password } = req.body;
+  const { fullName, email, password, phone } = req.body;
 
     try {
         // Check if user already exists
@@ -17,9 +17,10 @@ exports.registerUser = async (req, res) => {
 
         // Create new user
         user = new User({
-            username,
+            fullName,
             email,
-            password
+            password,
+            phone
         });
 
         // Encrypt password

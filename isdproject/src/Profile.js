@@ -67,8 +67,10 @@ const Profile = () => {
       <h2>Profile</h2>
       {user && (
         <div>
-          <p><strong>Username:</strong> {user.username}</p>
+          <p><strong>Full name:</strong> {user.fullName}</p>
           <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Phone:</strong> {user.phone}</p>
+          <p><strong>Role:</strong> {user.role}</p>
         </div>
       )}
       <button onClick={handleLogout}>Log Out</button>
