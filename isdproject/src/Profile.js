@@ -72,11 +72,10 @@ const Profile = () => {
   const handleResetPassword = async () => {
     try {
       // Send request to reset password
-      const token = Cookies.get('token');
-      const response = await axios.post('http://localhost:8080/api/auth/reset-password', { email: user.email });
-      const resetUrl = response.data.resetUrl;
+      const response = await axios.post('http://localhost:8080/api/auth/generate-password-token', { email });
+      const resetUrl = response.data;
       // Open the reset URL in a new tab
-      window.open(resetUrl, '_blank');
+      window.open(resetUrl.link, '_blank');
     } catch (error) {
       console.error('Error resetting password:', error);
     }
