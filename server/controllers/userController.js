@@ -1,6 +1,11 @@
 const User = require('../models/User');
 const AccessLog = require('../models/AccessLog');
 const bcrypt = require('bcryptjs');
+
+const postmark = require("postmark");
+
+const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY);
+
 // @route   POST api/users/register
 // @desc    Register new user
 // @access  Public
@@ -28,6 +33,23 @@ exports.registerUser = async (req, res) => {
 
         // Save user to database
         await user.save();
+
+        try {
+          if (process.env.ENABLE_EMAILS === 'true') {
+            await client.sendEmail({
+              "From": "hi@thomas-johnston.com",
+              "To": "hi@thomas-johnston.com",
+              "Subject": "Hello from Postmark",
+              "HtmlBody": "<strong>Hello</strong> dear Postmark user.",
+              "TextBody": "Hello from Postmark!",
+              "MessageStream": "outbound"
+            });
+            console.log('Welcome email sent successfully');
+          }
+        } catch (error) {
+          console.error('Error sending welcome email:', error);
+        }
+        
 
         await AccessLog.create({
           eventType: 'account_created',
