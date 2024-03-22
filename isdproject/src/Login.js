@@ -8,6 +8,7 @@ const Login = () => {
     email: '',
     password: ''
   });
+  const [resetLink, setResetLink] = useState('');
 
   const { email, password } = formData;
   const navigate = useNavigate();
@@ -24,6 +25,19 @@ const Login = () => {
       navigate('/profile');
     } catch (err) {
       console.error(err.response); // Handle error response
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    try {
+      // Send request to server to generate reset password token
+      const response = await axios.post('http://localhost:8080/api/auth/generate-password-token', { email });
+      const resetLinkURL = response.data;
+
+      // Display the custom URL in the UI
+      setResetLink(resetLinkURL);
+    } catch (error) {
+      console.error('Error requesting password reset:', error);
     }
   };
 
@@ -46,6 +60,13 @@ const Login = () => {
         required
       />
       <button type="submit">Login</button>
+      <button onClick={handleForgotPassword}>Forgot Password</button>
+      {resetLink && (
+        <div>
+          <p>{resetLink.msg}</p>
+          <a href={resetLink.link}>Reset password link: {resetLink.link}</a>
+        </div>
+      )}
     </form>
   );
 };
