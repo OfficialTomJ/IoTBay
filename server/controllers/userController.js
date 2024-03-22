@@ -90,3 +90,18 @@ exports.updateUserProfile = async (req, res) => {
     res.status(500).json({ msg: 'Server Error' });
   }
 };
+
+exports.getUserLogs = async (req, res) => {
+  try {
+    // Assuming you have a way to identify the current user, e.g., through req.user
+    const userId = req.user.id;
+
+    // Fetch user logs from the database based on userId
+    const userLogs = await AccessLog.find({ userId });
+
+    res.json({ userLogs });
+  } catch (error) {
+    console.error('Error fetching user logs:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};

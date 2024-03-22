@@ -9,6 +9,7 @@ const Profile = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [isEditable, setIsEditable] = useState(false);
+  const [userLogs, setUserLogs] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +38,24 @@ const Profile = () => {
       // If no token is found, redirect to login page
       navigate('/login');
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchUserLogs = async () => {
+      try {
+        const token = Cookies.get('token');
+        const response = await axios.get('http://localhost:8080/api/user/logs', {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setUserLogs(response.data.userLogs);
+      } catch (error) {
+        console.error('Error fetching user logs:', error);
+      }
+    };
+
+    fetchUserLogs();
   }, []);
 
   const handleLogout = () => {
@@ -157,6 +176,15 @@ const Profile = () => {
       <button onClick={handleResetPassword}>Reset Password</button>
       <button onClick={handleLogout}>Log Out</button>
       <button onClick={handleDeleteAccount}>Delete Account</button>
+
+      <div>
+      <h2>User Logs</h2>
+      <ul>
+        {userLogs.map((log, index) => (
+          <li key={index}>{log.timestamp}: {log.eventType}</li>
+        ))}
+      </ul>
+    </div>
     </div>
   );
 };
