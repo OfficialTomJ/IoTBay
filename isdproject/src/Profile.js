@@ -10,6 +10,7 @@ const Profile = () => {
   const [phone, setPhone] = useState('');
   const [isEditable, setIsEditable] = useState(false);
   const [userLogs, setUserLogs] = useState([]);
+  const [searchTime, setSearchTime] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,8 +41,7 @@ const Profile = () => {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchUserLogs = async () => {
+  const fetchUserLogs = async () => {
       try {
         const token = Cookies.get('token');
         const response = await axios.get('http://localhost:8080/api/user/logs', {
@@ -55,6 +55,7 @@ const Profile = () => {
       }
     };
 
+  useEffect(() => {
     fetchUserLogs();
   }, []);
 
@@ -121,6 +122,18 @@ const Profile = () => {
     }
   };
 
+  const handleSearchLogs = () => {
+    // Filter user logs based on searchTime
+    const filteredLogs = userLogs.filter(log => log.timestamp.includes(searchTime));
+    setUserLogs(filteredLogs);
+  };
+
+  const handleResetSearch = () => {
+  setSearchTime('');
+    // Call the function to fetch user logs without any search filter
+    fetchUserLogs();
+  };
+
   return (
     <div>
       <h2>Profile</h2>
@@ -179,10 +192,20 @@ const Profile = () => {
 
       <div>
       <h2>User Logs</h2>
-      <ul>
-        {userLogs.map((log, index) => (
-          <li key={index}>{log.timestamp}: {log.eventType}</li>
-        ))}
+      <input
+          type="text"
+          placeholder="Search by time..."
+          value={searchTime}
+          onChange={(e) => setSearchTime(e.target.value)}
+        />
+        <button onClick={handleSearchLogs}>Search</button>
+        {searchTime && (
+          <button onClick={handleResetSearch}>Reset</button>
+        )}
+        <ul>
+          {userLogs.map((log, index) => (
+            <li key={index}>{log.timestamp}: {log.eventType}</li>
+          ))}
       </ul>
     </div>
     </div>
