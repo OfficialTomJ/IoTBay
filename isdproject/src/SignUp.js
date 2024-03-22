@@ -20,7 +20,7 @@ const SignUp = () => {
   const onSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:8080/api/users/register', formData);
+      const res = await axios.post('http://localhost:8080/api/user/register', formData);
       console.log(res.data); // Handle success response
       setSuccessMessage('Registration successful! Click the button to Sign In.');
       setShowSignInButton(true);
