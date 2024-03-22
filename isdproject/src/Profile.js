@@ -39,6 +39,29 @@ const Profile = () => {
     navigate('/login');
   };
 
+  const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      // Send request to delete account
+      const token = Cookies.get('token');
+      await axios.delete('http://localhost:8080/api/user', {
+      headers: {
+        Authorization: `${token}`
+      }
+    });
+      
+      // Clear token cookie and redirect to login page
+      Cookies.remove('token');
+      navigate('/login');
+    } catch (error) {
+      console.error('Error deleting account:', error);
+    }
+    };
+
   return (
     <div>
       <h2>Profile</h2>
@@ -49,6 +72,7 @@ const Profile = () => {
         </div>
       )}
       <button onClick={handleLogout}>Log Out</button>
+      <button onClick={handleDeleteAccount}>Delete Account</button>
     </div>
   );
 };
