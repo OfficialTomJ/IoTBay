@@ -4,15 +4,16 @@ import axios from 'axios';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    fullName: '',
     email: '',
-    password: ''
+    password: '',
+    phone: ''
   });
   const [successMessage, setSuccessMessage] = useState('');
   const [showSignInButton, setShowSignInButton] = useState(false);
   const navigate = useNavigate();
 
-  const { username, email, password } = formData;
+  const { fullName, email, password, phone } = formData;
 
   const onChange = e =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,9 +40,9 @@ const SignUp = () => {
       <form onSubmit={onSubmit}>
         <input
           type="text"
-          placeholder="Username"
-          name="username"
-          value={username}
+          placeholder="Full Name"
+          name="fullName"
+          value={fullName}
           onChange={onChange}
           required
         />
@@ -60,6 +61,14 @@ const SignUp = () => {
           value={password}
           onChange={onChange}
           minLength="6"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Phone Number"
+          name="phone"
+          value={phone}
+          onChange={onChange}
           required
         />
         <button type="submit">Sign Up</button>
