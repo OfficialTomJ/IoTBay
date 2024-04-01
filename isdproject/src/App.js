@@ -7,6 +7,7 @@ import Signup from './SignUp';
 import ErrorPage from './ErrorPage';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
+import WelcomePage from './WelcomePage';
 
 function App() {
 
