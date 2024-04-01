@@ -1,6 +1,5 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import {useState, useEffect} from "react";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import Signup from './SignUp';
@@ -10,18 +9,18 @@ import ResetPassword from './ResetPassword';
 import WelcomePage from './WelcomePage';
 
 function App() {
-
   return (
     <Router>
-        <Routes>
-          {/* Define routes */}
-          <Route exact path="/" element={<ErrorPage/>} />
-          <Route exact path="/signup" element={<Signup/>} />
-          <Route exact path="/login" element={<Login/>} />
-          <Route exact path="/profile" element={<Profile/>} />
-          <Route exact path="/reset-password/:token" element={<ResetPassword/>} />
-          {/* 404 Not Found route */}
-        </Routes>
+      <Routes>
+        {/* Set the root path to WelcomePage */}
+        <Route path="/" element={<WelcomePage/>} />
+        <Route path="/signup" element={<Signup/>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/profile" element={<Profile/>} /> {/* 直接访问，不再受保护 */}
+        <Route path="/reset-password/:token" element={<ResetPassword/>} />
+        {/* Provide a 404 error page for all undefined routes */}
+        <Route path="*" element={<ErrorPage/>} />
+      </Routes>
     </Router>
   );
 }
