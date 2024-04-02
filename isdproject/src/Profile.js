@@ -3,6 +3,56 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
+
+const NavigationBar = () => {
+  const navBarStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    padding: '1rem',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+    zIndex: 1000,
+  };
+//Navigation container style
+  const navContainerStyle = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%',
+    maxWidth: '1200px',
+  };
+//Navigation item style
+  const navItemStyle = {
+    margin: '0 15px',
+    color: '#0047ab',
+    textDecoration: 'none',
+  };
+
+  return (
+    <nav style={navBarStyle}>
+      <div style={navContainerStyle}>
+        <div></div> {/* The empty div on the left is used to balance the layout */}
+        {/* Middle navigation link */}
+        <div>
+          <a href="/menu" style={navItemStyle}>Menu</a>
+          <a href="/contact" style={navItemStyle}>Contact</a>
+          <a href="/about" style={navItemStyle}>About Us</a>
+        </div>
+        {/* Login and registration links on the right */}
+        <div>
+          <a href="/login" style={navItemStyle}>Login</a>
+          <a href="/SignUp" style={navItemStyle}>Register</a>
+        </div>
+      </div>
+    </nav>
+  );
+};
+
+
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [fullName, setFullName] = useState('');
@@ -42,18 +92,18 @@ const Profile = () => {
   }, []);
 
   const fetchUserLogs = async () => {
-    try {
-      const token = Cookies.get('token');
-      const response = await axios.get('http://localhost:8080/api/user/logs', {
-        headers: {
-          Authorization: token,
-        },
-      });
-      setUserLogs(response.data.userLogs);
-    } catch (error) {
-      console.error('Error fetching user logs:', error);
-    }
-  };
+      try {
+        const token = Cookies.get('token');
+        const response = await axios.get('http://localhost:8080/api/user/logs', {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setUserLogs(response.data.userLogs);
+      } catch (error) {
+        console.error('Error fetching user logs:', error);
+      }
+    };
 
   useEffect(() => {
     fetchUserLogs();
@@ -62,8 +112,8 @@ const Profile = () => {
   const handleLogout = () => {
     // Delete token cookie
     Cookies.remove('token');
-    // Redirect to login page
-    navigate('/login');
+    // Redirect to logout page
+    navigate('/Logout');
   };
 
   const handleDeleteAccount = async () => {
@@ -80,7 +130,7 @@ const Profile = () => {
           Authorization: `${token}`
         }
       });
-
+      
       // Clear token cookie and redirect to login page
       Cookies.remove('token');
       navigate('/login');
@@ -129,31 +179,9 @@ const Profile = () => {
   };
 
   const handleResetSearch = () => {
-    setSearchTime('');
+  setSearchTime('');
     // Call the function to fetch user logs without any search filter
     fetchUserLogs();
-  };
-
-  const buttonStyle = {
-    backgroundColor: '#007bff',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    padding: '8px 16px',
-    margin: '4px',
-    cursor: 'pointer',
-  };
-
-  const inputStyle = {
-    padding: '8px',
-    border: '1px solid #ccc',
-    borderRadius: '4px',
-    margin: '4px',
-  };
-
-  const spanStyle = {
-    marginRight: '8px',
-    fontWeight: 'bold',
   };
 
   return (
@@ -162,39 +190,36 @@ const Profile = () => {
       {user && (
         <div>
           <div>
-            <span style={spanStyle}>Full Name:</span>
+            <span>Full Name:</span>
             {isEditable ? (
               <input
                 type="text"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                style={inputStyle}
               />
             ) : (
               <span>{fullName}</span>
             )}
           </div>
           <div>
-            <span style={spanStyle}>Email:</span>
+            <span>Email:</span>
             {isEditable ? (
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                style={inputStyle}
               />
             ) : (
               <span>{email}</span>
             )}
           </div>
           <div>
-            <span style={spanStyle}>Phone:</span>
+            <span>Phone:</span>
             {isEditable ? (
               <input
                 type="text"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                style={inputStyle}
               />
             ) : (
               <span>{phone}</span>
@@ -203,37 +228,36 @@ const Profile = () => {
           <p><strong>Role:</strong> {user.role}</p>
         </div>
       )}
-      <button style={buttonStyle} onClick={() => {
-        setIsEditable(!isEditable);
-        if (isEditable) {
-          handleUpdateProfile();
-        }
+      <button onClick={() => {
+          setIsEditable(!isEditable);
+          if (isEditable) {
+              handleUpdateProfile();
+          }
       }}>
-        {isEditable ? 'Save' : 'Edit'}
+          {isEditable ? 'Save' : 'Edit'}
       </button>
-      <button style={buttonStyle} onClick={handleResetPassword}>Reset Password</button>
-      <button style={buttonStyle} onClick={handleLogout}>Log Out</button>
-      <button style={buttonStyle} onClick={handleDeleteAccount}>Delete Account</button>
+      <button onClick={handleResetPassword}>Reset Password</button>
+      <button onClick={handleLogout}>Log Out</button>
+      <button onClick={handleDeleteAccount}>Delete Account</button>
 
       <div>
-        <h2>User Logs</h2>
-        <input
+      <h2>User Logs</h2>
+      <input
           type="text"
           placeholder="Search by time..."
           value={searchTime}
           onChange={(e) => setSearchTime(e.target.value)}
-          style={inputStyle}
         />
-        <button style={buttonStyle} onClick={handleSearchLogs}>Search</button>
+        <button onClick={handleSearchLogs}>Search</button>
         {searchTime && (
-          <button style={buttonStyle} onClick={handleResetSearch}>Reset</button>
+          <button onClick={handleResetSearch}>Reset</button>
         )}
         <ul>
           {userLogs.map((log, index) => (
             <li key={index}>{log.timestamp}: {log.eventType}</li>
           ))}
-        </ul>
-      </div>
+      </ul>
+    </div>
     </div>
   );
 };
