@@ -34,22 +34,22 @@ const ResetPassword = () => {
   };
 
   return (
-    <div>
+    <div className="container mx-auto px-4">
       {isValidHash && !passwordResetSuccess ? (
-        <div>
-          <h2>Reset Password</h2>
+        <div className="mt-8">
+          <h2 className="text-2xl font-semibold mb-4">Reset Password</h2>
           <p>Resetting password for user: {userEmail}</p>
           <ResetPasswordForm onSubmit={handleResetPassword} />
         </div>
       ) : isValidHash && passwordResetSuccess ? (
-        <div>
+        <div className="mt-8">
           <p>Password reset successful!</p>
           <p>
-            <Link to="/login">Go back to Login</Link>
+            <Link to="/login" className="text-blue-500 hover:text-blue-700">Go back to Login</Link>
           </p>
         </div>
       ) : (
-        <p>Invalid or expired reset password link</p>
+        <p className="mt-8">Invalid or expired reset password link</p>
       )}
     </div>
   );
@@ -69,13 +69,14 @@ const ResetPasswordForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="mt-4">
       <input
         type="password"
         placeholder="New Password"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
         required
+        className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
       />
       <input
         type="password"
@@ -83,8 +84,11 @@ const ResetPasswordForm = ({ onSubmit }) => {
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
+        className="block w-full mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
       />
-      <button type="submit">Reset Password</button>
+      <button type="submit" className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+        Reset Password
+      </button>
     </form>
   );
 };
