@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-//image address
 const imageUrl = '/1.png';
 
 const NavigationBar = () => {
@@ -20,14 +19,14 @@ const NavigationBar = () => {
     boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
     zIndex: 1000,
   };
-//Navigation container style
+
   const navContainerStyle = {
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
     maxWidth: '1200px',
   };
-//Navigation item style
+
   const navItemStyle = {
     margin: '0 15px',
     color: '#0047ab',
@@ -37,14 +36,12 @@ const NavigationBar = () => {
   return (
     <nav style={navBarStyle}>
       <div style={navContainerStyle}>
-        <div></div> {/* The empty div on the left is used to balance the layout */}
-        {/* Middle navigation link */}
+        <div></div>
         <div>
           <a href="/menu" style={navItemStyle}>Menu</a>
           <a href="/contact" style={navItemStyle}>Contact</a>
           <a href="/about" style={navItemStyle}>About Us</a>
         </div>
-        {/* Login and registration links on the right */}
         <div>
           <a href="/login" style={navItemStyle}>Login</a>
           <a href="/SignUp" style={navItemStyle}>Register</a>
@@ -53,7 +50,6 @@ const NavigationBar = () => {
     </nav>
   );
 };
-
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -66,15 +62,12 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Read token from cookie
     const token = Cookies.get('token');
 
     const fetchUserData = async () => {
       try {
         const res = await axios.get('http://localhost:8080/api/user/profile', {
-          headers: {
-            Authorization: `${token}`
-          }
+          headers: { Authorization: `${token}` }
         });
         setUser(res.data.user);
         setFullName(res.data.user.fullName);
@@ -88,33 +81,28 @@ const Profile = () => {
     if (token) {
       fetchUserData();
     } else {
-      // If no token is found, redirect to login page
       navigate('/login');
     }
   }, []);
 
   const fetchUserLogs = async () => {
-      try {
-        const token = Cookies.get('token');
-        const response = await axios.get('http://localhost:8080/api/user/logs', {
-          headers: {
-            Authorization: token,
-          },
-        });
-        setUserLogs(response.data.userLogs);
-      } catch (error) {
-        console.error('Error fetching user logs:', error);
-      }
-    };
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.get('http://localhost:8080/api/user/logs', {
+        headers: { Authorization: token }
+      });
+      setUserLogs(response.data.userLogs);
+    } catch (error) {
+      console.error('Error fetching user logs:', error);
+    }
+  };
 
   useEffect(() => {
     fetchUserLogs();
   }, []);
 
   const handleLogout = () => {
-    // Delete token cookie
     Cookies.remove('token');
-    // Redirect to logout page
     navigate('/Logout');
   };
 
@@ -125,15 +113,10 @@ const Profile = () => {
     }
 
     try {
-      // Send request to delete account
       const token = Cookies.get('token');
       await axios.delete('http://localhost:8080/api/user', {
-        headers: {
-          Authorization: `${token}`
-        }
+        headers: { Authorization: `${token}` }
       });
-      
-      // Clear token cookie and redirect to login page
       Cookies.remove('token');
       navigate('/login');
     } catch (error) {
@@ -143,10 +126,8 @@ const Profile = () => {
 
   const handleResetPassword = async () => {
     try {
-      // Send request to reset password
       const response = await axios.post('http://localhost:8080/api/auth/generate-password-token', { email });
       const resetUrl = response.data;
-      // Open the reset URL in a new tab
       window.open(resetUrl.link, '_blank');
     } catch (error) {
       console.error('Error resetting password:', error);
@@ -155,18 +136,12 @@ const Profile = () => {
 
   const handleUpdateProfile = async () => {
     try {
-      // Send request to update profile
       const token = Cookies.get('token');
       await axios.put('http://localhost:8080/api/user/profile', { fullName, email, phone }, {
-        headers: {
-          Authorization: `${token}`
-        }
+        headers: { Authorization: `${token}` }
       });
-      // Refresh user data
       const res = await axios.get('http://localhost:8080/api/user/profile', {
-        headers: {
-          Authorization: `${token}`
-        }
+        headers: { Authorization: `${token}` }
       });
       setUser(res.data.user);
     } catch (error) {
@@ -196,14 +171,12 @@ const Profile = () => {
   };
 
   const handleSearchLogs = () => {
-    // Filter user logs based on searchTime
     const filteredLogs = userLogs.filter(log => log.timestamp.includes(searchTime));
     setUserLogs(filteredLogs);
   };
 
   const handleResetSearch = () => {
-  setSearchTime('');
-    // Call the function to fetch user logs without any search filter
+    setSearchTime('');
     fetchUserLogs();
   };
 
@@ -266,8 +239,8 @@ const Profile = () => {
 
 
       <div>
-      <h2>User Logs</h2>
-      <input
+        <h2>User Logs</h2>
+        <input
           type="text"
           placeholder="Search by time..."
           value={searchTime}
@@ -281,11 +254,10 @@ const Profile = () => {
           {userLogs.map((log, index) => (
             <li key={index}>{log.timestamp}: {log.eventType}</li>
           ))}
-      </ul>
-    </div>
+        </ul>
+      </div>
     </div>
   );
 };
 
 export default Profile;
-
