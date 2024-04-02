@@ -34,22 +34,22 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div>
       {isValidHash && !passwordResetSuccess ? (
-        <div className="mt-8">
-          <h2 className="text-2xl font-semibold mb-4">Reset Password</h2>
-          <p>Resetting password for user: {userEmail}</p>
+        <div style={containerStyle}>
+          <h2 style={headingStyle}>Reset Password</h2>
+          <p style={textStyle}>Resetting password for user: {userEmail}</p>
           <ResetPasswordForm onSubmit={handleResetPassword} />
         </div>
       ) : isValidHash && passwordResetSuccess ? (
-        <div className="mt-8">
-          <p>Password reset successful!</p>
-          <p>
-            <Link to="/login" className="text-blue-500 hover:text-blue-700">Go back to Login</Link>
+        <div style={containerStyle}>
+          <p style={textStyle}>Password reset successful!</p>
+          <p style={textStyle}>
+            <Link to="/login" style={linkStyle}>Go back to Login</Link>
           </p>
         </div>
       ) : (
-        <p className="mt-8">Invalid or expired reset password link</p>
+        <p style={textStyle}>Invalid or expired reset password link</p>
       )}
     </div>
   );
@@ -69,14 +69,14 @@ const ResetPasswordForm = ({ onSubmit }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4">
+    <form onSubmit={handleSubmit} style={formStyle}>
       <input
         type="password"
         placeholder="New Password"
         value={newPassword}
         onChange={(e) => setNewPassword(e.target.value)}
         required
-        className="block w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+        style={inputStyle}
       />
       <input
         type="password"
@@ -84,13 +84,56 @@ const ResetPasswordForm = ({ onSubmit }) => {
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
         required
-        className="block w-full mt-2 p-2 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
+        style={inputStyle}
       />
-      <button type="submit" className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-        Reset Password
-      </button>
+      <button type="submit" style={buttonStyle}>Reset Password</button>
     </form>
   );
+};
+
+const containerStyle = {
+  textAlign: 'center',
+  marginTop: '4rem',
+};
+
+const headingStyle = {
+  fontSize: '2rem',
+  marginBottom: '1rem',
+};
+
+const textStyle = {
+  fontSize: '1rem',
+  marginBottom: '1rem',
+};
+
+const linkStyle = {
+  color: '#0047ab',
+  textDecoration: 'none',
+};
+
+const formStyle = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  marginTop: '1rem',
+};
+
+const inputStyle = {
+  padding: '0.5rem',
+  margin: '0.5rem',
+  borderRadius: '5px',
+  border: '1px solid #ccc',
+};
+
+const buttonStyle = {
+  padding: '0.5rem 1rem',
+  fontSize: '1rem',
+  backgroundColor: '#0047ab',
+  color: '#fff',
+  border: 'none',
+  borderRadius: '5px',
+  cursor: 'pointer',
+  marginTop: '1rem',
 };
 
 export default ResetPassword;
