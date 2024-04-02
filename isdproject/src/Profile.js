@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-// Import NavigationBar component
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [fullName, setFullName] = useState('');
@@ -122,147 +121,96 @@ const Profile = () => {
       console.error('Error updating profile:', error);
     }
   };
-  
-  const buttonStyle = {
-    padding: '12px 24px',
-    fontSize: '18px',
-    backgroundColor: '#0047ab',
-    color: 'white',
-    border: 'none',
-    borderRadius: '20px',
-    outline: 'none',
+
+  const handleSearchLogs = () => {
+    // Filter user logs based on searchTime
+    const filteredLogs = userLogs.filter(log => log.timestamp.includes(searchTime));
+    setUserLogs(filteredLogs);
   };
 
-  const bigStyle = {
-    fontSize: '152px',
-    margin: '0 0 24px 0',
-    fontWeight: 'bold',
-  };
-
-  const smallStyle = {
-    fontSize: '44px',
-    margin: '0 0 24px 0',
-  };
-
-  const containerStyle = {
-    width: 1440,
-    height: 1285,
-    position: 'relative',
-    background: 'white',
-  };
-
-  const headingStyle = {
-    width: 466,
-    height: 215,
-    left: 129,
-    top: 27,
-    position: 'absolute',
-    color: 'black',
-    fontSize: 80,
-    fontFamily: 'Inter',
-    fontWeight: '900',
-    lineHeight: 88,
-    wordWrap: 'break-word',
-  };
-
-  const roleContainerStyle = {
-    width: 250,
-    height: 56,
-    left: 189,
-    top: 913,
-    position: 'absolute',
-    color: 'black',
-    fontSize: 30,
-    fontFamily: 'Inter',
-    fontWeight: '900',
-    lineHeight: 45,
-    wordWrap: 'break-word',
-  };
-
-  const roleValueContainerStyle = {
-    width: 789,
-    height: 40,
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-    left: 395,
-    top: 938,
-    position: 'absolute',
-    background: 'white',
-    borderRadius: 8,
-    border: '1px #E0E0E0 solid',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    gap: 16,
-    display: 'inline-flex',
-  };
-
-  const roleValueStyle = {
-    width: 789,
-    height: 40,
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingTop: 8,
-    paddingBottom: 8,
-    background: 'white',
-    borderRadius: 8,
-    border: '1px #E0E0E0 solid',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    gap: 16,
-    display: 'inline-flex',
-  };
-
-  const searchLogsContainerStyle = {
-    width: 1167,
-    height: 988,
-    left: 157,
-    top: 242,
-    position: 'absolute',
-    background: 'white',
-    borderRadius: 50,
-    border: '1px black solid',
-  };
-
-  const searchLogsInputStyle = {
-    width: '100%',
-    padding: '12px 16px',
-    fontSize: '20px',
-    borderRadius: '8px',
-    border: '1px solid #ccc',
-    marginBottom: '16px',
-    boxSizing: 'border-box',
+  const handleResetSearch = () => {
+  setSearchTime('');
+    // Call the function to fetch user logs without any search filter
+    fetchUserLogs();
   };
 
   return (
-    <div style={containerStyle}>
-      <div style={headingStyle}>Profile</div>
-      <div style={{ ...roleContainerStyle }}>Role:</div>
-      <div style={roleValueContainerStyle}>
-        <div style={{ ...roleValueStyle }}>{user ? user.role : ''}</div>
-      </div>
-      <div style={searchLogsContainerStyle}>
-        <h2>User Logs</h2>
-        <input
+    <div>
+      <h2>Profile</h2>
+      {user && (
+        <div>
+          <div>
+            <span>Full Name:</span>
+            {isEditable ? (
+              <input
+                type="text"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+              />
+            ) : (
+              <span>{fullName}</span>
+            )}
+          </div>
+          <div>
+            <span>Email:</span>
+            {isEditable ? (
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            ) : (
+              <span>{email}</span>
+            )}
+          </div>
+          <div>
+            <span>Phone:</span>
+            {isEditable ? (
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            ) : (
+              <span>{phone}</span>
+            )}
+          </div>
+          <p><strong>Role:</strong> {user.role}</p>
+        </div>
+      )}
+      <button onClick={() => {
+          setIsEditable(!isEditable);
+          if (isEditable) {
+              handleUpdateProfile();
+          }
+      }}>
+          {isEditable ? 'Save' : 'Edit'}
+      </button>
+      <button onClick={handleResetPassword}>Reset Password</button>
+      <button onClick={handleLogout}>Log Out</button>
+      <button onClick={handleDeleteAccount}>Delete Account</button>
+
+      <div>
+      <h2>User Logs</h2>
+      <input
           type="text"
           placeholder="Search by time..."
           value={searchTime}
           onChange={(e) => setSearchTime(e.target.value)}
-          style={searchLogsInputStyle}
         />
-        <button >Search</button>
+        <button onClick={handleSearchLogs}>Search</button>
         {searchTime && (
-          <button >Reset</button>
+          <button onClick={handleResetSearch}>Reset</button>
         )}
         <ul>
           {userLogs.map((log, index) => (
             <li key={index}>{log.timestamp}: {log.eventType}</li>
           ))}
-        </ul>
-      </div>
+      </ul>
+    </div>
     </div>
   );
 };
 
 export default Profile;
+
