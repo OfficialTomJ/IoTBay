@@ -4,8 +4,6 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 
 // Import NavigationBar component
-import NavigationBar from './NavigationBar'; // Adjust the path as per your project structure
-
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [fullName, setFullName] = useState('');
@@ -239,7 +237,6 @@ const Profile = () => {
 
   return (
     <div style={containerStyle}>
-      <NavigationBar />
       <div style={headingStyle}>Profile</div>
       <div style={{ ...roleContainerStyle }}>Role:</div>
       <div style={roleValueContainerStyle}>
@@ -254,9 +251,9 @@ const Profile = () => {
           onChange={(e) => setSearchTime(e.target.value)}
           style={searchLogsInputStyle}
         />
-        <button onClick={handleSearchLogs}>Search</button>
+        <button >Search</button>
         {searchTime && (
-          <button onClick={handleResetSearch}>Reset</button>
+          <button >Reset</button>
         )}
         <ul>
           {userLogs.map((log, index) => (
