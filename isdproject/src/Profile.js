@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
+//image address
+const imageUrl = '/1.png';
 
 const NavigationBar = () => {
   const navBarStyle = {
@@ -171,6 +173,27 @@ const Profile = () => {
       console.error('Error updating profile:', error);
     }
   };
+  
+  const buttonStyle = {
+    padding: '12px 24px',
+    fontSize: '18px',
+    backgroundColor: '#0047ab',
+    color: 'white',
+    border: 'none',
+    borderRadius: '20px',
+    outline: 'none',
+  };
+
+  const bigStyle = {
+    fontSize: '152px',
+    margin: '0 0 24px 0',
+    fontWeight: 'bold',
+  };
+
+  const smallStyle = {
+    fontSize: '44px',
+    margin: '0 0 24px 0',
+  };
 
   const handleSearchLogs = () => {
     // Filter user logs based on searchTime
@@ -184,13 +207,14 @@ const Profile = () => {
     fetchUserLogs();
   };
 
+
   return (
     <div>
-      <h2>Profile</h2>
+      <h2 style={bigStyle}>Profile</h2>
       {user && (
         <div>
           <div>
-            <span>Full Name:</span>
+            <span style={smallStyle}>Full Name:</span>
             {isEditable ? (
               <input
                 type="text"
@@ -198,11 +222,11 @@ const Profile = () => {
                 onChange={(e) => setFullName(e.target.value)}
               />
             ) : (
-              <span>{fullName}</span>
+              <span style={smallStyle}>{fullName}</span>
             )}
           </div>
           <div>
-            <span>Email:</span>
+            <span style={smallStyle}>Email:</span>
             {isEditable ? (
               <input
                 type="email"
@@ -210,11 +234,11 @@ const Profile = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             ) : (
-              <span>{email}</span>
+              <span style={smallStyle}>{email}</span>
             )}
           </div>
           <div>
-            <span>Phone:</span>
+            <span style={smallStyle}>Phone:</span>
             {isEditable ? (
               <input
                 type="text"
@@ -222,13 +246,13 @@ const Profile = () => {
                 onChange={(e) => setPhone(e.target.value)}
               />
             ) : (
-              <span>{phone}</span>
+              <span style={smallStyle}>{phone}</span>
             )}
           </div>
           <p><strong>Role:</strong> {user.role}</p>
         </div>
       )}
-      <button onClick={() => {
+      <button style={buttonStyle} onClick={() => {
           setIsEditable(!isEditable);
           if (isEditable) {
               handleUpdateProfile();
@@ -236,9 +260,10 @@ const Profile = () => {
       }}>
           {isEditable ? 'Save' : 'Edit'}
       </button>
-      <button onClick={handleResetPassword}>Reset Password</button>
-      <button onClick={handleLogout}>Log Out</button>
-      <button onClick={handleDeleteAccount}>Delete Account</button>
+      <button style={buttonStyle} onClick={handleResetPassword}>Reset Password</button>
+      <button style={buttonStyle} onClick={handleLogout}>Log Out</button>
+      <button style={buttonStyle} onClick={handleDeleteAccount}>Delete Account</button>
+
 
       <div>
       <h2>User Logs</h2>
@@ -263,3 +288,4 @@ const Profile = () => {
 };
 
 export default Profile;
+
