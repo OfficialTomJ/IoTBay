@@ -3,53 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-const imageUrl = '/1.png';
-
-const NavigationBar = () => {
-  const navBarStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: '1rem',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    zIndex: 1000,
-  };
-
-  const navContainerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    maxWidth: '1200px',
-  };
-
-  const navItemStyle = {
-    margin: '0 15px',
-    color: '#0047ab',
-    textDecoration: 'none',
-  };
-
-  return (
-    <nav style={navBarStyle}>
-      <div style={navContainerStyle}>
-        <div></div>
-        <div>
-          <a href="/menu" style={navItemStyle}>Menu</a>
-          <a href="/contact" style={navItemStyle}>Contact</a>
-          <a href="/about" style={navItemStyle}>About Us</a>
-        </div>
-        <div>
-          <a href="/login" style={navItemStyle}>Login</a>
-          <a href="/SignUp" style={navItemStyle}>Register</a>
-        </div>
-      </div>
-    </nav>
-  );
-};
+// Import NavigationBar component
+import NavigationBar from './NavigationBar'; // Adjust the path as per your project structure
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -62,12 +17,15 @@ const Profile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Read token from cookie
     const token = Cookies.get('token');
 
     const fetchUserData = async () => {
       try {
         const res = await axios.get('http://localhost:8080/api/user/profile', {
-          headers: { Authorization: `${token}` }
+          headers: {
+            Authorization: `${token}`
+          }
         });
         setUser(res.data.user);
         setFullName(res.data.user.fullName);
@@ -81,28 +39,33 @@ const Profile = () => {
     if (token) {
       fetchUserData();
     } else {
+      // If no token is found, redirect to login page
       navigate('/login');
     }
   }, []);
 
   const fetchUserLogs = async () => {
-    try {
-      const token = Cookies.get('token');
-      const response = await axios.get('http://localhost:8080/api/user/logs', {
-        headers: { Authorization: token }
-      });
-      setUserLogs(response.data.userLogs);
-    } catch (error) {
-      console.error('Error fetching user logs:', error);
-    }
-  };
+      try {
+        const token = Cookies.get('token');
+        const response = await axios.get('http://localhost:8080/api/user/logs', {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setUserLogs(response.data.userLogs);
+      } catch (error) {
+        console.error('Error fetching user logs:', error);
+      }
+    };
 
   useEffect(() => {
     fetchUserLogs();
   }, []);
 
   const handleLogout = () => {
+    // Delete token cookie
     Cookies.remove('token');
+    // Redirect to logout page
     navigate('/Logout');
   };
 
@@ -113,10 +76,15 @@ const Profile = () => {
     }
 
     try {
+      // Send request to delete account
       const token = Cookies.get('token');
       await axios.delete('http://localhost:8080/api/user', {
-        headers: { Authorization: `${token}` }
+        headers: {
+          Authorization: `${token}`
+        }
       });
+      
+      // Clear token cookie and redirect to login page
       Cookies.remove('token');
       navigate('/login');
     } catch (error) {
@@ -126,8 +94,10 @@ const Profile = () => {
 
   const handleResetPassword = async () => {
     try {
+      // Send request to reset password
       const response = await axios.post('http://localhost:8080/api/auth/generate-password-token', { email });
       const resetUrl = response.data;
+      // Open the reset URL in a new tab
       window.open(resetUrl.link, '_blank');
     } catch (error) {
       console.error('Error resetting password:', error);
@@ -136,12 +106,18 @@ const Profile = () => {
 
   const handleUpdateProfile = async () => {
     try {
+      // Send request to update profile
       const token = Cookies.get('token');
       await axios.put('http://localhost:8080/api/user/profile', { fullName, email, phone }, {
-        headers: { Authorization: `${token}` }
+        headers: {
+          Authorization: `${token}`
+        }
       });
+      // Refresh user data
       const res = await axios.get('http://localhost:8080/api/user/profile', {
-        headers: { Authorization: `${token}` }
+        headers: {
+          Authorization: `${token}`
+        }
       });
       setUser(res.data.user);
     } catch (error) {
@@ -170,81 +146,113 @@ const Profile = () => {
     margin: '0 0 24px 0',
   };
 
-  const handleSearchLogs = () => {
-    const filteredLogs = userLogs.filter(log => log.timestamp.includes(searchTime));
-    setUserLogs(filteredLogs);
+  const containerStyle = {
+    width: 1440,
+    height: 1285,
+    position: 'relative',
+    background: 'white',
   };
 
-  const handleResetSearch = () => {
-    setSearchTime('');
-    fetchUserLogs();
+  const headingStyle = {
+    width: 466,
+    height: 215,
+    left: 129,
+    top: 27,
+    position: 'absolute',
+    color: 'black',
+    fontSize: 80,
+    fontFamily: 'Inter',
+    fontWeight: '900',
+    lineHeight: 88,
+    wordWrap: 'break-word',
   };
 
+  const roleContainerStyle = {
+    width: 250,
+    height: 56,
+    left: 189,
+    top: 913,
+    position: 'absolute',
+    color: 'black',
+    fontSize: 30,
+    fontFamily: 'Inter',
+    fontWeight: '900',
+    lineHeight: 45,
+    wordWrap: 'break-word',
+  };
+
+  const roleValueContainerStyle = {
+    width: 789,
+    height: 40,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
+    left: 395,
+    top: 938,
+    position: 'absolute',
+    background: 'white',
+    borderRadius: 8,
+    border: '1px #E0E0E0 solid',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: 16,
+    display: 'inline-flex',
+  };
+
+  const roleValueStyle = {
+    width: 789,
+    height: 40,
+    paddingLeft: 16,
+    paddingRight: 16,
+    paddingTop: 8,
+    paddingBottom: 8,
+    background: 'white',
+    borderRadius: 8,
+    border: '1px #E0E0E0 solid',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    gap: 16,
+    display: 'inline-flex',
+  };
+
+  const searchLogsContainerStyle = {
+    width: 1167,
+    height: 988,
+    left: 157,
+    top: 242,
+    position: 'absolute',
+    background: 'white',
+    borderRadius: 50,
+    border: '1px black solid',
+  };
+
+  const searchLogsInputStyle = {
+    width: '100%',
+    padding: '12px 16px',
+    fontSize: '20px',
+    borderRadius: '8px',
+    border: '1px solid #ccc',
+    marginBottom: '16px',
+    boxSizing: 'border-box',
+  };
 
   return (
-    <div>
-      <h2 style={bigStyle}>Profile</h2>
-      {user && (
-        <div>
-          <div>
-            <span style={smallStyle}>Full Name:</span>
-            {isEditable ? (
-              <input
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-              />
-            ) : (
-              <span style={smallStyle}>{fullName}</span>
-            )}
-          </div>
-          <div>
-            <span style={smallStyle}>Email:</span>
-            {isEditable ? (
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            ) : (
-              <span style={smallStyle}>{email}</span>
-            )}
-          </div>
-          <div>
-            <span style={smallStyle}>Phone:</span>
-            {isEditable ? (
-              <input
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
-            ) : (
-              <span style={smallStyle}>{phone}</span>
-            )}
-          </div>
-          <p><strong>Role:</strong> {user.role}</p>
-        </div>
-      )}
-      <button style={buttonStyle} onClick={() => {
-          setIsEditable(!isEditable);
-          if (isEditable) {
-              handleUpdateProfile();
-          }
-      }}>
-          {isEditable ? 'Save' : 'Edit'}
-      </button>
-      <button style={buttonStyle} onClick={handleResetPassword}>Reset Password</button>
-      <button style={buttonStyle} onClick={handleLogout}>Log Out</button>
-      <button style={buttonStyle} onClick={handleDeleteAccount}>Delete Account</button>
-
-
-      <div>
+    <div style={containerStyle}>
+      <NavigationBar />
+      <div style={headingStyle}>Profile</div>
+      <div style={{ ...roleContainerStyle }}>Role:</div>
+      <div style={roleValueContainerStyle}>
+        <div style={{ ...roleValueStyle }}>{user ? user.role : ''}</div>
+      </div>
+      <div style={searchLogsContainerStyle}>
         <h2>User Logs</h2>
         <input
           type="text"
           placeholder="Search by time..."
           value={searchTime}
           onChange={(e) => setSearchTime(e.target.value)}
+          style={searchLogsInputStyle}
         />
         <button onClick={handleSearchLogs}>Search</button>
         {searchTime && (
