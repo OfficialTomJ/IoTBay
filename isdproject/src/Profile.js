@@ -3,56 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-//image address
-const imageUrl = '/1.png';
-
 const NavigationBar = () => {
-  const navBarStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: '1rem',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    zIndex: 1000,
-  };
-//Navigation container style
-  const navContainerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    maxWidth: '1200px',
-  };
-//Navigation item style
-  const navItemStyle = {
-    margin: '0 15px',
-    color: '#0047ab',
-    textDecoration: 'none',
-  };
-
   return (
-    <nav style={navBarStyle}>
-      <div style={navContainerStyle}>
+    <nav className="fixed top-0 left-0 w-full flex justify-center items-center bg-white p-4 shadow-md z-50">
+      <div className="flex justify-between w-full max-w-6xl">
         <div></div> {/* The empty div on the left is used to balance the layout */}
-        {/* Middle navigation link */}
         <div>
-          <a href="/menu" style={navItemStyle}>Menu</a>
-          <a href="/contact" style={navItemStyle}>Contact</a>
-          <a href="/about" style={navItemStyle}>About Us</a>
+          <a href="/menu" className="mr-4 text-blue-500 hover:text-blue-700">Menu</a>
+          <a href="/contact" className="mr-4 text-blue-500 hover:text-blue-700">Contact</a>
+          <a href="/about" className="text-blue-500 hover:text-blue-700">About Us</a>
         </div>
-        {/* Login and registration links on the right */}
         <div>
-          <a href="/login" style={navItemStyle}>Login</a>
-          <a href="/SignUp" style={navItemStyle}>Register</a>
+          <a href="/login" className="mr-4 text-blue-500 hover:text-blue-700">Login</a>
+          <a href="/SignUp" className="text-blue-500 hover:text-blue-700">Register</a>
         </div>
       </div>
     </nav>
   );
 };
+
 
 
 const Profile = () => {
