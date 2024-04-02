@@ -8,6 +8,7 @@ import ErrorPage from './ErrorPage';
 import Profile from './Profile';
 import ResetPassword from './ResetPassword';
 import WelcomePage from './WelcomePage';
+import Logout from './Logout';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route exact path="/login" element={<Login/>} />
           <Route exact path="/profile" element={<Profile/>} />
           <Route exact path="/reset-password/:token" element={<ResetPassword/>} />
+          <Route exact path="/Logout" element={<Logout/>} />
           {/* 404 Not Found route */}
         </Routes>
     </Router>

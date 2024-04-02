@@ -62,8 +62,8 @@ const Profile = () => {
   const handleLogout = () => {
     // Delete token cookie
     Cookies.remove('token');
-    // Redirect to login page
-    navigate('/login');
+    // Redirect to logout page
+    navigate('/Logout');
   };
 
   const handleDeleteAccount = async () => {
