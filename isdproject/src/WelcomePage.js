@@ -13,7 +13,7 @@ const NavigationBar = () => {
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    padding: '1rem',
+    padding: '2rem',
     boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
     zIndex: 1000,
   };
@@ -29,6 +29,7 @@ const NavigationBar = () => {
     margin: '0 15px',
     color: '#0047ab',
     textDecoration: 'none',
+    fontSize:'20px',
   };
 
   return (
@@ -114,4 +115,4 @@ function WelcomePage() {
   );
 }
 
-export default WelcomePage;
+export default WelcomePage; 
