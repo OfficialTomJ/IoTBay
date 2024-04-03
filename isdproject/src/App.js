@@ -16,7 +16,7 @@ function App() {
         <Route path="/" element={<WelcomePage/>} />
         <Route path="/signup" element={<Signup/>} />
         <Route path="/login" element={<Login/>} />
-        <Route path="/profile" element={<Profile/>} /> 
+        <Route path="/profile" element={<Profile/>} /> {}
         <Route path="/reset-password/:token" element={<ResetPassword/>} />
         {/* Provide a 404 error page for all undefined routes */}
         <Route path="*" element={<ErrorPage/>} />
