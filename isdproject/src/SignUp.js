@@ -97,6 +97,12 @@ const SignUp = () => {
           )}
         </div>
       )}
+      <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '14px' }}>
+      <p style={{ color: '#007bff', cursor: 'pointer' }} onClick={handleSignInClick}>
+        Already have an account?<br />
+        Click to sign in.
+      </p>
+    </div>
     </div>
   </div>
 );
