@@ -57,7 +57,7 @@ const Login = () => {
     <form onSubmit={onSubmit}>
       <div className='loginText'> Login </div>
       <div className='inline'> Don't have an account? </div> 
-      <button onClick={navigateSignUp} className='forgotPw' > Register </button>
+      <button onClick={navigateSignUp} className='registerText' > Register </button>
       <div className='emailText'> Email </div>
       <input
         type="email"
