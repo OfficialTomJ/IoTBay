@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
+import './Login.css'; 
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -41,33 +42,56 @@ const Login = () => {
     }
   };
 
+  const navigateSignUp = async () => {
+    navigate('/SignUp');
+  }; 
+
+
+
   return (
+    <div style={{ display: 'flex'}}>
+      <div className='leftPageBg'> 
+        <div className='welcomeText'>Welcome</div> 
+      </div>
+  <div className='rightPageBg'>
     <form onSubmit={onSubmit}>
+      <div className='loginText'> Login </div>
+      <div className='inline'> Don't have an account? </div> 
+      <button onClick={navigateSignUp} className='registerText' > Register </button>
+      <div className='emailText'> Email </div>
       <input
         type="email"
         placeholder="Email Address"
         name="email"
         value={email}
         onChange={onChange}
+        className='inputBox'
         required
       />
+      <div style={{fontWeight: 'bold'}}> Password </div>
       <input
         type="password"
         placeholder="Password"
         name="password"
         value={password}
         onChange={onChange}
+        className='inputBox'
         required
       />
-      <button type="submit">Login</button>
-      <button onClick={handleForgotPassword}>Forgot Password</button>
+      <div><input type="checkbox"/> <div className='inline'> Remember me</div> 
+      
+      <button onClick={handleForgotPassword} className='forgotPw' >Forgot Password</button>
       {resetLink && (
         <div>
           <p>{resetLink.msg}</p>
           <a href={resetLink.link}>Reset password link: {resetLink.link}</a>
         </div>
-      )}
-    </form>
+      )}</div> 
+      <button type="submit"
+        className='loginBox'
+      >Login</button>
+    </form></div>
+</div> 
   );
 };
 
