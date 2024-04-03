@@ -42,6 +42,12 @@ const Login = () => {
     }
   };
 
+  const navigateSignUp = async () => {
+    navigate('/SignUp');
+  }; 
+
+
+
   return (
     <div style={{ display: 'flex'}}>
       <div className='leftPageBg'> 
@@ -51,7 +57,7 @@ const Login = () => {
     <form onSubmit={onSubmit}>
       <div className='loginText'> Login </div>
       <div className='inline'> Don't have an account? </div> 
-      <div className='registerText'> Register </div>
+      <button onClick={navigateSignUp} className='forgotPw' > Register </button>
       <div className='emailText'> Email </div>
       <input
         type="email"
