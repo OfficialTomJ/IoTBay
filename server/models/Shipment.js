@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 
 const shipmentSchema = new mongoose.Schema({
+    orderId: {
+        type: String,
+        required: true
+    },
     userID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
