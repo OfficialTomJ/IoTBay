@@ -168,12 +168,6 @@ const Profile = () => {
     }
   };
 
-  const handleDeleteShipment = (index) => {
-    const updatedShipments = [...shipments];
-    updatedShipments.splice(index, 1);
-    setShipments(updatedShipments);
-  };
-
   return (
     <div style={{ backgroundColor: '#e3f2fd', minHeight: '100vh', padding: 20 }}>
       <div style={{ position: 'absolute', top: 20, right: 20 }}>
@@ -345,9 +339,6 @@ const Profile = () => {
                     <div><strong>Status:</strong> {shipment.status}</div>
                     <div><strong>Tracking:</strong> {shipment.tracking}</div>
                     <div><strong>Date:</strong> {shipment.date}</div>
-                    <div style={{ textAlign: 'right', marginTop: 5 }}>
-                      <button style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: 4 }} onClick={() => handleDeleteShipment(index)}>Delete</button>
-                    </div>
                   </div>
                 </li>
               ))}
