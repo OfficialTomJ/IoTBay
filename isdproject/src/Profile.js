@@ -137,16 +137,19 @@ const Profile = () => {
     }));
   };
 
-  const handleAddShipment = () => {
-    setShipments(prevState => [...prevState, newShipment]);
-    setNewShipment({
-      orderId: '',
-      shipmentMethod: '',
-      address: '',
-      status: '',
-      tracking: '',
-      date: ''
-    });
+  const handleAddShipment = async () => {
+    try {
+      const token = Cookies.get('token');
+      console.log(newShipment);
+      const response = await axios.post('http://localhost:8080/api/shipment/create', newShipment, {
+        headers: {
+          Authorization: `${token}`
+        }
+      });
+      console.log('Shipment created:', response.data);
+    } catch (error) {
+      console.error('Error creating shipment:', error);
+    }
   };
 
   const handleDeleteShipment = (index) => {
