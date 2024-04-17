@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const shipmentSchema = new mongoose.Schema({
+    orderID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Order',
+        required: true
+    },
     userID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
