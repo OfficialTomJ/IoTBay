@@ -11,12 +11,19 @@ const Profile = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [userLogs, setUserLogs] = useState([]);
   const [searchTime, setSearchTime] = useState('');
+  const [shipments, setShipments] = useState([]);
+  const [newShipment, setNewShipment] = useState({
+    orderId: '',
+    shipmentMethod: '',
+    address: '',
+    status: '',
+    tracking: '',
+    date: ''
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Read token from cookie
     const token = Cookies.get('token');
-
     const fetchUserData = async () => {
       try {
         const res = await axios.get('http://localhost:8080/api/user/profile', {
@@ -36,34 +43,31 @@ const Profile = () => {
     if (token) {
       fetchUserData();
     } else {
-      // If no token is found, redirect to login page
       navigate('/login');
     }
   }, []);
-
-  const fetchUserLogs = async () => {
-      try {
-        const token = Cookies.get('token');
-        const response = await axios.get('http://localhost:8080/api/user/logs', {
-          headers: {
-            Authorization: token,
-          },
-        });
-        setUserLogs(response.data.userLogs);
-      } catch (error) {
-        console.error('Error fetching user logs:', error);
-      }
-    };
 
   useEffect(() => {
     fetchUserLogs();
   }, []);
 
+  const fetchUserLogs = async () => {
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.get('http://localhost:8080/api/user/logs', {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setUserLogs(response.data.userLogs);
+    } catch (error) {
+      console.error('Error fetching user logs:', error);
+    }
+  };
+
   const handleLogout = () => {
-    // Delete token cookie
     Cookies.remove('token');
-    // Redirect to logout page
-    navigate('/Logout');
+    navigate('/logout');
   };
 
   const handleDeleteAccount = async () => {
@@ -73,15 +77,12 @@ const Profile = () => {
     }
 
     try {
-      // Send request to delete account
       const token = Cookies.get('token');
       await axios.delete('http://localhost:8080/api/user', {
         headers: {
           Authorization: `${token}`
         }
       });
-      
-      // Clear token cookie and redirect to login page
       Cookies.remove('token');
       navigate('/login');
     } catch (error) {
@@ -91,10 +92,8 @@ const Profile = () => {
 
   const handleResetPassword = async () => {
     try {
-      // Send request to reset password
       const response = await axios.post('http://localhost:8080/api/auth/generate-password-token', { email });
       const resetUrl = response.data;
-      // Open the reset URL in a new tab
       window.open(resetUrl.link, '_blank');
     } catch (error) {
       console.error('Error resetting password:', error);
@@ -103,14 +102,12 @@ const Profile = () => {
 
   const handleUpdateProfile = async () => {
     try {
-      // Send request to update profile
       const token = Cookies.get('token');
       await axios.put('http://localhost:8080/api/user/profile', { fullName, email, phone }, {
         headers: {
           Authorization: `${token}`
         }
       });
-      // Refresh user data
       const res = await axios.get('http://localhost:8080/api/user/profile', {
         headers: {
           Authorization: `${token}`
@@ -123,35 +120,58 @@ const Profile = () => {
   };
 
   const handleSearchLogs = () => {
-    // Filter user logs based on searchTime
     const filteredLogs = userLogs.filter(log => log.timestamp.includes(searchTime));
     setUserLogs(filteredLogs);
   };
 
   const handleResetSearch = () => {
-  setSearchTime('');
-    // Call the function to fetch user logs without any search filter
+    setSearchTime('');
     fetchUserLogs();
+  };
+
+  const handleNewShipmentChange = (e) => {
+    const { name, value } = e.target;
+    setNewShipment(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleAddShipment = () => {
+    setShipments(prevState => [...prevState, newShipment]);
+    setNewShipment({
+      orderId: '',
+      shipmentMethod: '',
+      address: '',
+      status: '',
+      tracking: '',
+      date: ''
+    });
+  };
+
+  const handleDeleteShipment = (index) => {
+    const updatedShipments = [...shipments];
+    updatedShipments.splice(index, 1);
+    setShipments(updatedShipments);
   };
 
   return (
     <div style={{ backgroundColor: '#e3f2fd', minHeight: '100vh', padding: 20 }}>
       <div style={{ position: 'absolute', top: 20, right: 20 }}>
-        {/* Logout Button */}
-        <button 
-          style={{ 
-            backgroundColor: '#007bff', 
-            color: '#fff', 
-            border: 'none', 
-            padding: '8px 16px', 
-            borderRadius: 4 
-          }} 
+        <button
+          style={{
+            backgroundColor: '#007bff',
+            color: '#fff',
+            border: 'none',
+            padding: '8px 16px',
+            borderRadius: 4
+          }}
           onClick={handleLogout}
         >
           Log Out
         </button>
       </div>
-  
+
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div style={{ width: '80%', maxWidth: 800, backgroundColor: '#fff', borderRadius: 8, padding: 40, boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
           <div style={{ textAlign: 'center', marginBottom: 20 }}>
@@ -236,13 +256,88 @@ const Profile = () => {
               </ul>
             </div>
           </div>
+          <div style={{ marginTop: 20 }}>
+            <h2 style={{ fontSize: 24, marginBottom: 10 }}>Previous Shipments</h2>
+            <div style={{ border: '1px solid #ccc', borderRadius: 8, padding: 20 }}>
+              <div style={{ marginBottom: 20 }}>
+                <input
+                  type="text"
+                  name="orderId"
+                  value={newShipment.orderId}
+                  onChange={handleNewShipmentChange}
+                  placeholder="Order ID"
+                  style={{ width: '100%', padding: 10, borderRadius: 4, border: '1px solid #ccc' }}
+                />
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <input
+                  type="text"
+                  name="shipmentMethod"
+                  value={newShipment.shipmentMethod}
+                  onChange={handleNewShipmentChange}
+                  placeholder="Shipment Method"
+                  style={{ width: '100%', padding: 10, borderRadius: 4, border: '1px solid #ccc' }}
+                />
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <input
+                  type="text"
+                  name="address"
+                  value={newShipment.address}
+                  onChange={handleNewShipmentChange}
+                  placeholder="Address"
+                  style={{ width: '100%', padding: 10, borderRadius: 4, border: '1px solid #ccc' }}
+                />
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <input
+                  type="text"
+                  name="status"
+                  value={newShipment.status}
+                  onChange={handleNewShipmentChange}
+                  placeholder="Status"
+                  style={{ width: '100%', padding: 10, borderRadius: 4, border: '1px solid #ccc' }}
+                />
+              </div>
+              <div style={{ marginBottom: 20 }}>
+                <input
+                  type="text"
+                  name="tracking"
+                  value={newShipment.tracking}
+                  onChange={handleNewShipmentChange}
+                  placeholder="Tracking"
+                  style={{ width: '100%', padding: 10, borderRadius: 4, border: '1px solid #ccc' }}
+                />
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <button style={{ backgroundColor: '#28a745', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: 4 }} onClick={handleAddShipment}>Add Shipment</button>
+              </div>
+            </div>
+            {shipments.length === 0 && (
+              <p>No previous shipments available</p>
+            )}
+            <ul style={{ listStyleType: 'none', padding: 0 }}>
+              {shipments.map((shipment, index) => (
+                <li key={index} style={{ marginBottom: 8 }}>
+                  <div style={{ border: '1px solid #ccc', borderRadius: 8, padding: 10 }}>
+                    <div><strong>Order ID:</strong> {shipment.orderId}</div>
+                    <div><strong>Shipment Method:</strong> {shipment.shipmentMethod}</div>
+                    <div><strong>Address:</strong> {shipment.address}</div>
+                    <div><strong>Status:</strong> {shipment.status}</div>
+                    <div><strong>Tracking:</strong> {shipment.tracking}</div>
+                    <div><strong>Date:</strong> {shipment.date}</div>
+                    <div style={{ textAlign: 'right', marginTop: 5 }}>
+                      <button style={{ backgroundColor: '#dc3545', color: '#fff', border: 'none', padding: '5px 10px', borderRadius: 4 }} onClick={() => handleDeleteShipment(index)}>Delete</button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>
   );
-  
 };
 
-
 export default Profile;
-
