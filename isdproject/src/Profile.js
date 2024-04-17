@@ -49,6 +49,7 @@ const Profile = () => {
 
   useEffect(() => {
     fetchUserLogs();
+    fetchUserShipments();
   }, []);
 
   const fetchUserLogs = async () => {
@@ -62,6 +63,20 @@ const Profile = () => {
       setUserLogs(response.data.userLogs);
     } catch (error) {
       console.error('Error fetching user logs:', error);
+    }
+  };
+
+  const fetchUserShipments = async () => {
+    const token = Cookies.get('token');
+    try {
+      const response = await axios.get('http://localhost:8080/api/shipment/user-shipments', {
+        headers: {
+          Authorization: `${token}`
+        }
+      });
+      setShipments(response.data.shipments);
+    } catch (error) {
+      console.error('Error fetching user shipments:', error);
     }
   };
 
@@ -147,6 +162,7 @@ const Profile = () => {
         }
       });
       console.log('Shipment created:', response.data);
+      fetchUserShipments();
     } catch (error) {
       console.error('Error creating shipment:', error);
     }

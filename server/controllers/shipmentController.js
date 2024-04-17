@@ -27,3 +27,14 @@ exports.createShipment = async (req, res) => {
     res.status(500).json({ msg: 'Server Error' });
   }
 };
+
+exports.getUserShipments = async (req, res) => {
+  try {
+    const shipments = await Shipment.find({ userID: req.user.id });
+
+    res.json({ shipments });
+  } catch (error) {
+    console.error('Error fetching user shipments:', error);
+    res.status(500).json({ msg: 'Server Error' });
+  }
+};
