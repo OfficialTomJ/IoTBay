@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-//保存验证码到数据库
+
 const userVerificationSchema = new mongoose.Schema({
     fullName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
