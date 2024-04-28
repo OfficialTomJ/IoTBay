@@ -10,4 +10,8 @@ router.get('/:id', auth, orderController.getOrderById);
 router.delete('/:id', auth, orderController.cancelOrder);
 router.post('/checkout', auth, orderController.checkout); 
 
+// Route to handle checkout process
+router.post('/checkout', auth, orderController.checkout);
+
 module.exports = router;
+
