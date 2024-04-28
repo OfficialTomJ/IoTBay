@@ -3,14 +3,22 @@ const AccessLog = require('../models/AccessLog');
 
 exports.createOrder = async (req, res) => {
   try {
-    // Create a new order object based on request body
-    const newOrder = new Order(req.body);
+    const { products, quantities, shipmentId, paymentId } = req.body;
+
+    // Create a new order object
+    const newOrder = new Order({
+      products,
+      quantities,
+      shipmentId,
+      paymentId,
+      userId: req.user.id, // Assuming userId is available in the request
+    });
 
     // Save the order to the database
     await newOrder.save();
 
     // Log the event in the access log
-    AccessLog.create({
+    await AccessLog.create({
       eventType: 'order_created',
       userId: req.user.id,
     });
@@ -43,3 +51,4 @@ exports.deleteOrder = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete order' });
   }
 };
+
