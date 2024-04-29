@@ -6,20 +6,20 @@ const paymentSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    paymentMethod: {
-        type: String,
+    transactionID: {
+        type: Int8Array,
         required: true
     },
-    ccNumber: {
-        type: String,
+    userCardNum: {
+        type: Int16Array,
         required: true
     },
-    expiry: {
-        type: String,
+    userCardExpiry: {
+        type: Int8Array,
         required: true
     },
-    cvc: {
-        type: String,
+    user_CCV: {
+        type: Int8Array,
         required: true
     }
 });
