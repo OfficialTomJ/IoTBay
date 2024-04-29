@@ -29,14 +29,6 @@ const orderSchema = new mongoose.Schema({
     confirmed: {
         type: Boolean,
         default: false
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
     }
 });
 
