@@ -35,6 +35,17 @@ export const cancelOrder = async (orderId) => {
     }
 };
 
+// Function to delete an existing order by order ID
+export const deleteOrder = async (orderId) => {
+    try {
+        const response = await axios.delete(`${BASE_URL}/delete-order/${orderId}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        throw new Error('Failed to delete order');
+    }
+};
+
 // Function to get all orders
 export const getAllOrders = async () => {
     try {
