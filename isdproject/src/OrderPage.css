@@ -1,0 +1,85 @@
+/* Order Management Page Styling */
+.order-management-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .page-title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .new-order-form {
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .form-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .create-order-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .create-order-button:hover {
+    background-color: #45a049;
+  }
+  
+  .order-list {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .order-history-title {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .order-list-items {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .order-item {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  .order-info {
+    margin-bottom: 10px;
+  }
+  
+  .cancel-order-button {
+    background-color: #f44336;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    float: right;
+  }
+  
+  .cancel-order-button:hover {
+    background-color: #d32f2f;
+  }
+  

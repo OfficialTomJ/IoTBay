@@ -45,3 +45,14 @@ export const cancelOrder = async (orderId) => {
         throw new Error('Failed to cancel order');
     }
 };
+
+// Function to get all orders
+export const getAllOrders = async () => {
+    try {
+        const response = await axios.get(`${BASE_URL}/all-orders`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching all orders:', error);
+        throw new Error('Failed to fetch all orders');
+    }
+};
