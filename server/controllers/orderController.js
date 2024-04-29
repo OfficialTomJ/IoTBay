@@ -29,26 +29,10 @@ exports.createOrder = async (req, res) => {
     res.status(500).json({ error: 'Failed to create order' });
   }
 };
-
-exports.updateOrder = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updatedOrder = await Order.findByIdAndUpdate(id, req.body, { new: true });
-    res.json(updatedOrder);
-  } catch (error) {
-    console.error('Error updating order:', error);
-    res.status(500).json({ error: 'Failed to update order' });
-  }
+// Export controller functions
+module.exports = {
+    createOrder,
+    getOrderDetails,
+    updateOrder,
+    cancelOrder
 };
-
-exports.deleteOrder = async (req, res) => {
-  try {
-    const { id } = req.params;
-    await Order.findByIdAndDelete(id);
-    res.status(204).send(); // No content response
-  } catch (error) {
-    console.error('Error deleting order:', error);
-    res.status(500).json({ error: 'Failed to delete order' });
-  }
-};
-
