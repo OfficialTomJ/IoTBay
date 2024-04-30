@@ -23,7 +23,7 @@ const SignUp = () => {
       const res = await axios.post('http://localhost:8080/api/user/register', formData);
       console.log(res.data); // Handle success response
       localStorage.setItem('userEmail', email);
-      navigate('/signUpTest'); // Redirect to verification code input page
+      navigate('/UserAuthentication'); // Redirect to verification code input page
     } catch (err) {
       console.error(err.response.data); // Handle error response
     }
