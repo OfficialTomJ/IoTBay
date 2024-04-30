@@ -61,17 +61,14 @@ const OrderPage = () => {
   const handleLogout = () => {
     // Clear user authentication state
     localStorage.removeItem('authToken');
-    // Redirect to login page or any other action as needed
     window.location.href = '/login';
   };
 
   return (
     <div className="order-management-container">
       <h1 className="page-title">Order Management</h1>
-      {/* Logout Button */}
       <button className="logout-button" onClick={handleLogout}>Logout</button>
       <div className="content-container">
-        {/* New Order Form */}
         <div className="new-order-form">
           <h2 className="form-title">Create New Order</h2>
           <input
@@ -81,14 +78,10 @@ const OrderPage = () => {
             value={newOrderData.userId}
             onChange={(e) => setNewOrderData({ ...newOrderData, userId: e.target.value })}
           />
-          {/* Add more input fields for products, total cost, etc. */}
           <button className="create-order-button" onClick={handleCreateOrder}>Create Order</button>
         </div>
-        {/* Order History */}
         <div className="order-history">
           <h2 className="order-history-title">Order History</h2>
-          {/* Add search functionality */}
-          {/* Add filtering based on order number and date */}
           <table className="order-table">
             <thead>
               <tr>
