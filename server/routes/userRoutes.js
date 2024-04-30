@@ -9,6 +9,5 @@ router.get('/profile', auth, userController.getUserProfile);
 router.delete('/', auth, userController.deleteAccount);
 router.put('/profile', auth, userController.updateUserProfile);
 router.get('/logs', auth, userController.getUserLogs);
-router.post('/verify-email', userController.verifyEmail);
 
 module.exports = router;
