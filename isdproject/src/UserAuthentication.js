@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; 
 
-function SignUpTest() {
+function UserAuthentication() {
   const [code, setCode] = useState(''); //Verification code input
   const [email, setEmail] = useState('');
   const [error, setError] = useState(''); // Used to display error messages
