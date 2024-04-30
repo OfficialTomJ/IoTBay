@@ -1,12 +1,20 @@
-/* Order Management Page Styling */
-.order-management-container {
+body {
+    background-color: #f9eded; /* Very light blue background */
+  }
+.order-management{
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
+    background-color: blue; /* Blue background */
+    border-radius: 10px; /* Rounded corners */
   }
   
   .page-title {
+    position: relative; /* Set position to relative */
+    top: 40px; /* Move 10px from the top */
+    font-size: 36px;
+    font-weight: bold;
     text-align: center;
     font-size: 24px;
     margin-bottom: 20px;
@@ -17,21 +25,14 @@
     padding: 20px;
     border-radius: 10px;
     margin-bottom: 20px;
+    color: #000; /* Black color */
   }
   
-  .form-title {
-    font-size: 20px;
-    margin-bottom: 10px;
-  }
-  
-  .input-field {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-  }
-  
-  .create-order-button {
-    background-color: #4CAF50;
+  .logout-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #f44336; /* Red color */
     color: white;
     padding: 10px 20px;
     border: none;
@@ -45,33 +46,33 @@
   .order-list {
     background-color: #f9f9f9;
     padding: 20px;
+    background-color: #e9f7fd; /* White background */
+    border: 1px solid #1020b3;
     border-radius: 10px;
   }
   
-  .order-history-title {
-    font-size: 20px;
-    margin-bottom: 10px;
+  .form-title, .order-history-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #000; /* Black color */
   }
   
-  .order-list-items {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .order-item {
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    padding: 20px;
-    margin-bottom: 10px;
+  .input-field {
+    width: calc(100% - 20px); /* Adjust width for padding */
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
     border-radius: 5px;
   }
   
-  .order-info {
-    margin-bottom: 10px;
+  .input-field.highlight {
+    border: 2px solid #007bff; /* Blue border for highlighting */
   }
   
-  .cancel-order-button {
-    background-color: #f44336;
+  .create-order-button {
+    width: 100%;
+    background-color: #007bff; /* Blue color */
     color: white;
     padding: 8px 16px;
     border: none;
@@ -79,7 +80,11 @@
     float: right;
   }
   
-  .cancel-order-button:hover {
-    background-color: #d32f2f;
+  .order-table th {
+    background-color: #f2f2f2; /* Light gray background */
+  }
+  
+  .order-table td button {
+    margin-right: 5px;
   }
   

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = '/api/order';
+const BASE_URL = 'http://localhost:8080/api/order'; 
 
 // Function to create a new order
 export const createOrder = async (orderData) => {
