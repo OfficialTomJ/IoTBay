@@ -1,4 +1,5 @@
-const Payment = require('../models/Shipment');
+
+const Payment = require('../models/Payment');
 const AccessLog = require('../models/AccessLog');
 
 exports.createPayment = async (req, res) => {
