@@ -77,8 +77,8 @@ exports.verifyEmail = async (req, res) => {
 
         // Record the account creation event in the AccessLog
         await AccessLog.create({
-            eventType: 'account_created',
-            userId: user._id
+        eventType: 'account_created',
+        userId: user._id
         });
 
         // Clean up the temporary data
@@ -91,8 +91,6 @@ exports.verifyEmail = async (req, res) => {
     }
 };
 
-
-
 exports.getUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
@@ -104,13 +102,13 @@ exports.getUserProfile = async (req, res) => {
 };
 
 exports.deleteAccount = async (req, res) => {
-    try {
-        await User.findByIdAndDelete(req.user.id);
-        res.json({ msg: 'Account deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting account:', error);
-        res.status(500).json({ msg: 'Server Error' });
-    }
+try {
+    await User.findByIdAndDelete(req.user.id);
+    res.json({ msg: 'Account deleted successfully' });
+} catch (error) {
+    console.error('Error deleting account:', error);
+    res.status(500).json({ msg: 'Server Error' });
+}
 };
 
 exports.updateUserProfile = async (req, res) => {
@@ -135,15 +133,15 @@ exports.updateUserProfile = async (req, res) => {
 
 exports.getUserLogs = async (req, res) => {
     try {
-      // Assuming you have a way to identify the current user, e.g., through req.user
-      const userId = req.user.id;
+    // Assuming you have a way to identify the current user, e.g., through req.user
+    const userId = req.user.id;
   
-      // Fetch user logs from the database based on userId
-      const userLogs = await AccessLog.find({ userId });
+    // Fetch user logs from the database based on userId
+    const userLogs = await AccessLog.find({ userId });
   
-      res.json({ userLogs });
-    } catch (error) {
-      console.error('Error fetching user logs:', error);
-      res.status(500).json({ error: 'Server error' });
-    }
-  };
+    res.json({ userLogs });
+} catch (error) {
+    console.error('Error fetching user logs:', error);
+    res.status(500).json({ error: 'Server error' });
+}
+};
