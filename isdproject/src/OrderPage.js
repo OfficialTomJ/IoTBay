@@ -1,50 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { createOrder, cancelOrder, getAllOrders } from './orderService'; // Import getAllOrders function
+import { createOrder, cancelOrder, getAllOrders, deleteOrder } from './orderService'; // Import getAllOrders function
 import './OrderPage.css'; // Import CSS for styling
 
 const OrderPage = () => {
-  const [orders, setOrders] = useState([]);
   const [newOrderData, setNewOrderData] = useState({
-    userId: '',
-    products: [],
-    totalCost: 0,
+    orderId: '', // Changed 'userId' to 'orderId'
+    items: [],
   });
+  const [orderHistory, setOrderHistory] = useState([]);
+  const [searchCriteria, setSearchCriteria] = useState({
+    orderNumber: '',
+    date: '',
+  });
+  const [filteredOrders, setFilteredOrders] = useState([]);
 
   useEffect(() => {
-    fetchOrders(); // Fetch orders when component mounts
+    fetchOrders();
   }, []);
 
   const fetchOrders = async () => {
     try {
-      const ordersData = await getAllOrders(); // Fetch orders from the server using getAllOrders
-      setOrders(ordersData);
+      const ordersData = await getAllOrders();
+      setOrderHistory(ordersData);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
   };
 
-  const handleCreateOrder = async () => {
+  const handleAddToCart = async () => {
     try {
       await createOrder(newOrderData); // Send new order data to the server
+      setNewOrderData({ userId: '', products: [], totalCost: 0 }); // Clear input fields after creating order
       fetchOrders(); // Refresh order list after creating new order
     } catch (error) {
-      console.error('Error creating order:', error);
+      console.error('Error adding item to cart:', error);
     }
+  };
+
+  const handleSubmitOrder = () => {
+    setOrderHistory([...orderHistory, newOrderData]);
+    setNewOrderData({ orderId: '', items: [] }); // Changed 'userId' to 'orderId'
   };
 
   const handleCancelOrder = async (orderId) => {
     try {
-      await cancelOrder(orderId); // Send request to cancel order to the server
-      fetchOrders(); // Refresh order list after canceling order
+      await cancelOrder(orderId);
+      const updatedOrders = orderHistory.filter(order => order.id !== orderId);
+      setOrderHistory(updatedOrders);
     } catch (error) {
       console.error('Error canceling order:', error);
     }
   };
+  
+  const handleUpdateOrder = (orderId) => {
+    // You need to implement the update logic here
+    console.log('Updating order:', orderId);
+  };
 
-  const handleDeleteOrder = async (orderId) => {
+  const handleSearch = async () => {
     try {
-      await deleteOrder(orderId); // Send request to delete order to the server
-      fetchOrders(); // Refresh order list after deleting order
+      if (searchCriteria.orderNumber) {
+        const searchedOrders = await searchOrderByNumber(searchCriteria.orderNumber);
+        setFilteredOrders(searchedOrders);
+      } else if (searchCriteria.date) {
+        const searchedOrders = await searchOrderByDate(searchCriteria.date);
+        setFilteredOrders(searchedOrders);
+      }
     } catch (error) {
       console.error('Error deleting order:', error);
     }
@@ -60,34 +81,27 @@ const OrderPage = () => {
   const handleLogout = () => {
     // Clear user authentication state
     localStorage.removeItem('authToken');
-    // Redirect to login page or any other action as needed
     window.location.href = '/login';
   };
 
   return (
     <div className="order-management-container">
       <h1 className="page-title">Order Management</h1>
-      {/* Logout Button */}
       <button className="logout-button" onClick={handleLogout}>Logout</button>
       <div className="content-container">
-        {/* New Order Form */}
         <div className="new-order-form">
           <h2 className="form-title">Create New Order</h2>
           <input
-            className="input-field highlight"
+            className="input-field"
             type="text"
-            placeholder="User ID"
-            value={newOrderData.userId}
-            onChange={(e) => setNewOrderData({ ...newOrderData, userId: e.target.value })}
+            placeholder="Enter Order ID"
+            value={newOrderData.orderId}
+            onChange={(e) => setNewOrderData({ ...newOrderData, orderId: e.target.value })}
           />
-          {/* Add more input fields for products, total cost, etc. */}
           <button className="create-order-button" onClick={handleCreateOrder}>Create Order</button>
         </div>
-        {/* Order History */}
         <div className="order-history">
           <h2 className="order-history-title">Order History</h2>
-          {/* Add search functionality */}
-          {/* Add filtering based on order number and date */}
           <table className="order-table">
             <thead>
               <tr>

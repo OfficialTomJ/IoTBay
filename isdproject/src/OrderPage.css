@@ -1,65 +1,60 @@
 body {
-    background-color: #f9eded; /* Very light blue background */
+    background-color: #f9eded; 
   }
 .order-management{
     max-width: 800px;
-    margin: 0 auto;
+    margin: 2 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
-    background-color: blue; /* Blue background */
-    border-radius: 10px; /* Rounded corners */
+    background-color: blue; 
+    border-radius: 10px; 
   }
   
   .page-title {
-    position: relative; /* Set position to relative */
-    top: 40px; /* Move 10px from the top */
+    position: relative; 
+    top: 40px; 
     font-size: 36px;
     font-weight: bold;
     text-align: center;
-    font-size: 24px;
     margin-bottom: 20px;
-  }
-  
-  .new-order-form {
-    background-color: #f0f0f0;
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    color: #000; /* Black color */
+    color: #000; 
   }
   
   .logout-button {
     position: absolute;
     top: 10px;
     right: 10px;
-    background-color: #f44336; /* Red color */
+    background-color: #f44336; 
     color: white;
     padding: 10px 20px;
     border: none;
     cursor: pointer;
   }
   
-  .create-order-button:hover {
-    background-color: #45a049;
+  .content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   
-  .order-list {
-    background-color: #f9f9f9;
+  .new-order-form, .order-history {
+    width: 80%;
     padding: 20px;
-    background-color: #e9f7fd; /* White background */
+    background-color: #e9f7fd; 
     border: 1px solid #1020b3;
     border-radius: 10px;
+    margin-top: 20px;
   }
   
   .form-title, .order-history-title {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
-    color: #000; /* Black color */
+    color: #000; 
   }
   
   .input-field {
-    width: calc(100% - 20px); /* Adjust width for padding */
+    width: calc(100% - 20px); 
     padding: 10px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
@@ -67,21 +62,32 @@ body {
   }
   
   .input-field.highlight {
-    border: 2px solid #007bff; /* Blue border for highlighting */
+    border: 2px solid #007bff; 
   }
   
   .create-order-button {
     width: 100%;
-    background-color: #007bff; /* Blue color */
+    background-color: #007bff; 
     color: white;
-    padding: 8px 16px;
+    padding: 10px 20px;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
-    float: right;
+  }
+  
+  .order-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .order-table th, .order-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
   }
   
   .order-table th {
-    background-color: #f2f2f2; /* Light gray background */
+    background-color: #f2f2f2; 
   }
   
   .order-table td button {
