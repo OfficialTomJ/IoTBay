@@ -33,7 +33,11 @@ const ShippingComponent = () => {
       <h3>Choose Shipping Address</h3>
       <select style={{ marginBottom: "10px", width: "100%", padding: "10px" }}>
         <option value="">Select a saved shipping address</option>
-        <option value="address1">123 Shipping Street, City, Country</option>
+        {addresses.map((address, index) => (
+          <option key={index} value={address}>
+            {address}
+          </option>
+        ))}
       </select>
       <hr style={{ marginBottom: "10px", borderTop: "1px solid #eaeaea" }} />
       <h3>Or enter a new shipping address</h3>
