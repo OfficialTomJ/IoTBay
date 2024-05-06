@@ -11,6 +11,7 @@ import WelcomePage from './WelcomePage';
 import LogoutPage from './Logout';
 import ProductPage from './ProductPage';
 import ShoppingCart from './ShoppingCart';
+import Checkout from './Checkout';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/logout" element={<LogoutPage/>} />
         <Route path="/product" element={<ProductPage/>} />
         <Route path="/ShoppingCart" element={<ShoppingCart/>} />
+        <Route path="/checkout" element={<Checkout/>} />
         <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </Router>
