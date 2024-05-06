@@ -1,56 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; //Import Link component
+import NavigationBar from './components/NavigationBar'; 
 
 //image address
 const imageUrl = '/1.png';
-
-const NavigationBar = () => {
-  const navBarStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: '2rem',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    zIndex: 1000,
-  };
-//Navigation container style
-  const navContainerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    maxWidth: '1200px',
-  };
-//Navigation item style
-  const navItemStyle = {
-    margin: '0 15px',
-    color: '#0047ab',
-    textDecoration: 'none',
-    fontSize:'20px',
-  };
-
-  return (
-    <nav style={navBarStyle}>
-      <div style={navContainerStyle}>
-        <div></div> {/* The empty div on the left is used to balance the layout */}
-        {/* Middle navigation link */}
-        <div>
-          <a href="/menu" style={navItemStyle}>Menu</a>
-          <a href="/contact" style={navItemStyle}>Contact</a>
-          <a href="/about" style={navItemStyle}>About Us</a>
-        </div>
-        {/* Login and registration links on the right */}
-        <div>
-          <a href="/login" style={navItemStyle}>Login</a>
-          <a href="/SignUp" style={navItemStyle}>Register</a>
-        </div>
-      </div>
-    </nav>
-  );
-};
 
 function WelcomePage() {
   const containerStyle = {
@@ -105,7 +58,7 @@ function WelcomePage() {
         <div style={textContainerStyle}>
           <h1 style={helloStyle}>Hello!</h1>
           <p style={seeYouStyle}>Go to see you here</p>
-          <button style={startButtonStyle}>Go to Start</button>
+          <Link to="/product" style={startButtonStyle}>Go to Start</Link>
         </div>
         <div>
           <img src={imageUrl} alt="Decorative" style={imageStyle} />
@@ -115,4 +68,5 @@ function WelcomePage() {
   );
 }
 
-export default WelcomePage; 
+export default WelcomePage;
+
