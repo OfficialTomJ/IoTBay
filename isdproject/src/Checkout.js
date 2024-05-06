@@ -1,5 +1,6 @@
 import React from 'react';
 import PaymentComponent from './components/PaymentComponent';
+import ShippingComponent from './ShipmentComponent';
 
 const CheckoutPage = () => {
     const cartItems = [
@@ -14,8 +15,7 @@ const CheckoutPage = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <div style={{ flex: 1, marginRight: '20px' }}>
                 <h2>Shipping</h2>
-                {/* Shipping component */}
-                {/* Input fields for shipping address, etc. */}
+                <ShippingComponent/>
             </div>
             <div style={{ flex: 1, marginRight: '20px' }}>
                 <h2>Payment</h2>
