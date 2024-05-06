@@ -54,7 +54,7 @@ const ShoppingCartPage = () => {
             <h3 className="text-lg font-medium">Total Price: ${totalPrice}</h3>
             <div className="flex items-center space-x-4">
               <Link to="/Product" className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md">Back to Products</Link>
-              <Link to="/payment" className="bg-blue-500 text-white px-4 py-2 rounded-md">Proceed to Payment</Link>
+              <Link to="/checkout" className="bg-blue-500 text-white px-4 py-2 rounded-md">Proceed to Checkout</Link>
             </div>
           </div>
         </div>
