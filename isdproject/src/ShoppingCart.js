@@ -51,12 +51,12 @@ const ShoppingCartPage = () => {
               <button onClick={() => removeItem(item.id)} className="remove-button">Remove</button>
             </div>
           ))}
-          <div className="total-price-container">
-            <h3 className="total-price">Total Price: ${totalPrice}</h3>
-          </div>
-          <div className="action-buttons">
-            <Link to="/products" className="back-button">Back to Products</Link>
-            <Link to="/checkout" className="checkout-button">Proceed to Checkout</Link>
+          <div className="total-price">
+            <h3>Total Price: ${totalPrice}</h3>
+            <div className="action-buttons">
+              <Link to="/product" className="back-button">Back to Products</Link>
+              <Link to="/checkout" className="checkout-button">Proceed to Checkout</Link>
+            </div>
           </div>
         </div>
       )}
@@ -65,3 +65,4 @@ const ShoppingCartPage = () => {
 };
 
 export default ShoppingCartPage;
+
