@@ -38,3 +38,19 @@ exports.getUserShipments = async (req, res) => {
     res.status(500).json({ msg: 'Server Error' });
   }
 };
+
+exports.getUserAddresses = async (req, res) => {
+  try {
+    const shipments = await Shipment.find({ userID: req.user.id });
+
+    const uniqueAddresses = Array.from(
+      new Set(shipments.map((shipment) => shipment.address))
+    );
+
+    res.json({ addresses: uniqueAddresses });
+  } catch (error) {
+    console.error("Error fetching user shipments:", error);
+    res.status(500).json({ msg: "Server Error" });
+  }
+};
+

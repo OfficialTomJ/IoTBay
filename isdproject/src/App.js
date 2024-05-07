@@ -1,3 +1,4 @@
+import './tailwind.css';
 import React from 'react';
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -8,6 +9,9 @@ import Profile from './Profile';
 import ResetPassword from './ResetPassword';
 import WelcomePage from './WelcomePage';
 import LogoutPage from './Logout';
+import ProductPage from './ProductPage';
+import ShoppingCart from './ShoppingCart';
+import Checkout from './Checkout';
 import UserAuthentication from './UserAuthentication';
 
 function App() {
@@ -21,8 +25,11 @@ function App() {
         <Route path="/profile" element={<Profile/>} /> {}
         <Route path="/reset-password/:token" element={<ResetPassword/>} />
         {/* Provide a 404 error page for all undefined routes */}
-        <Route path="/logout" element={<LogoutPage/>} />  
-        <Route path="/UserAuthentication" element={<UserAuthentication/>} />         
+        <Route path="/logout" element={<LogoutPage/>} />
+        <Route path="/product" element={<ProductPage/>} />
+        <Route path="/ShoppingCart" element={<ShoppingCart/>} />
+        <Route path="/checkout" element={<Checkout/>} />
+        <Route path="/UserAuthentication" element={<UserAuthentication/>} />
         <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </Router>

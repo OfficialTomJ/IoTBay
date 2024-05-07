@@ -19,7 +19,7 @@ exports.registerUser = async (req, res) => {
     const { fullName, email, password, phone } = req.body;
 
     try {
-        let user = await User.findOne({ email });// check if the user is already a verified user
+        let user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({ msg: 'User already exists' });
         }
@@ -50,7 +50,6 @@ exports.registerUser = async (req, res) => {
             'Please verify your email',
             `Your verification code is: ${emailVerificationCode}. Please complete verification within an hour.`
         );
-
         res.json({ msg: 'Registration successful, please check your email to complete verification.', verificationCode: emailVerificationCode });
     } catch (err) {
         console.error(err.message);
@@ -151,3 +150,34 @@ exports.getUserLogs = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
 }
 };
+
+// @route   POST api/users/resend-verification-code
+// @desc    Resend a new verification code to the user's email
+// @access  Public
+exports.resendVerificationCode = async (req, res) => {
+    const { email } = req.body;
+    try { // check Userinformation
+        let tempUser = await UserVerification.findOne({ email });
+
+        if (!tempUser) {
+            return res.status(400).json({ msg: 'User not found' });
+        }
+        // Generate new verification code and expiration time
+        const newVerificationCode = generateVerificationCode();
+        const newExpireTime = new Date(Date.now() + 3600000); //Expires in 60 minutes
+        tempUser.emailVerificationCode = newVerificationCode;//Update the verification code information in the database
+        tempUser.expireTime = newExpireTime;
+        await tempUser.save()
+        // Send new verification code to user email
+        await sendEmail(
+            email,
+            'Your new verification code',
+            `Your new verification code is: ${newVerificationCode}. Please complete verification within an hour.`
+        );
+        res.json({ msg: 'New verification code has been sent successfully' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+

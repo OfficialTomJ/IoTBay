@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function UserAuthentication() {
-  const [code, setCode] = useState(''); // Verification code input
+  const [code, setCode] = useState(''); 
   const [email, setEmail] = useState('');
-  const [error, setError] = useState(''); // Used to display error messages
-  const [countdown, setCountdown] = useState(60); // Initial countdown state
-  const [canRequestCode, setCanRequestCode] = useState(false); // Button enable state
+  const [error, setError] = useState(''); 
+  const [success, setSuccess] = useState(''); 
+  const [countdown, setCountdown] = useState(60); 
+  const [canRequestCode, setCanRequestCode] = useState(false); 
 
   useEffect(() => {
     const userEmail = localStorage.getItem('userEmail');
     setEmail(userEmail);
     const timer = setInterval(() => {
-      setCountdown(prevCount => prevCount - 1);
+      setCountdown((prevCount) => prevCount - 1);
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -20,19 +21,20 @@ function UserAuthentication() {
   useEffect(() => {
     if (countdown <= 0) {
       setCanRequestCode(true);
-      clearInterval(countdown);
     }
   }, [countdown]);
 
+  // Handle form submission logic
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
-
+    setError(''); 
+    setSuccess(''); 
     try {
-      const response = await axios.post('http://localhost:8080/api/user/verify-email', { email, code });
-      window.location.href = '/login';
+      await axios.post('http://localhost:8080/api/user/verify-email', { email, code });
+      setSuccess('Verification successful. Redirecting to the product page...');
+      window.location.href = '/Login';
     } catch (err) {
-      setError(err.response.data.msg || 'Verification failed, please try again');
+      setError(err.response?.data?.msg || 'Verification failed. Please try again.');
     }
   };
 
@@ -40,10 +42,13 @@ function UserAuthentication() {
     if (!canRequestCode) return;
     try {
       const response = await axios.post('http://localhost:8080/api/user/resend-verification-code', { email });
-      setCountdown(60); // 重新开始倒计时
-      setCanRequestCode(false); // 禁用按钮直到倒计时结束
+      setSuccess(response.data.msg);
+      setError(''); 
+      setCountdown(60);
+      setCanRequestCode(false);
     } catch (err) {
-      setError(err.response.data.msg || 'Failed to resend code. Please try again.');
+      setError(err.response?.data?.msg || 'Failed to resend code. Please try again.');
+      setSuccess('');
     }
   };
 
@@ -52,7 +57,7 @@ function UserAuthentication() {
     <div className="flex justify-center items-center w-full h-screen">
       <form className="flex flex-col items-center p-6 space-y-4 bg-white shadow-lg rounded-md" onSubmit={handleSubmit}>
         <label htmlFor="verification-code" className="text-lg font-semibold">
-        please enter verification code
+          Please enter verification code
         </label>
         <input
           id="verification-code"
@@ -62,21 +67,28 @@ function UserAuthentication() {
           value={code}
           onChange={(e) => setCode(e.target.value)}
         />
-        <button type="submit" className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        Submit
+        <button
+          type="submit"
+          className="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Submit
         </button>
         {countdown > 0 ? (
           <p>{countdown} seconds remaining until you can request a new code.</p>
         ) : (
-          <button onClick={handleResendCode} disabled={!canRequestCode} className="mt-4 w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+          <button
+            onClick={handleResendCode}
+            disabled={!canRequestCode}
+            className="mt-4 w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          >
             Resend Code
           </button>
         )}
         {error && <p className="text-red-500">{error}</p>}
+        {success && <p className="text-green-500">{success}</p>}
       </form>
     </div>
   );
 }
 
 export default UserAuthentication;
-
