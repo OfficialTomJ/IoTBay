@@ -19,26 +19,32 @@ exports.registerUser = async (req, res) => {
     const { fullName, email, password, phone } = req.body;
 
     try {
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ email });// check if the user is already a verified user
         if (user) {
             return res.status(400).json({ msg: 'User already exists' });
         }
-
+        // Check for existing unverified user information
+        let tempUser = await UserVerification.findOne({ email });
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const emailVerificationCode = generateVerificationCode();
 
-        const tempUser = new UserVerification({
-            fullName,
-            email,
-            hashedPassword,
-            phone,
-            emailVerificationCode,
-            expireTime: new Date(Date.now() + 3600000)
-        });
-
-        await tempUser.save();
-
+        if (tempUser) {
+            // If it already exists, update the verification code and expiration time
+            tempUser.emailVerificationCode = emailVerificationCode;
+            tempUser.expireTime = new Date(Date.now() + 3600000); //Update expiration time 60min
+            await tempUser.save();
+        } else {
+            tempUser = new UserVerification({
+                fullName,
+                email,
+                hashedPassword,
+                phone,
+                emailVerificationCode,
+                expireTime: new Date(Date.now() + 3600000)//set time 60min
+            });
+            await tempUser.save();
+        }
         await sendEmail(
             email,
             'Please verify your email',
@@ -102,13 +108,13 @@ exports.getUserProfile = async (req, res) => {
 };
 
 exports.deleteAccount = async (req, res) => {
-try {
-    await User.findByIdAndDelete(req.user.id);
-    res.json({ msg: 'Account deleted successfully' });
-} catch (error) {
-    console.error('Error deleting account:', error);
-    res.status(500).json({ msg: 'Server Error' });
-}
+    try {
+        await User.findByIdAndDelete(req.user.id);
+        res.json({ msg: 'Account deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting account:', error);
+        res.status(500).json({ msg: 'Server Error' });
+    }
 };
 
 exports.updateUserProfile = async (req, res) => {

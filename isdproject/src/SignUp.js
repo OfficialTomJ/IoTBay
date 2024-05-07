@@ -9,11 +9,11 @@ const SignUp = () => {
     password: '',
     phone: ''
   });
+  const [error, setError] = useState(''); // Add error message status
   const navigate = useNavigate();
 
-  const { fullName, email, password, phone } = formData;
-
   const onChange = e => {
+    if (error) setError(''); // the user starts typing, clear the error message
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -22,10 +22,11 @@ const SignUp = () => {
     try {
       const res = await axios.post('http://localhost:8080/api/user/register', formData);
       console.log(res.data); // Handle success response
-      localStorage.setItem('userEmail', email);
-      navigate('/UserAuthentication'); // Redirect to verification code input page
+      localStorage.setItem('userEmail', formData.email); 
+      navigate('/UserAuthentication'); //  Redirect to verification code input page
     } catch (err) {
       console.error(err.response.data); // Handle error response
+      setError(err.response.data.error || 'This email address has already been registered, please change to another email address.'); 
     }
   };
 
@@ -39,7 +40,7 @@ const SignUp = () => {
             type="text"
             placeholder="Full Name"
             name="fullName"
-            value={fullName}
+            value={formData.fullName}
             onChange={onChange}
             required
           />
@@ -48,16 +49,17 @@ const SignUp = () => {
             type="email"
             placeholder="Email Address"
             name="email"
-            value={email}
+            value={formData.email}
             onChange={onChange}
-            required
+            required ={{ borderColor: error.includes('Email') ? 'red' : 'inherit' }} 
           />
+          {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
           <input
             style={{ width: '100%', marginBottom: '10px', padding: '10px', borderRadius: '3px', border: '1px solid #ccc' }}
             type="password"
             placeholder="Password"
             name="password"
-            value={password}
+            value={formData.password}
             onChange={onChange}
             minLength="6"
             required
@@ -67,7 +69,7 @@ const SignUp = () => {
             type="text"
             placeholder="Phone Number"
             name="phone"
-            value={phone}
+            value={formData.phone}
             onChange={onChange}
             required
           />
