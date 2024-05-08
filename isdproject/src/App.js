@@ -8,6 +8,7 @@ import Profile from './Profile';
 import ResetPassword from './ResetPassword';
 import WelcomePage from './WelcomePage';
 import LogoutPage from './Logout';
+import Admin from './Admin';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPassword/>} />
         {/* Provide a 404 error page for all undefined routes */}
         <Route path="/logout" element={<LogoutPage/>} />
+        <Route path="/Admin" element={<Admin/>} />
         <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </Router>
