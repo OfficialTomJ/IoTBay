@@ -20,6 +20,9 @@ const Profile = () => {
     tracking: '',
     date: ''
   });
+  const [paymentMethods, setPaymentMethods] = useState([]);
+
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,11 +48,28 @@ const Profile = () => {
     } else {
       navigate('/login');
     }
+
+    const fetchPaymentMethods = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/payment/user-payments', {
+          headers: {
+            Authorization: token,
+          },
+        });
+        console.log(response.data.payments);
+        setPaymentMethods(response.data.payments);
+      } catch (error) {
+        console.error('Error fetching payment methods:', error);
+      }
+    };
+
+    fetchPaymentMethods();
   }, []);
 
   useEffect(() => {
     fetchUserLogs();
     fetchUserShipments();
+
   }, []);
 
   const fetchUserLogs = async () => {
@@ -343,6 +363,22 @@ const Profile = () => {
                 </li>
               ))}
             </ul>
+          </div>
+          <div style={{ marginTop: 20 }}>
+            <h2 style={{ fontSize: 24, marginBottom: 10 }}>Payment Methods</h2>
+            <div style={{ border: '1px solid #ccc', borderRadius: 8, padding: 20 }}>
+              <ul style={{ listStyleType: 'none', padding: 0 }}>
+                {paymentMethods.map((method, index) => (
+                  <li key={index} style={{ marginBottom: 8 }}>
+                    <div style={{ border: '1px solid #ccc', borderRadius: 8, padding: 10 }}>
+                      <div><strong>Card Number:</strong> {method.userCardNum}</div>
+                      <div><strong>Expiry Date:</strong> {method.userCardExpiry}</div>
+                      <div><strong>CVV:</strong> {method.userCVV}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </div>

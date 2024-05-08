@@ -7,19 +7,19 @@ const paymentSchema = new mongoose.Schema({
         required: true
     },
     transactionID: {
-        type: Int8Array,
+        type: Number,
         required: true
     },
     userCardNum: {
-        type: Int16Array,
+        type: Number,
         required: true
     },
     userCardExpiry: {
-        type: Int8Array,
+        type: Number,
         required: true
     },
     user_CCV: {
-        type: Int8Array,
+        type: Number,
         required: true
     }
 });
