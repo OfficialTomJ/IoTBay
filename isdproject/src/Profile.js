@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -45,7 +47,7 @@ const Profile = () => {
     } else {
       navigate('/login');
     }
-  }, []);
+  }, [navigate]);
 
   useEffect(() => {
     fetchUserLogs();
@@ -345,6 +347,15 @@ const Profile = () => {
             </ul>
           </div>
         </div>
+      </div>
+
+      {/* Button to go to Products page */}
+      <div style={{ marginTop: '20px', textAlign: 'center' }}>
+        <Link to="/product">
+          <button style={{ backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '4px', fontSize: '16px' }}>
+            Go to Products
+          </button>
+        </Link>
       </div>
     </div>
   );

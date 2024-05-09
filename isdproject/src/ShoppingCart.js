@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import './ShoppingCartPage.css';
 
 const ShoppingCartPage = () => {
   const [cartItems, setCartItems] = useState([
@@ -28,33 +29,33 @@ const ShoppingCartPage = () => {
   };
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-//design
+
   return (
-    <div className="container mx-auto my-8">
-      <h1 className="text-3xl font-bold mb-4">Shopping Cart</h1>
+    <div className="shopping-cart-container">
+      <h1 className="page-title">Shopping Cart</h1>
       {cartItems.length === 0 ? (
-        <p className="text-gray-600">Your cart is empty.</p>
+        <p className="empty-cart-message">Your cart is empty.</p>
       ) : (
         <div>
           {cartItems.map(item => (
-            <div key={item.id} className="flex items-center justify-between border-b border-gray-300 py-2">
-              <div>
-                <h3 className="text-lg font-medium">{item.name}</h3>
-                <p className="text-gray-600">Price: ${item.price}</p>
-                <div className="flex items-center">
-                  <button onClick={() => decreaseQuantity(item.id)} className="text-gray-500 mr-2">-</button>
-                  <span>{item.quantity}</span>
-                  <button onClick={() => increaseQuantity(item.id)} className="text-gray-500 ml-2">+</button>
+            <div key={item.id} className="cart-item">
+              <div className="item-details">
+                <h3 className="item-name">{item.name}</h3>
+                <p className="item-price">Price: ${item.price}</p>
+                <div className="quantity-controls">
+                  <button onClick={() => decreaseQuantity(item.id)} className="quantity-button">-</button>
+                  <span className="item-quantity">{item.quantity}</span>
+                  <button onClick={() => increaseQuantity(item.id)} className="quantity-button">+</button>
                 </div>
               </div>
-              <button onClick={() => removeItem(item.id)} className="text-red-600">Remove</button>
+              <button onClick={() => removeItem(item.id)} className="remove-button">Remove</button>
             </div>
           ))}
-          <div className="flex justify-between items-center mt-4">
-            <h3 className="text-lg font-medium">Total Price: ${totalPrice}</h3>
-            <div className="flex items-center space-x-4">
-              <Link to="/Product" className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md">Back to Products</Link>
-              <Link to="/checkout" className="bg-blue-500 text-white px-4 py-2 rounded-md">Proceed to Checkout</Link>
+          <div className="total-price">
+            <h3>Total Price: ${totalPrice}</h3>
+            <div className="action-buttons">
+              <Link to="/product" className="back-button">Back to Products</Link>
+              <Link to="/checkout" className="checkout-button">Proceed to Checkout</Link>
             </div>
           </div>
         </div>
