@@ -95,7 +95,7 @@ exports.validateResetToken = async (req, res) => {
     res.json({ msg: 'Token is valid', email, isValid: true });
   } catch (error) {
     console.error('Error validating reset password token:', error);
-    res.status(400).json({ msg: 'Invalid token' });
+    res.status(500).json({ msg: '500 Internal Server Error' });
   }
 };
 
@@ -108,7 +108,7 @@ exports.resetPassword = async (req, res) => {
 
     // Check if the token is valid and not expired
     if (!decodedToken || !decodedToken.email) {
-      return res.status(400).json({ msg: 'Invalid or expired reset token' });
+      return res.status(500).json({ msg: '500 Internal Server Error' });
     }
 
     // Find the user by email and update the password
