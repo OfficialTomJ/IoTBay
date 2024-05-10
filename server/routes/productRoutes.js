@@ -5,9 +5,16 @@ const auth = require('../middleware/auth');
 const productController = require('../controllers/productController');
 
 router.post('/create', productController.createProduct);
-router.get('/profile', auth, productController.getProduct);
+router.get('/productid', auth, productController.getProductid);
 router.delete('/delete', auth, productController.deleteProduct);
 router.put('/update', auth, productController.updateProduct);
-router.get('/logs', auth, productController.getProductLogs);
+
+router.get('/product/:id', auth, productController.getProductById);
+router.get('/products', (req, res) => {
+    // Your route logic for /products here
+    // For example, you can send a response or query the database
+    // Replace this comment with your actual logic
+    res.send('This is the /products route');
+});
 
 module.exports = router;

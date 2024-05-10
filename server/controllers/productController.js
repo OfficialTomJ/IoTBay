@@ -1,9 +1,11 @@
-const Product = require('../models/Product');
+const Product = require('../models/product');
 const AccessLog = require('../models/AccessLog');
 
-exports.createProduct = async (req, res) => {
+// Function to create a new product
+exports.createProduct = async function(req, res) {
     const { name, type, price, quantity } = req.body;
     try {
+        // Your logic to create a new product
         if (!name || !type || !price || !quantity) {
             return res.status(400).json({ error: 'Please provide all required fields' });
         }
@@ -27,22 +29,32 @@ exports.createProduct = async (req, res) => {
     }
 };
 
-exports.getProduct = async (req, res) => {
+// Function to get product details
+exports.getProduct = async function(req, res) {
     try {
+        // Your logic to get product details
         const productId = req.params.id;
-        const product = await Product.findById(productId);
-        if (!product) {
-            return res.status(404).json({ error: 'Product not found' });
-        }
-        res.json({ product });
+        // Find the product by ID using a callback function
+        Product.findById(productId, function(err, product) {
+            if (err) {
+                console.error('Error fetching product by ID:', err);
+                return res.status(500).json({ error: 'Server Error' });
+            }
+            if (!product) {
+                return res.status(404).json({ error: 'Product not found' });
+            }
+            res.json({ product });
+        });
     } catch (error) {
         console.error('Error fetching product:', error);
         res.status(500).json({ error: 'Server Error' });
     }
 };
 
-exports.deleteProduct = async (req, res) => {
+// Function to delete a product
+exports.deleteProduct = async function(req, res) {
     try {
+        // Your logic to delete a product
         const productId = req.params.id;
         const product = await Product.findById(productId);
         if (!product) {
@@ -59,10 +71,12 @@ exports.deleteProduct = async (req, res) => {
     }
 };
 
-exports.updateProduct = async (req, res) => {
+// Function to update a product
+exports.updateProduct = async function(req, res) {
     const { name, type, price, quantity } = req.body;
     const productId = req.params.id;
     try {
+        // Your logic to update a product
         const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({ error: 'Product not found' });
@@ -76,6 +90,19 @@ exports.updateProduct = async (req, res) => {
         res.json({ message: 'Product updated successfully', product });
     } catch (error) {
         console.error('Error updating product:', error);
+        res.status(500).json({ error: 'Server Error' });
+    }
+};
+
+// Function to get product details by ID
+exports.getProductById = async function(req, res) {
+    try {
+        // Your logic to fetch product by ID
+        const productId = req.params.id;
+        // Your logic to fetch product by ID
+        res.send(`Product details for ID ${productId}`);
+    } catch (error) {
+        console.error('Error fetching product by ID:', error);
         res.status(500).json({ error: 'Server Error' });
     }
 };
