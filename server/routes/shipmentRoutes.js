@@ -8,4 +8,5 @@ const shipmentController = require('../controllers/shipmentController');
 router.post('/create', auth, shipmentController.createShipment);
 router.get('/user-shipments', auth, shipmentController.getUserShipments);
 router.get("/user-addresses", auth, shipmentController.getUserAddresses);
+router.put('/update', auth, shipmentController.updateShipment);
 module.exports = router;

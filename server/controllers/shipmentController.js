@@ -54,3 +54,25 @@ exports.getUserAddresses = async (req, res) => {
   }
 };
 
+exports.updateShipment = async (req, res) => {
+  const { orderId, shipmentMethod, address, status, tracking, _id } = req.body;
+  const { id } = req.params;
+  try {
+    const shipment = await Shipment.findById(_id);
+    if (!shipment) {
+      return res.status(404).json({ msg: "Shipment not found" });
+    }
+    console.log("runs");
+
+    // Update the shipment record
+    shipment.shipmentMethod = shipmentMethod;
+    shipment.address = address;
+    await shipment.save();
+
+    // Send response
+    res.json({ msg: "Shipment updated successfully" });
+  } catch (error) {
+    console.error("Error updating shipment:", error);
+    res.status(500).json({ msg: "Server Error" });
+  }
+};
