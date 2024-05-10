@@ -9,4 +9,5 @@ router.post('/create', auth, shipmentController.createShipment);
 router.get('/user-shipments', auth, shipmentController.getUserShipments);
 router.get("/user-addresses", auth, shipmentController.getUserAddresses);
 router.put('/update', auth, shipmentController.updateShipment);
+router.delete("/delete/:id", auth, shipmentController.deleteShipment);
 module.exports = router;

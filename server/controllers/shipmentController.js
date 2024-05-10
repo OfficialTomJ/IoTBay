@@ -76,3 +76,31 @@ exports.updateShipment = async (req, res) => {
     res.status(500).json({ msg: "Server Error" });
   }
 };
+
+exports.deleteShipment = async (req, res) => {
+  const { id } = req.params;
+  console.log("runs delete", id);
+  try {
+    // Find the shipment by ID
+    const shipment = await Shipment.findById(id);
+    if (!shipment) {
+      return res.status(404).json({ msg: "Shipment not found" });
+    }
+
+    // Delete the shipment record
+    await Shipment.findByIdAndDelete(id);
+
+    // Log the shipment deletion
+    await AccessLog.create({
+      eventType: "shipment_deleted",
+      userId: req.user.id,
+      shipmentId: id,
+    });
+
+    // Send success response
+    res.json({ msg: "Shipment deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting shipment:", error);
+    res.status(500).json({ msg: "Server Error" });
+  }
+};

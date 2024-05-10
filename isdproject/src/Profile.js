@@ -257,7 +257,6 @@ const Profile = () => {
     // Update shipment object with ISO date
     const updatedShipment = { ...shipment, date: isoDate };
 
-    console.log(updatedShipment);
     try {
       const token = Cookies.get("token");
       await axios.put(
@@ -307,11 +306,15 @@ const Profile = () => {
 
     try {
       const token = Cookies.get("token");
-      await axios.delete(`http://localhost:8080/api/shipment/${shipment.id}`, {
-        headers: {
-          Authorization: `${token}`,
-        },
-      });
+      await axios.delete(
+        `http://localhost:8080/api/shipment/delete/${shipment._id}`,
+        {
+          headers: {
+            Authorization: `${token}`,
+            _id: shipment._id,
+          },
+        }
+      );
        fetchUserShipments();
     } catch (error) {
       console.error("Error deleting shipment:", error);
