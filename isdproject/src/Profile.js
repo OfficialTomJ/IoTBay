@@ -76,7 +76,12 @@ const Profile = () => {
           Authorization: `${token}`
         }
       });
-      setShipments(response.data.shipments);
+      const formattedShipments = response.data.shipments.map((shipment) => ({
+        ...shipment,
+        date: formatDate(shipment.date),
+      }));
+      setShipments(formattedShipments);
+
     } catch (error) {
       console.error('Error fetching user shipments:', error);
     }
@@ -86,6 +91,22 @@ const Profile = () => {
     Cookies.remove('token');
     navigate('/logout');
   };
+
+  const formatDate = (isoDateString) => {
+    const date = new Date(isoDateString);
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: false,
+      timeZone: "UTC", // Adjust the time zone if needed
+    };
+    return date.toLocaleDateString("en-US", options);
+  };
+
 
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm('Are you sure you want to delete your account? This action cannot be undone.');
