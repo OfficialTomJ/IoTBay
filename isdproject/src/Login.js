@@ -9,6 +9,7 @@ const Login = () => {
     email: '',
     password: ''
   });
+  const [error, setError] = useState(false);  // Add new setting error status
   const [resetLink, setResetLink] = useState('');
 
   const { email, password } = formData;
@@ -26,6 +27,7 @@ const Login = () => {
       navigate('/profile');
     } catch (err) {
       console.error(err.response); // Handle error response
+      setError(true);  // Add new setting error status
     }
   };
 
@@ -65,7 +67,7 @@ const Login = () => {
         name="email"
         value={email}
         onChange={onChange}
-        className='inputBox'
+        className={error ? 'inputBox error' : 'inputBox'} // Conditional class name application
         required
       />
       <div style={{fontWeight: 'bold'}}> Password </div>
@@ -75,9 +77,10 @@ const Login = () => {
         name="password"
         value={password}
         onChange={onChange}
-        className='inputBox'
+        className={error ? 'inputBox error' : 'inputBox'} // Conditional class name application
         required
       />
+      {error && <div className='errorText'>The account or password is wrong, please try again.</div>} 
       <div><input type="checkbox"/> <div className='inline'> Remember me</div> 
       
       <button onClick={handleForgotPassword} className='forgotPw' >Forgot Password</button>

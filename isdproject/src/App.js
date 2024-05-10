@@ -12,6 +12,7 @@ import LogoutPage from './Logout';
 import ProductPage from './ProductPage';
 import ShoppingCart from './ShoppingCart';
 import Checkout from './Checkout';
+import UserAuthentication from './UserAuthentication';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path="/product" element={<ProductPage/>} />
         <Route path="/ShoppingCart" element={<ShoppingCart/>} />
         <Route path="/checkout" element={<Checkout/>} />
+        <Route path="/UserAuthentication" element={<UserAuthentication/>} />
         <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </Router>
