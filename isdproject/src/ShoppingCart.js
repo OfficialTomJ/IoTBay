@@ -11,15 +11,20 @@ const ShoppingCartPage = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const cart = Cookies.get('cart') ? JSON.parse(Cookies.get('cart')) : {};
+        const cart = Cookies.getJSON('cart') || {};
         const productIds = Object.keys(cart);
+        const cartItems = [];
 
-        const items = [];
         for (const productId of productIds) {
-          const product = await fetchProductById(productId);
-          items.push({ ...product, quantity: cart[productId] });
+          const response = await fetch(`/api/product/${productId}`);
+          if (!response.ok) {
+            throw new Error('Failed to fetch product');
+          }
+          const product = await response.json();
+          cartItems.push({ ...product, quantity: cart[productId] });
         }
-        setCartItems(items);
+
+        setCartItems(cartItems);
       } catch (error) {
         console.error('Error fetching cart items:', error);
       }
@@ -70,6 +75,21 @@ const ShoppingCartPage = () => {
   const removeItem = (id) => {
     const updatedCartItems = cartItems.filter(item => item.id !== id);
     setCartItems(updatedCartItems);
+  };
+  const addToCart = (productId, quantity) => {
+    const cart = Cookies.getJSON('cart') || {};
+    cart[productId] = (cart[productId] || 0) + quantity;
+    Cookies.set('cart', cart, { expires: 7 }); // Cookie expires in 7 days
+  };
+  const updateCart = (productId, quantity) => {
+    const cart = Cookies.getJSON('cart') || {};
+    cart[productId] = quantity;
+    Cookies.set('cart', cart, { expires: 7 }); // Cookie expires in 7 days
+  };
+  const removeFromCart = (productId) => {
+    const cart = Cookies.getJSON('cart') || {};
+    delete cart[productId];
+    Cookies.set('cart', cart, { expires: 7 }); // Cookie expires in 7 days
   };
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);

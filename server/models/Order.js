@@ -29,7 +29,15 @@ const orderSchema = new mongoose.Schema({
     confirmed: {
         type: Boolean,
         default: false
-    }
+    },
+    productId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        },
+        quantity: {
+            type: Number,
+            default: 1
+        }
 });
 
 const Order = mongoose.model('Order', orderSchema);
