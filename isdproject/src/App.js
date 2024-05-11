@@ -22,7 +22,7 @@ function App() {
         <Route path="/reset-password/:token" element={<ResetPassword/>} />
         {/* Provide a 404 error page for all undefined routes */}
         <Route path="/logout" element={<LogoutPage/>} />
-        <Route path="/Admin" element={<Admin/>} />
+        <Route path="/admin" element={<Admin/>} />
         <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </Router>

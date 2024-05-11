@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const adminRoutes = require('./routes/adminRoutes'); // Adjust the path as necessary
 require("dotenv").config();
-
 // app
 const app = express();
 
@@ -28,6 +28,7 @@ app.use(cors({ origin : true, credentials : true }));
 app.use('/api/user', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/shipment', require('./routes/shipmentRoutes'));
+app.use('/api/admin', adminRoutes);
 
 // port
 const port = process.env.PORT || 8080;
