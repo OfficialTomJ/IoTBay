@@ -1,11 +1,12 @@
+import './tailwind.css';
 import React, { useState } from 'react';
 import NavigationBar from './components/NavigationBar';
 import PaginationLogic from './components/PaginationLogic';
 
 function ProductPage() {
-  const [products, setProducts] = useState(Array.from({ length: 300 }, (_, index) => index + 1));
+  const products = Array.from({ length: 300 }, (_, index) => index + 1); //Set up virtual goods
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 30;
+  const productsPerPage = 30; //Set how many products are on a page
 
   const handleClick = (number) => {
     if (number === "...") {
@@ -22,10 +23,10 @@ function ProductPage() {
   const { startPage, endPage } = PaginationLogic({ totalPages, currentPage });
 
   return (
-    <div className="bg-gray-50">
+    <div>
       <NavigationBar />
-      <div className="flex flex-col justify-center items-center py-4">
-        <div className="flex flex-wrap justify-center items-start">
+      <div className="flex flex-col justify-center items-center bg-gray-50">
+        <div className="flex flex-wrap justify-center items-start py-4">
           {currentProducts.map((product, index) => (
             <div key={index} className="w-1/6 p-2">
               <div className="bg-white p-4 rounded-lg shadow-md">
@@ -35,7 +36,7 @@ function ProductPage() {
                   className="w-full h-auto rounded"
                 />
                 <p className="mt-2 text-gray-600 text-center">Product {product}</p>
-                <p className="mt-1 text-gray-700 text-center">Price: $XX.XX</p>
+                <p className="mt-1 text-gray-700 text-center">Price: $10.00</p>
                 <button 
                   className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
