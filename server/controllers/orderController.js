@@ -4,32 +4,26 @@ const Shipment = require('../models/Shipment');
 const Payment = require('../models/Payment');
 
 exports.createOrder = async (req, res) => {
-  try {
-    const { products, quantities, shipmentId, paymentId } = req.body;
+    try {
+        // Extract order data from request body
+        const { userId, products } = req.body;
 
-    // Create a new order object
-    const newOrder = new Order({
-      products,
-      quantities,
-      shipmentId,
-      paymentId,
-      userId: req.user.id, // Assuming userId is available in the request
-    });
+        // Create new order instance
+        const newOrder = new Order({
+            userId,
+            products
+        });
 
     // Save the order to the database
     await newOrder.save();
 
-    // Log the event in the access log
-    await AccessLog.create({
-      eventType: 'order_created',
-      userId: req.user.id,
-    });
-
-    res.status(201).json(newOrder); // Respond with the newly created order
-  } catch (error) {
-    console.error('Error creating order:', error);
-    res.status(500).json({ error: 'Failed to create order' });
-  }
+        // Return success response
+        res.status(201).json({ message: 'Order created successfully' });
+    } catch (error) {
+        // Handle error
+        console.error('Error creating order:', error);
+        res.status(500).json({ error: 'Server error' });
+    }
 };
 
 // Controller function to get order details by order ID

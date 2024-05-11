@@ -32,5 +32,8 @@ router.put('/update-order/:id', auth, orderController.updateOrder);
 // Route to delete an existing order
 router.delete('/delete-order/:id', auth, orderController.deleteOrder);
 
+// Route to handle checkout process
+router.post('/checkout', auth, orderController.checkout);
+
 module.exports = router;
 
