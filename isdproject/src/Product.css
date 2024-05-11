@@ -1,75 +1,58 @@
-.container {
-    background-color: #ffffff;
-    min-height: 100vh;
-    padding: 20px;
-  }
-  
-  .logout-button {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-  }
-  
-  .logout-button button {
-    background-color: #ffffff;
-    color: #000000;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-  }
-  
-  .product-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .product-card {
-    width: 80%;
-    max-width: 800px;
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 40px;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
-  }
-  
-  .product-title {
-    font-size: 32px;
-    font-weight: bold;
-    margin-bottom: 20px;
-  }
-  
-  .error-message {
-    color: red;
-    margin-bottom: 10px;
-  }
-  
-  .add-product-form {
-    margin-top: 20px;
-  }
-  
-  .add-product-button {
-    background-color: #28a745;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-  }
-  
-  .product-list {
-    margin-top: 20px;
-  }
-  
-  .product-item {
-    margin-bottom: 20px;
-  }
-  
-  .delete-product-button {
-    background-color: #dc3545;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    margin-top: 10px;
-  }
-  
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  display: inline;
+  margin-right: 10px;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.products {
+  display: flex; /* Display products horizontally */
+  flex-wrap: wrap; /* Allow products to wrap to the next row */
+  gap: 20px;
+  padding: 20px;
+}
+
+.product {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
+  width: calc(33.33% - 20px); /* Adjust width to fit three products per row */
+  box-sizing: border-box;
+}
+
+.product h2 {
+  margin-top: 0;
+}
+
+.product button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.product button:hover {
+  background-color: #45a049;
+}
