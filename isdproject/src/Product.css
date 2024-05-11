@@ -1,5 +1,5 @@
 .container {
-    background-color: #0296ff;
+    background-color: #ffffff;
     min-height: 100vh;
     padding: 20px;
   }
@@ -11,7 +11,7 @@
   }
   
   .logout-button button {
-    background-color: #007bff;
+    background-color: #ffffff;
     color: #000000;
     border: none;
     padding: 8px 16px;
