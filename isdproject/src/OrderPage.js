@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { createOrder, cancelOrder, getAllOrders, deleteOrder } from './orderService'; // Import getAllOrders function
-import './OrderPage.css'; // Import CSS for styling
+import './OrderPage.css';
+import { addToCart, getAllOrders, cancelOrder, searchOrderByNumber, searchOrderByDate } from './orderService';
 
 const OrderPage = () => {
   const [newOrderData, setNewOrderData] = useState({
-    orderId: '', // Changed 'userId' to 'orderId'
+    orderId: '',
     items: [],
   });
   const [orderHistory, setOrderHistory] = useState([]);
@@ -12,7 +12,7 @@ const OrderPage = () => {
     orderNumber: '',
     date: '',
   });
-  const [filteredOrders, setFilteredOrders] = useState([]);
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     fetchOrders();
@@ -27,45 +27,25 @@ const OrderPage = () => {
     }
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (orderId) => {
     try {
-      await createOrder(newOrderData); // Send new order data to the server
-      setNewOrderData({ userId: '', products: [], totalCost: 0 }); // Clear input fields after creating order
-      fetchOrders(); // Refresh order list after creating new order
+      await addToCart(newOrderData.orderId); // Changed 'userId' to 'orderId'
+      console.log('Item added to cart:', newOrderData.orderId); // Changed 'userId' to 'orderId'
+      setNewOrderData({ ...newOrderData, items: [...newOrderData.items, newOrderData.orderId] }); // Changed 'userId' to 'orderId'
     } catch (error) {
       console.error('Error adding item to cart:', error);
     }
   };
 
-  const handleSubmitOrder = () => {
-    setOrderHistory([...orderHistory, newOrderData]);
-    setNewOrderData({ orderId: '', items: [] }); // Changed 'userId' to 'orderId'
-  };
-
-  const handleCancelOrder = async (orderId) => {
-    try {
-      await cancelOrder(orderId);
-      const updatedOrders = orderHistory.filter(order => order.id !== orderId);
-      setOrderHistory(updatedOrders);
-    } catch (error) {
-      console.error('Error canceling order:', error);
-    }
-  };
-  
-  const handleUpdateOrder = (orderId) => {
-    // You need to implement the update logic here
-    console.log('Updating order:', orderId);
-  };
-
   const handleSearch = async () => {
     try {
+      let searchedOrders;
       if (searchCriteria.orderNumber) {
-        const searchedOrders = await searchOrderByNumber(searchCriteria.orderNumber);
-        setFilteredOrders(searchedOrders);
+        searchedOrders = await searchOrderByNumber(searchCriteria.orderNumber);
       } else if (searchCriteria.date) {
-        const searchedOrders = await searchOrderByDate(searchCriteria.date);
-        setFilteredOrders(searchedOrders);
+        searchedOrders = await searchOrderByDate(searchCriteria.date);
       }
+      setOrderHistory(searchedOrders);
     } catch (error) {
       console.error('Error deleting order:', error);
     }
@@ -84,6 +64,16 @@ const OrderPage = () => {
     window.location.href = '/login';
   };
 
+  const handleCreateOrder = async () => {
+    try {
+      const newOrder = await createOrder(cart);
+      setCart([]);
+      setOrderHistory((prevOrderHistory) => [...prevOrderHistory, newOrder]);
+    } catch (error) {
+      console.error('Error creating order:', error);
+    }
+  };
+
   return (
     <div className="order-management-container">
       <h1 className="page-title">Order Management</h1>
@@ -98,35 +88,74 @@ const OrderPage = () => {
             value={newOrderData.orderId}
             onChange={(e) => setNewOrderData({ ...newOrderData, orderId: e.target.value })}
           />
-          <button className="create-order-button" onClick={handleCreateOrder}>Create Order</button>
+          <button className="blue-button" onClick={handleAddToCart}>Submit</button>
         </div>
-        <div className="order-history">
-          <h2 className="order-history-title">Order History</h2>
-          <table className="order-table">
-            <thead>
-              <tr>
-                <th>Order ID</th>
-                <th>Order Date</th>
-                <th>Total Cost</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map(order => (
-                <tr key={order._id}>
-                  <td>{order._id}</td>
-                  <td>{order.orderDate}</td>
-                  <td>{order.totalCost}</td>
-                  <td>
-                    <button className="edit-order-button" onClick={() => handleEditOrder(order._id)}>Edit</button>
-                    <button className="delete-order-button" onClick={() => handleDeleteOrder(order._id)}>Delete</button>
-                    <button className="cancel-order-button" onClick={() => handleCancelOrder(order._id)}>Cancel</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      </div>
+
+      {/* Cart Section */}
+      <div className="section">
+        <h2 className="sub-heading">Cart</h2>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Order ID</th>
+              <th>Name</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Display items in cart */}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Order History Section */}
+      <div className="section">
+        <h2 className="sub-heading">Order History</h2>
+        <div className="search-section">
+          <h3>Search Orders</h3>
+          <div className="form-row">
+            <label>Order Number:</label>
+            <input
+              className="input-field"
+              type="text"
+              placeholder="Enter Order Number"
+              value={searchCriteria.orderNumber}
+              onChange={(e) => setSearchCriteria({ ...searchCriteria, orderNumber: e.target.value })}
+            />
+          </div>
+          <div className="form-row">
+            <label>Date:</label>
+            <input
+              className="input-field"
+              type="text"
+              placeholder="Enter Date"
+              value={searchCriteria.date}
+              onChange={(e) => setSearchCriteria({ ...searchCriteria, date: e.target.value })}
+            />
+          </div>
+          <button className="search-button" onClick={handleSearch}>Search</button>
         </div>
+        <table className="table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Order ID</th>
+              <th>User ID</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {/* Display order history or filtered orders */}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Go to Shipment Button */}
+      <div className="go-to-shipment-button">
+        <button className="blue-button" onClick={() => window.location.href = '/shipment'}>Go to Shipment</button>
       </div>
     </div>
   );

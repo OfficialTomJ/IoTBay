@@ -1,13 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { fetchProductById } from './api';
+import { addToCart, removeFromCart } from './cartService';
 import { Link } from 'react-router-dom';
 import './ShoppingCartPage.css';
 
 const ShoppingCartPage = () => {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Product 1', price: 10, quantity: 1 },
-    { id: 2, name: 'Product 2', price: 15, quantity: 2 },
-    { id: 3, name: 'Product 3', price: 20, quantity: 1 },
-  ]);
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const cart = Cookies.get('cart') ? JSON.parse(Cookies.get('cart')) : {};
+        const productIds = Object.keys(cart);
+
+        const items = [];
+        for (const productId of productIds) {
+          const product = await fetchProductById(productId);
+          items.push({ ...product, quantity: cart[productId] });
+        }
+        setCartItems(items);
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
+
+  const handleAddToCart = (productId, quantity) => {
+    addToCart(productId, quantity);
+    setCartItems((prevCartItems) => {
+      const existingItemIndex = prevCartItems.findIndex((item) => item.id === productId);
+      if (existingItemIndex !== -1) {
+        const updatedCartItems = [...prevCartItems];
+        updatedCartItems[existingItemIndex].quantity = quantity;
+        return updatedCartItems;
+      } else {
+        const newCartItem = fetchProductById(productId).then((product) => ({
+          ...product,
+          quantity,
+        }));
+        return [...prevCartItems, newCartItem];
+      }
+    });
+  };
+
+  const handleRemoveFromCart = (productId) => {
+    removeFromCart(productId);
+    setCartItems((prevCartItems) =>
+      prevCartItems.filter((item) => item.id !== productId)
+    );
+  };
 
   const decreaseQuantity = (id) => {
     const updatedCartItems = cartItems.map(item =>
@@ -65,4 +109,3 @@ const ShoppingCartPage = () => {
 };
 
 export default ShoppingCartPage;
-
