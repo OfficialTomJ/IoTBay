@@ -1,12 +1,11 @@
-import './tailwind.css';
 import React, { useState } from 'react';
 import NavigationBar from './components/NavigationBar';
 import PaginationLogic from './components/PaginationLogic';
 
 function ProductPage() {
-  const products = Array.from({ length: 300 }, (_, index) => index + 1); //Set up virtual goods
+  const [products, setProducts] = useState(Array.from({ length: 300 }, (_, index) => index + 1));
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 30; //Set how many products are on a page
+  const productsPerPage = 30;
 
   const handleClick = (number) => {
     if (number === "...") {
@@ -23,10 +22,10 @@ function ProductPage() {
   const { startPage, endPage } = PaginationLogic({ totalPages, currentPage });
 
   return (
-    <div>
+    <div className="bg-gray-50">
       <NavigationBar />
-      <div className="flex flex-col justify-center items-center bg-gray-50">
-        <div className="flex flex-wrap justify-center items-start py-4">
+      <div className="flex flex-col justify-center items-center py-4">
+        <div className="flex flex-wrap justify-center items-start">
           {currentProducts.map((product, index) => (
             <div key={index} className="w-1/6 p-2">
               <div className="bg-white p-4 rounded-lg shadow-md">
