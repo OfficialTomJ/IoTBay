@@ -51,3 +51,13 @@ exports.deleteOrder = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete order' });
   }
 };
+
+exports.checkout = async (req, res) => {
+  try {
+    // Your logic for handling the checkout process
+    res.status(200).json({ message: 'Checkout process handled successfully' });
+  } catch (error) {
+    console.error('Error handling checkout:', error);
+    res.status(500).json({ error: 'Failed to handle checkout process' });
+  }
+};

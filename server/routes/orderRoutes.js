@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const orderController = require('../controllers/orderController');
 const auth = require('../middleware/auth');
+const orderController = require('../controllers/orderController');
 
 // Route to create a new order
 router.post('/create-order', auth, orderController.createOrder);
@@ -16,4 +16,3 @@ router.delete('/delete-order/:id', auth, orderController.deleteOrder);
 router.post('/checkout', auth, orderController.checkout);
 
 module.exports = router;
-
