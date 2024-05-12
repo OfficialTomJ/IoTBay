@@ -17,5 +17,9 @@ router.delete('/cart/remove/:productId', orderController.removeFromCart);
 // Route to fetch product details by ID
 router.get('/product/:id', orderController.getProductById);
 
+router.get('/orders', auth, orderController.getOrdersForUser);
+router.get('/orders/:id', auth, orderController.getOrderById);
+// In your routes file
+router.delete('/orders/:id', auth, orderController.cancelOrder);
 
 module.exports = router;

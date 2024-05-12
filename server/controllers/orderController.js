@@ -140,3 +140,69 @@ exports.getProductById = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch product' });
   }
 };
+
+// In your orderController.js file
+exports.getOrdersForUser = async (req, res) => {
+  try {
+    const orders = await Order.find({ userId: req.user.id });
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders for user:', error);
+    res.status(500).json({ error: 'Failed to fetch orders for user' });
+  }
+};
+
+exports.getOrderById = async (req, res) => {
+  try {
+    const order = await Order.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.json(order);
+  } catch (error) {
+    console.error('Error fetching order by ID:', error);
+    res.status(500).json({ error: 'Failed to fetch order by ID' });
+  }
+};
+
+exports.cancelOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedOrder = await Order.findOneAndDelete({ _id: id, userId: req.user.id });
+    if (!deletedOrder) {
+      return res.status(404).json({ error: 'Order not found or unauthorized' });
+    }
+    res.status(204).send(); // No content response
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ error: 'Failed to delete order' });
+  }
+};
+
+exports.updateOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedOrder = await Order.findOneAndUpdate({ _id: id, userId: req.user.id }, req.body, { new: true });
+    if (!updatedOrder) {
+      return res.status(404).json({ error: 'Order not found or unauthorized' });
+    }
+    res.json(updatedOrder);
+  } catch (error) {
+    console.error('Error updating order:', error);
+    res.status(500).json({ error: 'Failed to update order' });
+  }
+};
+
+exports.getOrdersForUser = async (req, res) => {
+  try {
+    const { orderNumber, date } = req.query;
+    const query = { userId: req.user.id };
+    if (orderNumber) query.orderNumber = orderNumber;
+    if (date) query.date = date;
+    const orders = await Order.find(query);
+    res.json(orders);
+  } catch (error) {
+    console.error('Error fetching orders for user:', error);
+    res.status(500).json({ error: 'Failed to fetch orders for user' });
+  }
+};

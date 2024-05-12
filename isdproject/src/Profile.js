@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [fullName, setFullName] = useState('');
@@ -22,6 +21,8 @@ const Profile = () => {
     tracking: '',
     date: ''
   });
+  const [orderHistory, setOrderHistory] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,6 +53,7 @@ const Profile = () => {
   useEffect(() => {
     fetchUserLogs();
     fetchUserShipments();
+    generateSampleOrderHistory(); // Fetch sample order history data
   }, []);
 
   const fetchUserLogs = async () => {
@@ -170,6 +172,38 @@ const Profile = () => {
     }
   };
 
+  const [orderIdSearch, setOrderIdSearch] = useState('');
+const [dateSearch, setDateSearch] = useState('');
+
+const handleSearchOrderHistory = () => {
+  const filteredOrders = orderHistory.filter(order => {
+    const orderIdMatch = order.orderId.toLowerCase().includes(orderIdSearch.toLowerCase());
+    const dateMatch = order.date.toLowerCase().includes(dateSearch.toLowerCase());
+    return orderIdMatch && dateMatch;
+  });
+  setOrderHistory(filteredOrders);
+};
+
+const handleResetOrderHistorySearch = () => {
+  setOrderIdSearch('');
+  setDateSearch('');
+  generateSampleOrderHistory(); // Reset order history to initial state
+};
+
+
+  // Function to generate sample order history data
+  const generateSampleOrderHistory = () => {
+    const sampleData = [];
+    for (let i = 1; i <= 20; i++) {
+      sampleData.push({
+        orderId: `Order ${i}`,
+        date: new Date().toISOString(),
+        description: `Description for Order ${i}`
+      });
+    }
+    setOrderHistory(sampleData);
+  };
+
   return (
     <div style={{ backgroundColor: '#e3f2fd', minHeight: '100vh', padding: 20 }}>
       <div style={{ position: 'absolute', top: 20, right: 20 }}>
@@ -186,7 +220,7 @@ const Profile = () => {
           Log Out
         </button>
       </div>
-
+  
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <div style={{ width: '80%', maxWidth: 800, backgroundColor: '#fff', borderRadius: 8, padding: 40, boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.1)' }}>
           <div style={{ textAlign: 'center', marginBottom: 20 }}>
@@ -346,9 +380,48 @@ const Profile = () => {
               ))}
             </ul>
           </div>
+          <div style={{ marginTop: 20 }}>
+            <h2 style={{ fontSize: 24, marginBottom: 10 }}>Order History</h2>
+            <input
+              type="text"
+              placeholder="Search by Order ID..."
+              value={orderIdSearch}
+              onChange={(e) => setOrderIdSearch(e.target.value)}
+              style={{ marginBottom: 10, padding: '8px 12px', fontSize: 16, borderRadius: 4, border: '1px solid #ccc' }}
+            />
+            <input
+              type="text"
+              placeholder="Search by Date..."
+              value={dateSearch}
+              onChange={(e) => setDateSearch(e.target.value)}
+              style={{ marginBottom: 10, padding: '8px 12px', fontSize: 16, borderRadius: 4, border: '1px solid #ccc' }}
+            />
+            <button style={{ marginRight: 10, backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 4 }} onClick={handleSearchOrderHistory}>Search</button>
+            {(orderIdSearch !== '' || dateSearch !== '') && (
+              <button style={{ marginRight: 10, backgroundColor: '#007bff', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: 4 }} onClick={handleResetOrderHistorySearch}>Reset</button>
+            )}
+            <table style={{ width: '100%', borderCollapse: 'collapse', border: '1px solid #ccc' }}>
+              <thead>
+                <tr>
+                  <th style={{ border: '1px solid #ccc', padding: 8 }}>Order ID</th>
+                  <th style={{ border: '1px solid #ccc', padding: 8 }}>Date</th>
+                  <th style={{ border: '1px solid #ccc', padding: 8 }}>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orderHistory.map((order, index) => (
+                  <tr key={index}>
+                    <td style={{ border: '1px solid #ccc', padding: 8 }}>{order.orderId}</td>
+                    <td style={{ border: '1px solid #ccc', padding: 8 }}>{new Date(order.date).toLocaleDateString()}</td>
+                    <td style={{ border: '1px solid #ccc', padding: 8 }}>{order.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-
+  
       {/* Button to go to Products page */}
       <div style={{ marginTop: '20px', textAlign: 'center' }}>
         <Link to="/product">
@@ -359,6 +432,6 @@ const Profile = () => {
       </div>
     </div>
   );
-};
+}  
 
 export default Profile;

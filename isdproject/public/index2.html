@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IoT Device Ordering System</title>
+  <style>
+     body {
+      background-color: black;
+      color: white;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+
+  </style>
+</head>
+<body,bg color="black", foregroundcolor="white">
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <script>
+    // Models
+    const orderModel = {
+      orders: [],
+      createOrder: (order) => {
+        orderModel.orders.push(order);
+      },
+      updateOrder: (orderId, updatedOrder) => {
+        const index = orderModel.orders.findIndex((order) => order.id === orderId);
+        if (index !== -1) {
+          orderModel.orders[index] = { ...updatedOrder, id: orderId };
+        }
+      },
+      cancelOrder: (orderId) => {
+        orderModel.orders = orderModel.orders.filter((order) => order.id !== orderId);
+      },
+      getOrder: (orderId) => {
+        return orderModel.orders.find((order) => order.id === orderId);
+      },
+      getOrders: (userId) => {
+        return orderModel.orders.filter((order) => order.userId === userId);
+      },
+    };
+
+    // Views
+    function ProductList() {
+      const [products, setProducts] = React.useState([
+        { id: 1, name: 'IoT Device 1', price: 99.99 },
+        { id: 2, name: 'IoT Device 2', price: 129.99 },
+        { id: 3, name: 'IoT Device 3', price: 149.99 },
+      ]);
+
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('h2', null, 'Product List'),
+        React.createElement(
+          'ul',
+          null,
+          products.map((product) =>
+            React.createElement(
+              'li',
+              { key: product.id },
+              `${product.name} - $${product.price}`
+            )
+          )
+        )
+      );
+    }
+
+    function OrderForm({ order, onSubmit, onUpdate, onCancel }) {
+      const [products, setProducts] = React.useState(order?.products || []);
+
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        if (order) {
+          onUpdate({ ...order, products });
+        } else {
+          const userId = loggedInUser ? loggedInUser.id : null;
+          onSubmit({ id: Date.now(), products, userId });
+        }
+      };
+
+      const handleCancel = () => {
+        onCancel(order.id);
+      };
+
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('h2', null, order ? 'Update Order' : 'Create Order'),
+        React.createElement(
+          'form',
+          { onSubmit: handleSubmit },
+          React.createElement('button', { type: 'submit' }, order ? 'Update' : 'Submit'),
+          order && React.createElement('button', { type: 'button', onClick: handleCancel }, 'Cancel')
+        )
+      );
+    }
+
+    function OrderDetails({ order }) {
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('h2', null, 'Order Details'),
+        React.createElement('p', null, `Order ID: ${order.id}`)
+      );
+    }
+
+    function OrderHistory({ orders }) {
+      return React.createElement(
+        'div',
+        null,
+        React.createElement('h2', null, 'Order History'),
+        React.createElement(
+          'ul',
+          null,
+          orders.map((order) =>
+            React.createElement('li', { key: order.id }, `Order ID: ${order.id}`)
+          )
+        )
+      );
+    }
+
+    // Controller
+    function OrderController() {
+      const [currentOrder, setCurrentOrder] = React.useState(null);
+      const [orders, setOrders] = React.useState([]);
+
+      React.useEffect(() => {
+        const userOrders = orderModel.getOrders(loggedInUser.id);
+        setOrders(userOrders);
+      }, [loggedInUser]);
+
+      const handleCreateOrder = (order) => {
+        orderModel.createOrder(order);
+        setOrders(orderModel.getOrders(loggedInUser.id));
+        setCurrentOrder(null);
+      };
+
+      const handleUpdateOrder = (updatedOrder) => {
+        orderModel.updateOrder(updatedOrder.id, updatedOrder);
+        setOrders(orderModel.getOrders(loggedInUser.id));
+        setCurrentOrder(null);
+      };
+
+      const handleCancelOrder = (orderId) => {
+        orderModel.cancelOrder(orderId);
+        setOrders(orderModel.getOrders(loggedInUser.id));
+        setCurrentOrder(null);
+      };
+
+      const handleViewOrder = (orderId) => {
+        setCurrentOrder(orderModel.getOrder(orderId));
+      };
+
+      return React.createElement(
+        'div',
+        { className: 'container' },
+        React.createElement(OrderForm, {
+          order: currentOrder,
+          onSubmit: handleCreateOrder,
+          onUpdate: handleUpdateOrder,
+          onCancel: handleCancelOrder,
+        }),
+        currentOrder && React.createElement(OrderDetails, { order: currentOrder }),
+        React.createElement(OrderHistory, { orders })
+      );
+    }
+
+    function ProfilePage() {
+      const [loggedInUser, setLoggedInUser] = React.useState(null);
+
+      React.useEffect(() => {
+        const fetchLoggedInUser = async () => {
+          const user = { id: 1 }; // Assuming a logged-in user with ID 1
+          setLoggedInUser(user);
+        };
+
+        fetchLoggedInUser();
+      }, []);
+
+      return React.createElement(
+        'div',
+        { className: 'container' },
+        React.createElement('h1', null, 'Profile Page'),
+        loggedInUser
+          ? React.createElement(OrderController, null)
+          : React.createElement('p', null, 'Loading...')
+      );
+    }
+
+    function MainPage() {
+  return React.createElement(
+    'div',
+    { className: 'container' },
+    React.createElement('h1', null, 'IoT Device Ordering System'),
+    React.createElement(
+      'nav',
+      null,
+      React.createElement(
+        'ul',
+        null,
+        React.createElement('li', null, React.createElement('a', { href: '/' }, 'Home')),
+        React.createElement('li', null, React.createElement('a', { href: 'products' }, 'Products')),
+        React.createElement('li', null, React.createElement('a', { href: 'cart' }, 'Cart')),
+        React.createElement('li', null, React.createElement('a', { href: 'profile' }, 'Profile'))
+      )
+    ),
+    React.createElement(ProductList, null)
+  );
+}
+
+
+    ReactDOM.render(React.createElement(MainPage, null), document.getElementById('root'));
+  </script>
+  <!-- React and ReactDOM libraries -->
+  <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+ 
+
+</body>
+</html>
