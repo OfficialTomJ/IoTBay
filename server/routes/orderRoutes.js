@@ -28,4 +28,19 @@ router.delete('/cart/remove/:productId', orderController.removeFromCart);
 // Route to checkout and create an order
 router.post('/checkout', orderController.checkout);
 
+// Route to fetch product details by ID
+router.get('/product/:id', async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+    res.json(product);
+  } catch (error) {
+    console.error('Error fetching product:', error);
+    res.status(500).json({ error: 'Failed to fetch product' });
+  }
+});
+
+
 module.exports = router;

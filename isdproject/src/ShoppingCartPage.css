@@ -1,23 +1,19 @@
-body {
-  background-color: #cce6ff; /* Blue background for the whole page */
-  margin: 0; /* Remove default body margin */
-  padding: 20px; /* Add padding to space out the elements */
-}
-
 .shopping-cart-container {
-  text-align: center;
+  background-color: #cce6ff;
+  margin: 0;
+  padding: 20px;
 }
 
 .page-title {
   font-size: 36px;
   font-weight: bold;
-  margin-bottom: 20px; /* Space out the title from other elements */
+  margin-bottom: 20px;
 }
 
 .empty-cart-message {
   font-size: 18px;
   color: #888;
-  margin-bottom: 20px; /* Space out the empty cart message */
+  margin-bottom: 20px;
 }
 
 .cart-item {
@@ -25,10 +21,10 @@ body {
   justify-content: space-between;
   align-items: center;
   border: 1px solid #ccc;
-  border-radius: 10px; /* Rounded corners */
-  background-color: #fff; /* White background */
-  padding: 10px 20px; /* Add padding to space out the elements */
-  margin-bottom: 20px; /* Space out the cart items */
+  border-radius: 10px;
+  background-color: #fff;
+  padding: 10px 20px;
+  margin-bottom: 20px;
 }
 
 .item-details {
@@ -39,12 +35,12 @@ body {
 .item-name {
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 5px; /* Space out the item name */
+  margin-bottom: 5px;
 }
 
 .item-price {
   color: #888;
-  margin-bottom: 5px; /* Space out the item price */
+  margin-bottom: 5px;
 }
 
 .quantity-controls {
@@ -58,7 +54,7 @@ body {
   padding: 5px 10px;
   font-size: 16px;
   cursor: pointer;
-  margin: 0 5px; /* Space out the quantity buttons */
+  margin: 0 5px;
   border-radius: 5px;
 }
 
@@ -68,7 +64,7 @@ body {
 }
 
 .remove-button {
-  background-color: #fc0101; /* Blue button */
+  background-color: #ff0000;
   color: white;
   border: none;
   padding: 5px 10px;
@@ -87,7 +83,7 @@ body {
 
 .back-button,
 .checkout-button {
-  background-color: #2f0def; /* Blue button */
+  background-color: #4000ff;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -95,10 +91,10 @@ body {
   cursor: pointer;
   border-radius: 5px;
   text-decoration: none;
-  margin-right: 10px; /* Space out the action buttons */
+  margin-right: 10px;
 }
 
 .back-button:hover,
 .checkout-button:hover {
-  background-color: #986efa;
+  background-color: #690072;
 }

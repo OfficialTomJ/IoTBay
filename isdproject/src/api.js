@@ -32,10 +32,30 @@ export const createPayment = async () => {
 
 export const createOrder = async (orderData) => {
   try {
+    // Extract product details and quantity from orderData
+    const { products } = orderData;
+
+    // Add each product to the cart
+    for (const product of products) {
+      await addToCart(product.productId, product.quantity);
+    }
+
+    // Create the order
     const response = await axios.post('/api/orders', orderData);
     return response.data;
   } catch (error) {
     console.error('Error creating order:', error);
+    throw error;
+  }
+};
+
+export const addToCart = async (productId, quantity) => {
+  try {
+    // Make an API call to add the product to the cart
+    const response = await axios.post('/api/cart/add', { productId, quantity });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding product to cart:', error);
     throw error;
   }
 };
