@@ -131,8 +131,15 @@ exports.searchShipments = async (req, res) => {
     let query = { userID: new mongoose.Types.ObjectId(req.user.id) };
 
     if (shipmentId) {
-      query._id = new mongoose.Types.ObjectId(shipmentId);
+      if (mongoose.Types.ObjectId.isValid(shipmentId)) {
+        // If shipmentId is a valid ObjectId, directly filter by _id
+        query._id = new mongoose.Types.ObjectId(shipmentId);
+      } else {
+        // If shipmentId is not a valid ObjectId, return an empty array
+        return res.json({ shipments: [] });
+      }
     }
+
     if (date !== undefined && date !== null && date !== "") {
       // Convert the date to ISO format
       const isoDate = new Date(date).toISOString();
@@ -164,6 +171,7 @@ exports.searchShipments = async (req, res) => {
     res.status(500).json({ msg: "Server Error" });
   }
 };
+
 
 
 
