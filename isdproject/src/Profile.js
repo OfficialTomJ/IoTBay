@@ -351,6 +351,32 @@ const Profile = () => {
     }
   };
 
+  const [searchOrderId, setSearchOrderId] = useState("");
+  const [searchDate, setSearchDate] = useState("");
+
+  const handleSearchOrders = async () => {
+    try {
+    const token = Cookies.get("token");
+    const response = await axios.get("http://localhost:8080/api/shipment/search", {
+      headers: {
+        Authorization: `${token}`,
+      },
+      params: {
+        shipmentId: searchOrderId,
+        date: searchDate,
+      },
+    });
+    // Handle the response data, set state, or perform any other actions
+    const formattedShipments = response.data.shipments.map((shipment) => ({
+      ...shipment,
+      date: formatDate(shipment.date),
+    }));
+    setShipments(formattedShipments);
+  } catch (error) {
+    console.error("Error searching orders:", error);
+  }
+  };
+
   return (
     <div
       style={{ backgroundColor: "#e3f2fd", minHeight: "100vh", padding: 20 }}
@@ -693,6 +719,70 @@ const Profile = () => {
                 </button>
               </div>
             </div>
+            <div style={{ marginTop: 20 }}>
+              <h2 style={{ fontSize: 24, marginBottom: 10 }}>Search Orders</h2>
+              <div
+                style={{
+                  border: "1px solid #ccc",
+                  borderRadius: 8,
+                  padding: 20,
+                }}
+              >
+                <input
+                  type="text"
+                  placeholder="Order ID"
+                  value={searchOrderId}
+                  onChange={(e) => setSearchOrderId(e.target.value)}
+                  style={{
+                    marginBottom: 10,
+                    padding: "8px 12px",
+                    fontSize: 16,
+                    borderRadius: 4,
+                    border: "1px solid #ccc",
+                  }}
+                />
+                <input
+                  type="date"
+                  placeholder="Date"
+                  value={searchDate}
+                  onChange={(e) => setSearchDate(e.target.value)}
+                  style={{
+                    marginBottom: 10,
+                    padding: "8px 12px",
+                    fontSize: 16,
+                    borderRadius: 4,
+                    border: "1px solid #ccc",
+                  }}
+                />
+                <button
+                  style={{
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    border: "none",
+                    padding: "8px 16px",
+                    borderRadius: 4,
+                    marginLeft: 10,
+                  }}
+                  onClick={handleSearchOrders}
+                >
+                  Search
+                </button>
+                <button
+                  style={{
+                    backgroundColor: "#007bff",
+                    color: "#fff",
+                    border: "none",
+                    padding: "8px 16px",
+                    borderRadius: 4,
+                    marginLeft: 10,
+                  }}
+                  onClick={handleResetSearch}
+                >
+                  Reset
+                </button>
+              </div>
+            </div>
+
             {shipments.length === 0 && <p>No previous shipments available</p>}
             <ul style={{ listStyleType: "none", padding: 0 }}>
               {shipments.map((shipment, index) => (

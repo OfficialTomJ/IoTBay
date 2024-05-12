@@ -120,3 +120,52 @@ exports.deleteShipment = async (req, res) => {
     res.status(500).json({ msg: "Server Error" });
   }
 };
+
+exports.searchShipments = async (req, res) => {
+  const { shipmentId, date } = req.query;
+  const { id } = req.params;
+  console.log("Search query:", { shipmentId, date });
+
+  try {
+    console.log(req.user.id);
+    let query = { userID: new mongoose.Types.ObjectId(req.user.id) };
+
+    if (shipmentId) {
+      query._id = new mongoose.Types.ObjectId(shipmentId);
+    }
+    if (date !== undefined && date !== null && date !== "") {
+      // Convert the date to ISO format
+      const isoDate = new Date(date).toISOString();
+      // Extract only the date part (dd/mm/yy)
+      const datePart = isoDate.split("T")[0];
+      // Calculate the start and end of the day for the given date
+      const startOfDay = new Date(datePart);
+      const endOfDay = new Date(datePart);
+      endOfDay.setDate(endOfDay.getDate() + 1); // Next day
+      // Search for shipments within the date range
+      query.date = { $gte: startOfDay, $lt: endOfDay };
+    }
+
+    // Log the constructed query
+    console.log("Constructed query:", query);
+
+    // Find shipments matching the query
+    const shipments = await Shipment.find(query);
+
+    // If no filtering criteria were provided, return an empty array
+    if (!shipmentId && !date) {
+      return res.json({ shipments: [] });
+    }
+
+    // Send the search results
+    res.json({ shipments });
+  } catch (error) {
+    console.error("Error searching shipments:", error);
+    res.status(500).json({ msg: "Server Error" });
+  }
+};
+
+
+
+
+
