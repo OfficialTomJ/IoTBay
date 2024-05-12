@@ -376,6 +376,12 @@ const Profile = () => {
     console.error("Error searching orders:", error);
   }
   };
+ const handleResetSearchShipments = () => {
+   setSearchOrderId("");
+   setSearchDate("");
+   fetchUserShipments();
+ };
+
 
   return (
     <div
@@ -776,7 +782,7 @@ const Profile = () => {
                     borderRadius: 4,
                     marginLeft: 10,
                   }}
-                  onClick={handleResetSearch}
+                  onClick={handleResetSearchShipments}
                 >
                   Reset
                 </button>
