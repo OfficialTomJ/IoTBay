@@ -2,11 +2,12 @@ import './tailwind.css';
 import React, { useState } from 'react';
 import NavigationBar from './components/NavigationBar';
 import PaginationLogic from './components/PaginationLogic';
+import { Link } from 'react-router-dom'; // Import Link
 
 function ProductPage() {
-  const products = Array.from({ length: 300 }, (_, index) => index + 1); //Set up virtual goods
+  const products = Array.from({ length: 300 }, (_, index) => index + 1); // Set up virtual goods
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 30; //Set how many products are on a page
+  const productsPerPage = 30; // Set how many products are on a page
 
   const handleClick = (number) => {
     if (number === "...") {
@@ -21,6 +22,11 @@ function ProductPage() {
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(products.length / productsPerPage);
   const { startPage, endPage } = PaginationLogic({ totalPages, currentPage });
+
+  const addToCart = (productId) => {
+    // Simulate adding the product to the shopping cart
+    console.log('Product added to cart:', productId);
+  };
 
   return (
     <div>
@@ -37,11 +43,13 @@ function ProductPage() {
                 />
                 <p className="mt-2 text-gray-600 text-center">Product {product}</p>
                 <p className="mt-1 text-gray-700 text-center">Price: $XX.XX</p>
-                <button 
+                <Link
+                  to="/shoppingcart"
+                  onClick={() => addToCart(product)}
                   className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                   Buy Now
-                </button>
+                </Link>
               </div>
             </div>
           ))}
@@ -73,20 +81,3 @@ function ProductPage() {
 }
 
 export default ProductPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

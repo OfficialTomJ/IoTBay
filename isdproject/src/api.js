@@ -3,10 +3,10 @@ import axios from 'axios';
 export const fetchProductById = async (productId) => {
   try {
     const response = await axios.get(`/api/products/${productId}`);
-    return response.data;
+    return response.data; // Return product data
   } catch (error) {
     console.error('Error fetching product:', error);
-    throw error;
+    throw error; // Throw error for further handling
   }
 };
 
@@ -51,11 +51,11 @@ export const createOrder = async (orderData) => {
 
 export const addToCart = async (productId, quantity) => {
   try {
-    // Make an API call to add the product to the cart
+    // Make a POST request to add the product to the cart
     const response = await axios.post('/api/cart/add', { productId, quantity });
-    return response.data;
+    return response.data; // Return response data
   } catch (error) {
     console.error('Error adding product to cart:', error);
-    throw error;
+    throw error; // Throw error for further handling
   }
 };

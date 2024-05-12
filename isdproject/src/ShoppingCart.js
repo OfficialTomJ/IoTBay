@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import axios from 'axios'; // Import axios for API calls
+import { fetchProductById } from './api';
 import { Link } from 'react-router-dom';
 import './ShoppingCartPage.css';
 
 const ShoppingCartPage = () => {
   const [cartItems, setCartItems] = useState([]);
-
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const cart = Cookies.getJSON('cart') || {};
+        const cartString = Cookies.get('cart') || '{}';
+        const cart = JSON.parse(cartString);
         const productIds = Object.keys(cart);
         const itemsFromCart = [];
 
@@ -19,7 +20,7 @@ const ShoppingCartPage = () => {
           itemsFromCart.push({ ...product, quantity: cart[productId] });
         }
 
-        setCartItems(prevItems => [...prevItems, ...itemsFromCart]);
+        setCartItems(itemsFromCart);
       } catch (error) {
         console.error('Error fetching cart items:', error);
       }
@@ -32,9 +33,9 @@ const ShoppingCartPage = () => {
     const fetchSampleCartItems = () => {
       // Sample data for cart items
       const sampleCartItems = [
-        { id: 1, name: 'Sample Product 1', price: 10.99, quantity: 1 },
-        { id: 2, name: 'Sample Product 2', price: 19.99, quantity: 1 },
-        { id: 3, name: 'Sample Product 3', price: 7.99, quantity: 1 },
+        { id: 1, name: ' Product 1', price: 10, quantity: 1 },
+        { id: 2, name: ' Product 2', price: 15, quantity: 1 },
+        { id: 3, name: ' Product 3', price: 20, quantity: 1 },
         // Add more sample items as needed
       ];
 
@@ -87,7 +88,7 @@ const ShoppingCartPage = () => {
       item.id === id ? { ...item, quantity: item.quantity + 1 } : item
     );
     setCartItems(updatedCartItems);
-    updateCart(id, cartItems.find((item) => item.id === id).quantity + 1);
+    updateCart(id, cartItems.find((item) => item.id === id).quantity + 5);
   };
 
   const removeItem = (id) => {
@@ -97,15 +98,32 @@ const ShoppingCartPage = () => {
   };
 
   const updateCart = (productId, quantity) => {
-    const cart = Cookies.getJSON('cart') || {};
-    cart[productId] = quantity;
-    Cookies.set('cart', cart, { expires: 7 }); // Cookie expires in 7 days
+    // Get the raw cookie string
+    const cart = Cookies.get('cart') || '{}';
+    console.log('Cart from cookie:', cart); // Log the value of cart
+    
+    // Parse the JSON string to an object
+    let cartObject = {};
+    try {
+      cartObject = JSON.parse(cart);
+    } catch (error) {
+      console.error('Error parsing cart JSON:', error);
+    }
+    
+    // Update the cart object
+    cartObject[productId] = quantity;
+    
+    // Stringify the object before setting as cookie
+    Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
+  
 
   const removeFromCart = (productId) => {
-    const cart = Cookies.getJSON('cart') || {};
-    delete cart[productId];
-    Cookies.set('cart', cart, { expires: 7 }); // Cookie expires in 7 days
+    const cartString = Cookies.get('cart') || '{}'; // Get the raw cookie string
+let cart = JSON.parse(cartString); // Parse the JSON string to an object
+delete cart[productId];
+Cookies.set('cart', JSON.stringify(cart), { expires: 7 }); // Stringify the object before setting as cookie
+
   };
 
   const fetchProductById = async (productId) => {
@@ -170,6 +188,8 @@ const ShoppingCartPage = () => {
     }
   };
 
+
+  
   return (
     <div className="shopping-cart-container">
       <h1 className="page-title">Shopping Cart</h1>

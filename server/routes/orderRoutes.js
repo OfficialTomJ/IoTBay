@@ -3,44 +3,19 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const orderController = require('../controllers/orderController');
 
-// Route to create a new order
-router.post('/create-order', auth, orderController.createOrder);
+// Routes for managing orders
+router.post('/orders/create', auth, orderController.createOrder);
+router.put('/orders/update/:id', auth, orderController.updateOrder);
+router.delete('/orders/delete/:id', auth, orderController.deleteOrder);
+router.post('/orders/checkout', auth, orderController.checkout);
 
-// Route to update an existing order
-router.put('/update-order/:id', auth, orderController.updateOrder);
-
-// Route to delete an existing order
-router.delete('/delete-order/:id', auth, orderController.deleteOrder);
-
-// Route to handle checkout process
-router.post('/checkout', auth, orderController.checkout);
-
-
-// Route to add items to the cart
+// Routes for managing the shopping cart
 router.post('/cart/add', orderController.addToCart);
-
-// Route to update the cart
-router.put('/cart/update', orderController.updateCart);
-
-// Route to remove items from the cart
+router.put('/cart/update/:productId', orderController.updateCart);
 router.delete('/cart/remove/:productId', orderController.removeFromCart);
 
-// Route to checkout and create an order
-router.post('/checkout', orderController.checkout);
-
 // Route to fetch product details by ID
-router.get('/product/:id', async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.json(product);
-  } catch (error) {
-    console.error('Error fetching product:', error);
-    res.status(500).json({ error: 'Failed to fetch product' });
-  }
-});
+router.get('/product/:id', orderController.getProductById);
 
 
 module.exports = router;

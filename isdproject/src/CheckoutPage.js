@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import Cookies from 'js-cookie';
-import { fetchProductById, createShipment, createPayment, createOrder } from '../services/api';
+import { fetchProductById, createShipment, createPayment, createOrder } from './api';
 
 const CheckoutPage = () => {
   const [shippingAddress, setShippingAddress] = useState('');
@@ -11,15 +10,17 @@ const CheckoutPage = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const cart = Cookies.get('cart') ? JSON.parse(Cookies.get('cart')) : {};
+        const cartString = Cookies.get('cart') || '{}';
+        const cart = JSON.parse(cartString);
         const productIds = Object.keys(cart);
+        const itemsFromCart = [];
 
-        const items = [];
         for (const productId of productIds) {
           const product = await fetchProductById(productId);
-          items.push({ ...product, quantity: cart[productId] });
+          itemsFromCart.push({ ...product, quantity: cart[productId] });
         }
-        setCartItems(items);
+
+        setCartItems(itemsFromCart);
       } catch (error) {
         console.error('Error fetching cart items:', error);
       }
@@ -47,7 +48,7 @@ const CheckoutPage = () => {
 
       // Create order
       const orderResponse = await createOrder(orderData);
-      console.log('Order created:', order);
+      console.log('Order created:', orderResponse);
       
       // Clear cart cookie
       Cookies.remove('cart');
@@ -81,4 +82,3 @@ const CheckoutPage = () => {
 };
 
 export default CheckoutPage;
-

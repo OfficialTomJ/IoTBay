@@ -89,7 +89,8 @@ exports.addToCart = async (req, res) => {
 
 exports.updateCart = async (req, res) => {
   try {
-    const { productId, quantity } = req.body;
+    const { productId } = req.params;
+    const { quantity } = req.body;
 
     // Find the order in the cart by productId
     const order = await Order.findOne({ productId });
@@ -127,31 +128,15 @@ exports.removeFromCart = async (req, res) => {
   }
 };
 
-exports.checkout = async (req, res) => {
+exports.getProductById = async (req, res) => {
   try {
-    // Fetch the cart items from the database
-    const cartItems = await Order.find();
-
-    // Calculate the total price of the cart
-    let totalPrice = 0;
-    for (const item of cartItems) {
-      totalPrice += item.price * item.quantity;
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
     }
-
-    // Create an order document
-    const newOrder = new Order({
-      items: cartItems,
-      totalPrice,
-      // Add other order details as needed
-    });
-    await newOrder.save();
-
-    // Clear the cart (delete all items from the cart)
-    await Order.deleteMany();
-
-    res.status(200).json({ message: 'Checkout successful', order: newOrder });
+    res.json(product);
   } catch (error) {
-    console.error('Error checking out:', error);
-    res.status(500).json({ error: 'Failed to checkout' });
+    console.error('Error fetching product:', error);
+    res.status(500).json({ error: 'Failed to fetch product' });
   }
 };
