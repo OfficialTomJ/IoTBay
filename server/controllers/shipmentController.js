@@ -1,32 +1,48 @@
 const Shipment = require('../models/Shipment');
+const Order = require('../models/Order');
 const AccessLog = require('../models/AccessLog');
+const mongoose = require("mongoose");
 
 exports.createShipment = async (req, res) => {
   const { orderId, shipmentMethod, address, status, tracking } = req.body;
-  console.log(orderId);
   try {
+    // Convert orderId to ObjectId
+    const orderObjectId = new mongoose.Types.ObjectId(orderId);
+
+    // Check if there's a valid order ID in orders
+    const existingOrder = await Order.findOne({ _id: orderObjectId });
+    if (!existingOrder) {
+      return res.status(400).json({ msg: "Invalid order ID" });
+    }
+
     // Create a new shipment record
     const shipment = await Shipment.create({
-      orderId,
+      orderId, 
       shipmentMethod,
       address,
       status,
       tracking,
-      userID: req.user.id
+      userID: req.user.id,
     });
 
-     AccessLog.create({
-       eventType: 'shipment_created',
-       userId: req.user.id,
-     });
+    // Update the associated order's shipmentID
+    existingOrder.shipmentID = shipment._id;
+    await existingOrder.save();
+
+    // Log the shipment creation
+    AccessLog.create({
+      eventType: "shipment_created",
+      userId: req.user.id,
+    });
 
     // Send response
     res.status(201).json({ shipment });
   } catch (error) {
-    console.error('Error creating shipment:', error);
-    res.status(500).json({ msg: 'Server Error' });
+    console.error("Error creating shipment:", error);
+    res.status(500).json({ msg: "Server Error" });
   }
 };
+
 
 exports.getUserShipments = async (req, res) => {
   try {
