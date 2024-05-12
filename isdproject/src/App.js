@@ -13,6 +13,8 @@ import ProductPage from './ProductPage';
 import ShoppingCart from './ShoppingCart';
 import Checkout from './Checkout';
 import UserAuthentication from './UserAuthentication';
+import AdminLogin from './AdminLogin';
+import AdminPage from './AdminPage';
 
 function App() {
   return (
@@ -30,6 +32,8 @@ function App() {
         <Route path="/ShoppingCart" element={<ShoppingCart/>} />
         <Route path="/checkout" element={<Checkout/>} />
         <Route path="/UserAuthentication" element={<UserAuthentication/>} />
+        <Route path="/AdminLogin" element={<AdminLogin/>} />
+        <Route path="/AdminPage" element={<AdminPage/>} />
         <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </Router>
