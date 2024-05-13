@@ -24,7 +24,6 @@ const Login = () => {
       const res = await axios.post('http://localhost:8080/api/auth/login', formData);
 
       const { token } = res.data;
-      console.log(token);
       Cookies.set('token', token, { expires: 1 / 24 }); // Expires in 1 hour
         try {
           const res = await axios.get('http://localhost:8080/api/user/profile', {
@@ -32,10 +31,6 @@ const Login = () => {
               Authorization: `${token}`
             }
           });
-          console.log(res);
-          console.log(res.data.user.fullName);
-          console.log(res.data.user.email);
-          console.log(res.data.user.phone);
         } catch (error) {
           console.error('Error fetching user data:', error);
         }
