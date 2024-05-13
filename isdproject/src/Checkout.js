@@ -1,6 +1,6 @@
 import React from 'react';
 import PaymentComponent from './components/PaymentComponent';
-import ShippingComponent from './ShipmentComponent';
+import ShippingComponent from './components/ShipmentComponent';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import './CheckoutPage.css'; // Import the CSS file for styling
 
