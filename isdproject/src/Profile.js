@@ -14,8 +14,9 @@ const Profile = () => {
   const [isEditable, setIsEditable] = useState(false);
   const [userLogs, setUserLogs] = useState([]);
   const [searchTime, setSearchTime] = useState("");
-  const [shipments, setShipments] = useState([]);
+  const [shipments, setShipments] = useState([]); // State to store user's shipments
   const [newShipment, setNewShipment] = useState({
+    // State for a new shipment
     orderId: "",
     shipmentMethod: "",
     address: "",
@@ -23,6 +24,10 @@ const Profile = () => {
     tracking: "",
     date: "",
   });
+  const [editingShipments, setEditingShipments] = useState(
+    Array(shipments.length).fill(false)
+  ); // State to track editing status of shipments
+
   const navigate = useNavigate();
 
   const alert = useAlert();
@@ -182,6 +187,7 @@ const Profile = () => {
     fetchUserLogs();
   };
 
+  // Function to handle changes in the new shipment form
   const handleNewShipmentChange = (e) => {
     const { name, value } = e.target;
     setNewShipment((prevState) => ({
@@ -190,6 +196,7 @@ const Profile = () => {
     }));
   };
 
+  // Function to add a new shipment
   const handleAddShipment = async () => {
     try {
       const token = Cookies.get("token");
@@ -209,6 +216,7 @@ const Profile = () => {
     }
   };
 
+  // Functions to handle changes in shipment details
   const handleShipmentMethodChange = (e, index) => {
     const { value } = e.target;
     setShipments((prevShipments) => {
@@ -221,6 +229,7 @@ const Profile = () => {
     });
   };
 
+  // Functions to handle changes in shipment details
   const handleAddressChange = (e, index) => {
     const { value } = e.target;
     setShipments((prevShipments) => {
@@ -233,6 +242,7 @@ const Profile = () => {
     });
   };
 
+  // Function to update shipment details
   const handleUpdateShipment = async (shipment) => {
     // Split the date string into its components
     const dateComponents = shipment.date.split(" ");
@@ -296,9 +306,7 @@ const Profile = () => {
     return months.indexOf(month);
   };
 
-
-
-
+  // Function to delete a shipment
   const handleDeleteShipment = async (shipment) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this shipment?"
@@ -318,15 +326,12 @@ const Profile = () => {
           },
         }
       );
-       fetchUserShipments();
-       alert.success("Deleted Shipment!");
+      fetchUserShipments();
+      alert.success("Deleted Shipment!");
     } catch (error) {
       alert.success("Error deleting shipment: " + error.response.data.msg);
     }
   };
-  const [editingShipments, setEditingShipments] = useState(
-    Array(shipments.length).fill(false)
-  );
 
   // Function to toggle editing status of a shipment
   const toggleEditing = (index) => {
@@ -358,34 +363,38 @@ const Profile = () => {
   const [searchOrderId, setSearchOrderId] = useState("");
   const [searchDate, setSearchDate] = useState("");
 
+  //Function to handle database query for shipment search
   const handleSearchOrders = async () => {
     try {
-    const token = Cookies.get("token");
-    const response = await axios.get("http://localhost:8080/api/shipment/search", {
-      headers: {
-        Authorization: `${token}`,
-      },
-      params: {
-        shipmentId: searchOrderId,
-        date: searchDate,
-      },
-    });
-    // Handle the response data, set state, or perform any other actions
-    const formattedShipments = response.data.shipments.map((shipment) => ({
-      ...shipment,
-      date: formatDate(shipment.date),
-    }));
-    setShipments(formattedShipments);
-  } catch (error) {
-    alert.error("Shipment search error: " + error.response.data.msg);
-  }
+      const token = Cookies.get("token");
+      const response = await axios.get(
+        "http://localhost:8080/api/shipment/search",
+        {
+          headers: {
+            Authorization: `${token}`,
+          },
+          params: {
+            shipmentId: searchOrderId,
+            date: searchDate,
+          },
+        }
+      );
+      // Handle the response data, set state, or perform any other actions
+      const formattedShipments = response.data.shipments.map((shipment) => ({
+        ...shipment,
+        date: formatDate(shipment.date),
+      }));
+      setShipments(formattedShipments);
+    } catch (error) {
+      alert.error("Shipment search error: " + error.response.data.msg);
+    }
   };
- const handleResetSearchShipments = () => {
-   setSearchOrderId("");
-   setSearchDate("");
-   fetchUserShipments();
- };
-
+   //Function to reset search parameters for shipments
+  const handleResetSearchShipments = () => {
+    setSearchOrderId("");
+    setSearchDate("");
+    fetchUserShipments();
+  };
 
   return (
     <div
