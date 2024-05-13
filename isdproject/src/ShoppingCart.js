@@ -17,6 +17,7 @@ const ShoppingCartPage = () => {
         { id: '5', name: 'Sample Product 5', price: 10, quantity: 1 },
       ];
 
+
       setCartItems(sampleProducts);
       saveCartToCookies(sampleProducts);
     };
@@ -57,7 +58,7 @@ const ShoppingCartPage = () => {
     updateCart(updatedCartItems);
   };
 
-  // Remove a product from the cart
+  // Remove item from cart
   const removeItem = (id) => {
     const updatedCartItems = cartItems.filter(item => item.id !== id);
     setCartItems(updatedCartItems);
@@ -73,7 +74,8 @@ const ShoppingCartPage = () => {
     Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
 
-  // Rest of your component code...
+  // Calculate total price of items in cart
+  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className="shopping-cart-container">
@@ -99,7 +101,7 @@ const ShoppingCartPage = () => {
             </div>
           ))}
           <div className="total-price">
-            {/* Calculate and display total price */}
+            <h3>Total Price: ${totalPrice.toFixed(2)}</h3>
           </div>
           <div className="action-buttons">
             <Link to="/product" className="back-button">Back to Products</Link>
