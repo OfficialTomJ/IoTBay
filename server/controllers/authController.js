@@ -48,6 +48,53 @@ exports.loginUser = async (req, res) => {
         res.status(500).send('Server Error');
     }
 };
+exports.loginStaff = async (req, res) => {
+    const { email, password } = req.body;
+
+    try { // Check if user exists
+        let user = await User.findOne({ email }); 
+        console.log(user);
+        if (!user) {
+            return res.status(400).json({ msg: 'Invalid credentials' });
+        }
+
+        if (user.role !== 'Staff') {        // Check if the user is an staff
+            return res.status(403).json({ msg: 'Access denied: only staff can log in here' });
+        }
+        const isMatch = await bcrypt.compare(password, user.password);         // Validate password
+        if (!isMatch) {
+            return res.status(400).json({ msg: 'Invalid credentials' });
+        }
+
+        await AccessLog.create({
+            eventType: 'login',
+            userId: user._id,
+        });
+
+        const payload = { // Create JWT token
+            user: {
+                id: user.id,
+                role: user.role
+            }
+        };
+        const jwtSecret = process.env.jwtSecret;
+
+        jwt.sign(
+            payload,
+            jwtSecret,
+            { expiresIn: 3600 }, // 1 hour
+            (err, token) => {
+                if (err) throw err;
+
+                res.json({ token });
+            }
+        );
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+};
+
 
 exports.generatePasswordToken = async (req, res) => {
     const { email } = req.body;
