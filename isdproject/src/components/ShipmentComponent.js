@@ -68,8 +68,8 @@ const ShippingComponent = () => {
         }}
       >
         <option value="">Select a shipment method with estimated cost</option>
-        <option value="standard">$5.00 - Standard Shipping</option>
-        <option value="express">$10.00 - Express Shipping</option>
+        <option value="Sea">$5.00 - Sea Shipping</option>
+        <option value="Air">$10.00 - Air Shipping</option>
       </select>
     </>
   );
