@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { fetchProductById } from './api';
-import { addToCart, removeFromCart } from './cartService';
+import axios from 'axios'; // Import axios for API calls
 import { Link } from 'react-router-dom';
 import './ShoppingCartPage.css';
 
@@ -11,15 +10,17 @@ const ShoppingCartPage = () => {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        const cart = Cookies.get('cart') ? JSON.parse(Cookies.get('cart')) : {};
+        const cartString = Cookies.get('cart') || '{}';
+        const cart = JSON.parse(cartString);
         const productIds = Object.keys(cart);
+        const itemsFromCart = [];
 
-        const items = [];
         for (const productId of productIds) {
           const product = await fetchProductById(productId);
-          items.push({ ...product, quantity: cart[productId] });
+          itemsFromCart.push({ ...product, quantity: cart[productId] });
         }
-        setCartItems(items);
+
+        setCartItems(itemsFromCart);
       } catch (error) {
         console.error('Error fetching cart items:', error);
       }
@@ -28,30 +29,15 @@ const ShoppingCartPage = () => {
     fetchCartItems();
   }, []);
 
-  const handleAddToCart = (productId, quantity) => {
-    addToCart(productId, quantity);
-    setCartItems((prevCartItems) => {
-      const existingItemIndex = prevCartItems.findIndex((item) => item.id === productId);
-      if (existingItemIndex !== -1) {
-        const updatedCartItems = [...prevCartItems];
-        updatedCartItems[existingItemIndex].quantity = quantity;
-        return updatedCartItems;
-      } else {
-        const newCartItem = fetchProductById(productId).then((product) => ({
-          ...product,
-          quantity,
-        }));
-        return [...prevCartItems, newCartItem];
-      }
-    });
-  };
+  useEffect(() => {
+    console.error('This should be run in /Checkout.js');
+  }, []);
 
-  const handleRemoveFromCart = (productId) => {
-    removeFromCart(productId);
-    setCartItems((prevCartItems) =>
-      prevCartItems.filter((item) => item.id !== productId)
-    );
-  };
+  useEffect(() => {
+    console.error('This should be run in /Checkout.js');
+  }, []);
+
+  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const decreaseQuantity = (id) => {
     const updatedCartItems = cartItems.map((item) =>
@@ -62,25 +48,17 @@ const ShoppingCartPage = () => {
   };
 
   const increaseQuantity = (id) => {
-    const updatedCartItems = cartItems.map(item =>
+    const updatedCartItems = cartItems.map((item) =>
       item.id === id ? { ...item, quantity: item.quantity + 1 } : item
     );
     setCartItems(updatedCartItems);
+    updateCart(id, cartItems.find((item) => item.id === id).quantity + 5);
   };
 
+  // Remove a product from the cart
   const removeItem = (id) => {
-    removeFromCart(id);
-    const updatedCartItems = cartItems.filter((item) => item.id !== id);
+    const updatedCartItems = cartItems.filter(item => item.id !== id);
     setCartItems(updatedCartItems);
-    updateCart(updatedCartItems);
-  };
-
-  const updateCart = (items) => {
-    const cartObject = {};
-    items.forEach(item => {
-      cartObject[item.id] = item.quantity;
-    });
-    Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
 
   const updateCart = (productId, quantity) => {
@@ -95,22 +73,7 @@ const ShoppingCartPage = () => {
     Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
 
-  const removeFromCart = (productId) => {
-    const cartString = Cookies.get('cart') || '{}';
-    let cart = JSON.parse(cartString);
-    delete cart[productId];
-    Cookies.set('cart', JSON.stringify(cart), { expires: 7 });
-  };
-
-  const fetchProductById = async (productId) => {
-    try {
-      const response = await axios.get(`/api/products/${productId}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching product:', error);
-      throw error;
-    }
-  };
+  // Rest of your component code...
 
   return (
     <div className="shopping-cart-container">
@@ -145,7 +108,7 @@ const ShoppingCartPage = () => {
             </div>
           ))}
           <div className="total-price">
-            <h3>Total Price: ${totalPrice}</h3>
+            <h3>Total Price: ${totalPrice.toFixed(2)}</h3>
             <div className="action-buttons">
               <Link to="/product" className="back-button">Back to Products</Link>
               <Link to="/checkout" className="checkout-button">Proceed to Checkout</Link>
