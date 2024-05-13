@@ -4,82 +4,45 @@ const Shipment = require('../models/Shipment');
 const Payment = require('../models/Payment');
 
 exports.createOrder = async (req, res) => {
-    try {
-        // Extract order data from request body
-        const { userId, products } = req.body;
-
-        // Create new order instance
-        const newOrder = new Order({
-            userId,
-            products
-        });
+  try {
+    // Create a new order object based on request body
+    const newOrder = new Order(req.body);
 
     // Save the order to the database
     await newOrder.save();
 
-        // Return success response
-        res.status(201).json({ message: 'Order created successfully' });
-    } catch (error) {
-        // Handle error
-        console.error('Error creating order:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
+    // Log the event in the access log
+    AccessLog.create({
+      eventType: 'order_created',
+      userId: req.user.id,
+    });
+
+    res.status(201).json(newOrder); // Respond with the newly created order
+  } catch (error) {
+    console.error('Error creating order:', error);
+    res.status(500).json({ error: 'Failed to create order' });
+  }
 };
 
-// Controller function to get order details by order ID
-exports.getOrderDetails = async (req, res) => {
-    try {
-        const orderId = req.params.orderId;
-        const order = await Order.findById(orderId);
-        if (!order) {
-            return res.status(404).json({ error: 'Order not found' });
-        }
-        res.json(order);
-    } catch (error) {
-        console.error('Error fetching order details:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
-};
-
-// Controller function to update an existing order by order ID
 exports.updateOrder = async (req, res) => {
-    try {
-        const orderId = req.params.orderId;
-        const updatedData = req.body;
-
-        // Find the order by ID and update it
-        const updatedOrder = await Order.findByIdAndUpdate(orderId, updatedData, { new: true });
-
-        // Check if the order was found and updated successfully
-        if (!updatedOrder) {
-            return res.status(404).json({ error: 'Order not found' });
-        }
-
-        // Return success response
-        res.json({ message: 'Order updated successfully', updatedOrder });
-    } catch (error) {
-        console.error('Error updating order:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
+  try {
+    const { id } = req.params;
+    const updatedOrder = await Order.findByIdAndUpdate(id, req.body, { new: true });
+    res.json(updatedOrder);
+  } catch (error) {
+    console.error('Error updating order:', error);
+    res.status(500).json({ error: 'Failed to update order' });
+  }
 };
 
-// Controller function to cancel an existing order by order ID
-exports.cancelOrder = async (req, res) => {
-    try {
-        const orderId = req.params.orderId;
-
-        // Find the order by ID and delete it
-        const deletedOrder = await Order.findByIdAndDelete(orderId);
-
-        // Check if the order was found and deleted successfully
-        if (!deletedOrder) {
-            return res.status(404).json({ error: 'Order not found' });
-        }
-
-        // Return success response
-        res.json({ message: 'Order canceled successfully', deletedOrder });
-    } catch (error) {
-        console.error('Error canceling order:', error);
-        res.status(500).json({ error: 'Server error' });
-    }
+exports.deleteOrder = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Order.findByIdAndDelete(id);
+    res.status(204).send(); // No content response
+  } catch (error) {
+    console.error('Error deleting order:', error);
+    res.status(500).json({ error: 'Failed to delete order' });
+  }
 };
+
