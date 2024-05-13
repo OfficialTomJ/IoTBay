@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { useAlert } from "react-alert";
 
 
 const Profile = () => {
@@ -23,6 +24,8 @@ const Profile = () => {
     date: "",
   });
   const navigate = useNavigate();
+
+  const alert = useAlert();
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -190,7 +193,6 @@ const Profile = () => {
   const handleAddShipment = async () => {
     try {
       const token = Cookies.get("token");
-      console.log(newShipment);
       const response = await axios.post(
         "http://localhost:8080/api/shipment/create",
         newShipment,
@@ -200,10 +202,10 @@ const Profile = () => {
           },
         }
       );
-      console.log("Shipment created:", response.data);
+      alert.success("Shipment Created!");
       fetchUserShipments();
     } catch (error) {
-      console.error("Error creating shipment:", error);
+      alert.error("Error creating shipment: " + error.response.data.msg);
     }
   };
 
@@ -269,8 +271,9 @@ const Profile = () => {
         }
       );
       fetchUserShipments();
+      alert.success("Updated shipment! ");
     } catch (error) {
-      console.error("Error updating shipment:", error);
+      alert.error("Error updating shipment: " + error.response.data.msg);
     }
   };
 
@@ -316,8 +319,9 @@ const Profile = () => {
         }
       );
        fetchUserShipments();
+       alert.success("Deleted Shipment!");
     } catch (error) {
-      console.error("Error deleting shipment:", error);
+      alert.success("Error deleting shipment: " + error.response.data.msg);
     }
   };
   const [editingShipments, setEditingShipments] = useState(
@@ -373,7 +377,7 @@ const Profile = () => {
     }));
     setShipments(formattedShipments);
   } catch (error) {
-    console.error("Error searching orders:", error);
+    alert.error("Shipment search error: " + error.response.data.msg);
   }
   };
  const handleResetSearchShipments = () => {
