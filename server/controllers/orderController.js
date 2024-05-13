@@ -3,14 +3,22 @@ const AccessLog = require('../models/AccessLog');
 
 exports.createOrder = async (req, res) => {
   try {
-    // Create a new order object based on request body
-    const newOrder = new Order(req.body);
+    const { products, quantities, shipmentId, paymentId } = req.body;
+
+    // Create a new order object
+    const newOrder = new Order({
+      products,
+      quantities,
+      shipmentId,
+      paymentId,
+      userId: req.user.id, // Assuming userId is available in the request
+    });
 
     // Save the order to the database
     await newOrder.save();
 
     // Log the event in the access log
-    AccessLog.create({
+    await AccessLog.create({
       eventType: 'order_created',
       userId: req.user.id,
     });
@@ -22,24 +30,40 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-exports.updateOrder = async (req, res) => {
+exports.getOrdersForUser = async (req, res) => {
   try {
-    const { id } = req.params;
-    const updatedOrder = await Order.findByIdAndUpdate(id, req.body, { new: true });
-    res.json(updatedOrder);
+    const orders = await Order.find({ userId: req.user.id });
+    res.json(orders);
   } catch (error) {
-    console.error('Error updating order:', error);
-    res.status(500).json({ error: 'Failed to update order' });
+    console.error('Error fetching orders for user:', error);
+    res.status(500).json({ error: 'Failed to fetch orders for user' });
   }
 };
 
-exports.deleteOrder = async (req, res) => {
+exports.getOrderById = async (req, res) => {
+  try {
+    const order = await Order.findOne({ _id: req.params.id, userId: req.user.id });
+    if (!order) {
+      return res.status(404).json({ error: 'Order not found' });
+    }
+    res.json(order);
+  } catch (error) {
+    console.error('Error fetching order by ID:', error);
+    res.status(500).json({ error: 'Failed to fetch order by ID' });
+  }
+};
+
+exports.cancelOrder = async (req, res) => {
   try {
     const { id } = req.params;
-    await Order.findByIdAndDelete(id);
+    const deletedOrder = await Order.findOneAndDelete({ _id: id, userId: req.user.id });
+    if (!deletedOrder) {
+      return res.status(404).json({ error: 'Order not found or unauthorized' });
+    }
     res.status(204).send(); // No content response
   } catch (error) {
     console.error('Error deleting order:', error);
     res.status(500).json({ error: 'Failed to delete order' });
   }
 };
+
