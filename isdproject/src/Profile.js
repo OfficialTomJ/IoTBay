@@ -252,7 +252,7 @@ const Profile = () => {
           </div>
           <div style={{ marginTop: 20 }}>
             <h2 style={{ fontSize: 24, marginBottom: 10 }}>User Logs</h2>
-            <div style={{ border: '1px solid #ccc', borderRadius: 8, padding: 20 }}>
+            <div style={{ border: '1px solid #ccc', borderRadius: 8, padding: 20 ,maxHeight: '200px',overflowY: 'auto'}}>
               <input
                 type="text"
                 placeholder="Search by time..."

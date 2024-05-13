@@ -4,7 +4,7 @@ import OrderManagement from './components/OrderManagement';
 import CustomerInfo from './components/CustomerInfo';
 import ProductInfo from './components/ProductInfo';
 
-function AdminPage() {
+function StaffPgae() {
     const [activeTab, setActiveTab] = useState('employeeInfo');
 
     const renderComponent = () => {
@@ -20,7 +20,7 @@ function AdminPage() {
     return (
         <div className="flex h-screen">
             <div className="w-64 bg-blue-500 text-white p-5">
-                <h2 className="text-xl mb-5">Hello admin !</h2>
+                <h2 className="text-xl mb-5">Hello Staff !</h2>
                 <ul>
                     <li className="mb-2 p-2 cursor-pointer hover:bg-gray-700 transition duration-300 ease-in-out transform hover:scale-105"
                         onClick={() => setActiveTab('employeeInfo')}>Personal Information</li>
@@ -39,7 +39,7 @@ function AdminPage() {
     );
 }
 
-export default AdminPage;
+export default  StaffPgae;
 
 
 
