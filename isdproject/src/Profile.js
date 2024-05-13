@@ -736,7 +736,7 @@ const Profile = () => {
               >
                 <input
                   type="text"
-                  placeholder="Order ID"
+                  placeholder="Shipment ID"
                   value={searchOrderId}
                   onChange={(e) => setSearchOrderId(e.target.value)}
                   style={{
