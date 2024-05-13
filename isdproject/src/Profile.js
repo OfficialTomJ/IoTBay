@@ -317,19 +317,18 @@ const Profile = () => {
 
     try {
       const token = Cookies.get("token");
-      await axios.delete(
-        `http://localhost:8080/api/shipment/delete/${shipment._id}`,
-        {
-          headers: {
-            Authorization: `${token}`,
-            _id: shipment._id,
-          },
-        }
-      );
+      await axios.delete("http://localhost:8080/api/shipment/delete", {
+      headers: {
+        Authorization: `${token}`,
+      },
+      data: {
+      id: shipment._id,
+      },
+    });
       fetchUserShipments();
       alert.success("Deleted Shipment!");
     } catch (error) {
-      alert.success("Error deleting shipment: " + error.response.data.msg);
+      alert.error("Error deleting shipment: " + error.response.data.msg);
     }
   };
 
