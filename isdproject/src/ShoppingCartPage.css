@@ -86,8 +86,9 @@ body {
 }
 
 .back-button,
-.checkout-button {
-  background-color: #2f0def; /* Blue button */
+.checkout-button,
+.add-to-cart-button {
+  background-color: #0004ff; /* Green button */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -99,6 +100,7 @@ body {
 }
 
 .back-button:hover,
-.checkout-button:hover {
-  background-color: #986efa;
+.checkout-button:hover,
+.add-to-cart-button:hover {
+  background-color: #9412ff; /* Darker green on hover */
 }

@@ -5,27 +5,33 @@ import './ShoppingCartPage.css';
 
 const ShoppingCartPage = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [productIdToAdd, setProductIdToAdd] = useState('');
 
   useEffect(() => {
-    // Initialize cart with sample products when component mounts
-    const initializeCart = () => {
+    const cartString = Cookies.get('cart') || '{}';
+    const cart = JSON.parse(cartString);
+
+    if (Object.keys(cart).length === 0) {
       const sampleProducts = [
         { id: '1', name: 'Sample Product 1', price: 10, quantity: 1 },
         { id: '2', name: 'Sample Product 2', price: 10, quantity: 1 },
         { id: '3', name: 'Sample Product 3', price: 10, quantity: 1 },
         { id: '4', name: 'Sample Product 4', price: 10, quantity: 1 },
-        { id: '5', name: 'Sample Product 5', price: 10, quantity: 1 },
+        { id: '5', name: 'Sample Product 5', price: 10, quantity: 1 }
       ];
-
-
       setCartItems(sampleProducts);
       saveCartToCookies(sampleProducts);
-    };
-
-    initializeCart();
+    } else {
+      const itemsFromCart = Object.keys(cart).map(productId => ({
+        id: productId,
+        quantity: cart[productId],
+        name: `Product ${productId}`,
+        price: 10
+      }));
+      setCartItems(itemsFromCart);
+    }
   }, []);
 
-  // Function to save cart items to cookies
   const saveCartToCookies = (items) => {
     const cartObject = {};
     items.forEach(item => {
@@ -34,7 +40,26 @@ const ShoppingCartPage = () => {
     Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
 
-  // Increase quantity of a product
+  const addProductById = () => {
+    if (productIdToAdd.trim() !== '') {
+      const id = productIdToAdd.trim();
+      const existingItem = cartItems.find(item => item.id === id);
+      if (existingItem) {
+        increaseQuantity(id);
+      } else {
+        const newProduct = {
+          id: id,
+          name: `Product ${id}`,
+          price: 10,
+          quantity: 1
+        };
+        setCartItems(prevItems => [...prevItems, newProduct]);
+        updateCart([...cartItems, newProduct]);
+      }
+      setProductIdToAdd('');
+    }
+  };
+
   const increaseQuantity = (id) => {
     const updatedCartItems = cartItems.map(item => {
       if (item.id === id) {
@@ -46,7 +71,6 @@ const ShoppingCartPage = () => {
     updateCart(updatedCartItems);
   };
 
-  // Decrease quantity of a product
   const decreaseQuantity = (id) => {
     const updatedCartItems = cartItems.map(item => {
       if (item.id === id && item.quantity > 1) {
@@ -58,14 +82,12 @@ const ShoppingCartPage = () => {
     updateCart(updatedCartItems);
   };
 
-  // Remove item from cart
   const removeItem = (id) => {
     const updatedCartItems = cartItems.filter(item => item.id !== id);
     setCartItems(updatedCartItems);
     updateCart(updatedCartItems);
   };
 
-  // Update cart in cookies
   const updateCart = (items) => {
     const cartObject = {};
     items.forEach(item => {
@@ -74,12 +96,20 @@ const ShoppingCartPage = () => {
     Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
 
-  // Calculate total price of items in cart
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className="shopping-cart-container">
       <h1 className="page-title">Shopping Cart</h1>
+      <div className="product-input-container">
+        <input
+          type="text"
+          placeholder="Enter Product ID"
+          value={productIdToAdd}
+          onChange={(e) => setProductIdToAdd(e.target.value)}
+        />
+        <button onClick={addProductById} className="add-to-cart-button">Add to Cart</button>
+      </div>
       {cartItems.length === 0 ? (
         <div className="empty-cart-message">
           Your cart is empty.
