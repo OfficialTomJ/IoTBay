@@ -5,6 +5,13 @@ const mongoose = require("mongoose");
 
 // Controller for creating a new shipment
 exports.createShipment = async (req, res) => {
+  // Check if req.body is defined and contains the required properties
+  if (
+    !req.body
+  ) {
+    return res.status(500).json({ msg: "Invalid request body" });
+  }
+
   const { orderId, shipmentMethod, address, status, tracking } = req.body;
 
   try {
@@ -94,6 +101,10 @@ exports.getUserAddresses = async (req, res) => {
 
 // Controller for updating a shipment
 exports.updateShipment = async (req, res) => {
+  if (!req.body) {
+    return res.status(500).json({ msg: "Invalid request body" });
+  }
+
   const { shipmentMethod, address, _id } = req.body;
 
   try {
@@ -149,8 +160,13 @@ exports.updateShipment = async (req, res) => {
 
 // Controller for deleting a shipment
 exports.deleteShipment = async (req, res) => {
-  const { id } = req.params;
-  console.log("runs delete", id);
+  if (!req.body || !req.body.id) {
+    return res
+      .status(400)
+      .json({ msg: "Invalid request data: ID is required" });
+  }
+  const { id } = req.body;
+
   try {
     // Validate shipmentId
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -164,13 +180,17 @@ exports.deleteShipment = async (req, res) => {
     }
 
     // Delete the shipment record
-    await Shipment.findByIdAndDelete(id);
+    const deletedShipment = await Shipment.findByIdAndDelete(id);
+
+    // Check if shipment was deleted
+    if (!deletedShipment) {
+      return res.status(404).json({ msg: "Shipment not found" });
+    }
 
     // Log the shipment deletion
     await AccessLog.create({
       eventType: "shipment_deleted",
       userId: req.user.id,
-      shipmentId: id,
     });
 
     // Send success response
@@ -181,8 +201,14 @@ exports.deleteShipment = async (req, res) => {
   }
 };
 
+
+
 // Controller for searching shipments
 exports.searchShipments = async (req, res) => {
+  if (!req.body) {
+    return res.status(500).json({ msg: "Invalid request body" });
+  }
+
   const { shipmentId, date } = req.query;
   console.log("Search query:", { shipmentId, date });
 
