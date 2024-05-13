@@ -41,8 +41,11 @@ const CheckoutPage = () => {
 
     const handleCheckout = async () => {
         try {
+            // Create shipment
             const shipmentId = await createShipment();
+            // Create payment
             const paymentId = await createPayment();
+            // Construct order data
             const products = cartItems.map(item => item.id);
             const quantities = cartItems.map(item => item.quantity);
             const orderData = {
@@ -51,16 +54,21 @@ const CheckoutPage = () => {
                 shipmentId,
                 paymentId,
             };
-    
+            // Create order
             const orderResponse = await createOrder(orderData);
             console.log('Order created:', orderResponse);
+            // Clear cart cookie
             Cookies.remove('cart');
+            // Display success message to the user
+            alert('Your order has been submitted successfully!');
             // Redirect to success/thank you page or perform other actions
         } catch (error) {
-            console.error('Error during checkout:', error);
-            setError('Error during checkout');
+            setError('Error during checkout'); // Set error if there's an issue during checkout
+            // Display error message to the user
+            alert('There was an error while processing your order. Please try again later.');
         }
     };
+    
     
 
     const handleQuantityChange = (itemId, newQuantity) => {
@@ -120,6 +128,7 @@ const CheckoutPage = () => {
             <div className="action-buttons">
                 <Link to="/shoppingcart" className="back-button">Back to Shopping Cart</Link>
                 <button className="submit-button" onClick={handleCheckout}>Checkout</button>
+
             </div>
         </div>
     );
