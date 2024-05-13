@@ -1,6 +1,8 @@
 import React from 'react';
 import PaymentComponent from './components/PaymentComponent';
-import ShippingComponent from './ShipmentComponent';
+import ShippingComponent from './components/ShipmentComponent';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import './CheckoutPage.css'; // Import the CSS file for styling
 
 const CheckoutPage = () => {
     const cartItems = [
@@ -12,30 +14,41 @@ const CheckoutPage = () => {
     const totalPrice = cartItems.reduce((total, item) => total + item.price, 0);
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div style={{ flex: 1, marginRight: '20px' }}>
-                <h2>Shipping</h2>
-                <ShippingComponent/>
+        <div className="checkout-page-container"> {/* Add a container class */}
+            <h1 className="page-title">Checkout</h1> {/* Add page title */}
+            <div className="section">
+                <div className="bubble">
+                    <h2 className="section-title">Shipment</h2> {/* Make title bold */}
+                    <ShippingComponent/>
+                </div>
             </div>
-            <div style={{ flex: 1, marginRight: '20px' }}>
-                <h2>Payment</h2>
-                <PaymentComponent/>
+            <div className="section">
+                <div className="bubble">
+                    <h2 className="section-title">Payment</h2> {/* Make title bold */}
+                    <PaymentComponent/>
+                </div>
             </div>
-            <div style={{ flex: 1 }}>
-                <div style={{ border: '1px solid #eaeaea', borderRadius: '5px', padding: '20px' }}>
-                    <h2>Cart</h2>
-                    <ul style={{ listStyleType: 'none', padding: 0 }}>
-                        {/* Render cart items */}
-                        {cartItems.map(item => (
-                            <li key={item.id}>
-                                {item.name} - ${item.price}
-                            </li>
-                        ))}
-                    </ul>
-                    <div style={{ marginTop: '20px', fontWeight: 'bold' }}>
-                        Total: ${totalPrice}
+            <div className="section">
+                <div className="bubble">
+                    <h2 className="section-title">Cart</h2> {/* Make title bold */}
+                    <div className="cart-box">
+                        <ul className="cart-items"> {/* Add class for cart items */}
+                            {/* Render cart items */}
+                            {cartItems.map(item => (
+                                <li key={item.id} className="cart-item"> {/* Add class for cart item */}
+                                    {item.name} - ${item.price}
+                                </li>
+                            ))}
+                        </ul>
+                        <div className="total-price"> {/* Add class for total price */}
+                            Total: ${totalPrice}
+                        </div>
                     </div>
                 </div>
+            </div>
+            <div className="action-buttons">
+                <Link to="/shoppingcart" className="back-button">Back to Shopping Cart</Link>
+                <Link to="/thank-you" className="submit-button">Submit</Link>
             </div>
         </div>
     );

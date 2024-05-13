@@ -57,7 +57,7 @@ function WelcomePage() {
       <div style={containerStyle}>
         <div style={textContainerStyle}>
           <h1 style={helloStyle}>Hello!</h1>
-          <p style={seeYouStyle}>Go to see you here</p>
+          <p style={seeYouStyle}>Good to see you here</p>
           <Link to="/product" style={startButtonStyle}>Go to Start</Link>
         </div>
         <div>
