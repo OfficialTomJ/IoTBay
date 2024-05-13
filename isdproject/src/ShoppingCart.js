@@ -6,62 +6,83 @@ import './ShoppingCartPage.css';
 
 const ShoppingCartPage = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [productIdToAdd, setProductIdToAdd] = useState('');
 
   useEffect(() => {
-    // Initialize cart with sample products when component mounts
-    const initializeCart = () => {
+    const cartString = Cookies.get('cart') || '{}';
+    const cart = JSON.parse(cartString);
+
+    if (Object.keys(cart).length === 0) {
       const sampleProducts = [
         { id: '1', name: 'Sample Product 1', price: 10, quantity: 1 },
         { id: '2', name: 'Sample Product 2', price: 10, quantity: 1 },
         { id: '3', name: 'Sample Product 3', price: 10, quantity: 1 },
         { id: '4', name: 'Sample Product 4', price: 10, quantity: 1 },
-        { id: '5', name: 'Sample Product 5', price: 10, quantity: 1 },
+        { id: '5', name: 'Sample Product 5', price: 10, quantity: 1 }
       ];
+
 
       setCartItems(sampleProducts);
       saveCartToCookies(sampleProducts);
-    };
-
-    initializeCart();
+    } else {
+      const itemsFromCart = Object.keys(cart).map(productId => ({
+        id: productId,
+        quantity: cart[productId],
+        name: `Product ${productId}`,
+        price: 10
+      }));
+      setCartItems(itemsFromCart);
+    }
   }, []);
 
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-
-  const decreaseQuantity = (id) => {
-    const updatedCartItems = cartItems.map((item) =>
-      item.id === id ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item
-    );
-    setCartItems(updatedCartItems);
-    updateCart(id, Math.max(1, cartItems.find((item) => item.id === id).quantity - 1));
+  // Function to save cart items to cookies
+  const saveCartToCookies = (items) => {
+    const cartObject = {};
+    items.forEach(item => {
+      cartObject[item.id] = item.quantity;
+    });
+    Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
 
+  // Increase quantity of a product
   const increaseQuantity = (id) => {
-    const updatedCartItems = cartItems.map((item) =>
-      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-    );
+    const updatedCartItems = cartItems.map(item => {
+      if (item.id === id) {
+        return { ...item, quantity: item.quantity + 1 };
+      }
+      return item;
+    });
+    setCartItems(updatedCartItems);
+    updateCart(updatedCartItems);
+  };
+
+  // Decrease quantity of a product
+  const decreaseQuantity = (id) => {
+    const updatedCartItems = cartItems.map(item => {
+      if (item.id === id && item.quantity > 1) {
+        return { ...item, quantity: item.quantity - 1 };
+      }
+      return item;
+    });
     setCartItems(updatedCartItems);
     updateCart(id, cartItems.find((item) => item.id === id).quantity + 5);
   };
 
-  // Remove item from cart
   const removeItem = (id) => {
     const updatedCartItems = cartItems.filter(item => item.id !== id);
     setCartItems(updatedCartItems);
+    updateCart(updatedCartItems);
   };
 
-  const updateCart = (productId, quantity) => {
-    const cart = Cookies.get('cart') || '{}';
-    let cartObject = {};
-    try {
-      cartObject = JSON.parse(cart);
-    } catch (error) {
-      console.error('Error parsing cart JSON:', error);
-    }
-    cartObject[productId] = quantity;
+  // Update cart in cookies
+  const updateCart = (items) => {
+    const cartObject = {};
+    items.forEach(item => {
+      cartObject[item.id] = item.quantity;
+    });
     Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
 
-  // Calculate total price of items in cart
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
