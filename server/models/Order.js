@@ -1,43 +1,28 @@
 const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
-    orderNumber: {
-        type: String,
-        required: true
-    },
     products: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product'
     }],
-    totalCost: {
-        type: Number,
-        required: true
-    },
-    userID: {
+    quantities: [Number],
+    shipmentId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+        ref: 'Shipment'
     },
-    paymentID: {
+    paymentId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Payment'
     },
-    shipmentID: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Shipment'
+        ref: 'User',
+        required: true
     },
     confirmed: {
         type: Boolean,
         default: false
     },
-    productId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product'
-        },
-        quantity: {
-            type: Number,
-            default: 1
-        }
 });
 
 const Order = mongoose.model('Order', orderSchema);
