@@ -9,6 +9,7 @@ import ResetPassword from './ResetPassword';
 import WelcomePage from './WelcomePage';
 import LogoutPage from './Logout';
 import Admin from './Admin';
+import SearchUserAdmin from './SearchUserAdmin';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         {/* Provide a 404 error page for all undefined routes */}
         <Route path="/logout" element={<LogoutPage/>} />
         <Route path="/admin" element={<Admin/>} />
+        <Route path="/searchuseradmin" element={<SearchUserAdmin/>} />
         <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </Router>

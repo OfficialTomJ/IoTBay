@@ -1,5 +1,6 @@
 // adminController.js
 const User = require('../models/User');
+const AccessLog = require('../models/AccessLog');
 const bcrypt = require('bcryptjs');
 
 exports.adminRegister = async (req, res) => {
@@ -36,10 +37,22 @@ exports.adminRegister = async (req, res) => {
 };
 
 exports.getUserProfile = async (req, res) => {
-  // Logic for retrieving user profile
+  const { name, phone } = req.query;
+
+  if (!name || !phone) {
+    return res.status(400).json({ msg: 'Name and phone number are required' });
+  }
+
   try {
-    // Fetch user profile based on user ID stored in req.user.id from auth middleware
-    const user = await User.findById(req.user.id).select('-password');
+    const user = await User.findOne({
+      fullName: name,
+      phone: phone
+    }).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ msg: 'User not found with the provided name and phone number' });
+    }
+
     res.json({ user });
   } catch (error) {
     console.error('Error fetching user profile:', error);
@@ -47,9 +60,11 @@ exports.getUserProfile = async (req, res) => {
   }
 };
 
+
+
 exports.deleteAccount = async (req, res) => {
   try {
-    await User.findByIdAndDelete(req.user.id);
+    await User.findByIdAndDelete(req.params.id);
     res.json({ msg: 'Account deleted successfully' });
   } catch (error) {
     console.error('Error deleting account:', error);
@@ -59,42 +74,26 @@ exports.deleteAccount = async (req, res) => {
 
 exports.updateUserProfile = async (req, res) => {
   const { fullName, email, phone } = req.body;
-  const userId = req.user.id;
+  const userId = req.params.id;
+
+  console.log(`Updating user profile for ID: ${userId}`);
 
   try {
-    // Find the user by ID
     let user = await User.findById(userId);
-
     if (!user) {
+      console.log(`User not found for ID: ${userId}`);
       return res.status(404).json({ msg: 'User not found' });
     }
 
-    // Update user profile fields
-    if (fullName) user.fullName = fullName;
-    if (email) user.email = email;
-    if (phone) user.phone = phone;
+    user.fullName = fullName || user.fullName;
+    user.email = email || user.email;
+    user.phone = phone || user.phone;
 
-    // Save the updated user profile
     await user.save();
 
-    res.json({ msg: 'User profile updated successfully' });
+    res.json({ msg: 'User profile updated successfully', user });
   } catch (error) {
     console.error('Error updating user profile:', error);
     res.status(500).json({ msg: 'Server Error' });
-  }
-};
-
-exports.getUserLogs = async (req, res) => {
-  try {
-    // Assuming you have a way to identify the current user, e.g., through req.user
-    const userId = req.user.id;
-
-    // Fetch user logs from the database based on userId
-    const userLogs = await AccessLog.find({ userId });
-
-    res.json({ userLogs });
-  } catch (error) {
-    console.error('Error fetching user logs:', error);
-    res.status(500).json({ error: 'Server error' });
   }
 };
