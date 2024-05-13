@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import PaymentComponent from './components/PaymentComponent';
 import ShippingComponent from './ShipmentComponent';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie'; // Import Cookies for managing cookies
-import { createShipment, createPayment, createOrder } from './api'; // Import API functions
+import Cookies from 'js-cookie';
+import { createShipment, createPayment, createOrder } from './api';
 import './CheckoutPage.css';
 
 const CheckoutPage = () => {
     const [shippingAddress, setShippingAddress] = useState('');
     const [paymentDetails, setPaymentDetails] = useState('');
     const [cartItems, setCartItems] = useState([]);
-    const [error, setError] = useState(null); // State for error handling
+    const [totalCost, setTotalCost] = useState(0); // State to hold total cost
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchCartItems = () => {
@@ -26,8 +27,12 @@ const CheckoutPage = () => {
                 }));
 
                 setCartItems(items);
+
+                // Calculate total cost
+                const cost = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                setTotalCost(cost);
             } catch (error) {
-                setError('Error fetching cart items'); // Set error if there's an issue fetching cart items
+                setError('Error fetching cart items');
             }
         };
 
@@ -36,11 +41,8 @@ const CheckoutPage = () => {
 
     const handleCheckout = async () => {
         try {
-            // Create shipment
             const shipmentId = await createShipment();
-            // Create payment
             const paymentId = await createPayment();
-            // Construct order data
             const products = cartItems.map(item => item.id);
             const quantities = cartItems.map(item => item.quantity);
             const orderData = {
@@ -49,15 +51,27 @@ const CheckoutPage = () => {
                 shipmentId,
                 paymentId,
             };
-            // Create order
+    
             const orderResponse = await createOrder(orderData);
             console.log('Order created:', orderResponse);
-            // Clear cart cookie
             Cookies.remove('cart');
             // Redirect to success/thank you page or perform other actions
         } catch (error) {
-            setError('Error during checkout'); // Set error if there's an issue during checkout
+            console.error('Error during checkout:', error);
+            setError('Error during checkout');
         }
+    };
+    
+
+    const handleQuantityChange = (itemId, newQuantity) => {
+        const updatedCartItems = cartItems.map(item =>
+            item.id === itemId ? { ...item, quantity: newQuantity } : item
+        );
+        setCartItems(updatedCartItems);
+
+        // Recalculate total cost
+        const cost = updatedCartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        setTotalCost(cost);
     };
 
     return (
@@ -88,17 +102,24 @@ const CheckoutPage = () => {
                         <ul className="cart-items">
                             {cartItems.map(item => (
                                 <li key={item.id} className="cart-item">
-                                    {item.name} - ${item.price} - Quantity: {item.quantity}
+                                    {item.name} - ${item.price} - Quantity: 
+                                    <input
+                                        type="number"
+                                        value={item.quantity}
+                                        onChange={e => handleQuantityChange(item.id, parseInt(e.target.value))}
+                                        min="1"
+                                    />
                                 </li>
                             ))}
                         </ul>
                     </div>
+                    <p>Total Cost: ${totalCost}</p> {/* Display total cost */}
                 </div>
             </div>
-            {error && <div className="error-message">{error}</div>} {/* Display error message if error state is set */}
+            {error && <div className="error-message">{error}</div>}
             <div className="action-buttons">
                 <Link to="/shoppingcart" className="back-button">Back to Shopping Cart</Link>
-                <button className="submit-button" onClick={handleCheckout}>Checkout</button> {/* Change Link to button for checkout */}
+                <button className="submit-button" onClick={handleCheckout}>Checkout</button>
             </div>
         </div>
     );
