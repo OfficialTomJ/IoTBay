@@ -133,6 +133,11 @@ exports.updateShipment = async (req, res) => {
     }
     await shipment.save();
 
+    AccessLog.create({
+      eventType: "shipment_updated",
+      userId: req.user.id,
+    });
+
     // Send response
     res.json({ msg: "Shipment updated successfully" });
   } catch (error) {
