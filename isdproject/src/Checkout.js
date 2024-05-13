@@ -66,13 +66,19 @@ const CheckoutPage = () => {
             <div className="section">
                 <div className="bubble">
                     <h2 className="section-title">Shipment</h2>
-                    <ShippingComponent />
+                    <ShippingComponent
+                        value={shippingAddress}
+                        onChange={e => setShippingAddress(e.target.value)}
+                    />
                 </div>
             </div>
             <div className="section">
                 <div className="bubble">
                     <h2 className="section-title">Payment</h2>
-                    <PaymentComponent />
+                    <PaymentComponent
+                        value={paymentDetails}
+                        onChange={e => setPaymentDetails(e.target.value)}
+                    />
                 </div>
             </div>
             <div className="section">
