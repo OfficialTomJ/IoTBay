@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
-import { useAlert } from "react-alert";
 
 
 const Profile = () => {
@@ -23,6 +22,9 @@ const Profile = () => {
     tracking: "",
     date: "",
   });
+  const [orderHistory, setOrderHistory] = useState([]);
+  const [orderIdSearch, setOrderIdSearch] = useState('');
+  const [dateSearch, setDateSearch] = useState('');
   const [editingShipments, setEditingShipments] = useState(
     Array(shipments.length).fill(false)
   ); // State to track editing status of shipments
@@ -437,7 +439,6 @@ const Profile = () => {
     setSearchDate("");
     fetchUserShipments();
   };
-
   return (
     <div
       style={{ backgroundColor: "#e3f2fd", minHeight: "100vh", padding: 20 }}

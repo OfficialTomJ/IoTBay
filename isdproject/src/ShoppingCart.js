@@ -1,45 +1,76 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
+import { fetchProductById } from './api';
+import { addToCart, removeFromCart } from './cartService';
 import { Link } from 'react-router-dom';
 import './ShoppingCartPage.css';
 
 const ShoppingCartPage = () => {
-  const [cartItems, setCartItems] = useState([
-    { id: 1, name: 'Product 1', price: 10, quantity: 1 },
-    { id: 2, name: 'Product 2', price: 15, quantity: 2 },
-    { id: 3, name: 'Product 3', price: 20, quantity: 1 },
-  ]);
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      try {
+        const cart = Cookies.get('cart') ? JSON.parse(Cookies.get('cart')) : {};
+        const productIds = Object.keys(cart);
+
+        const items = [];
+        for (const productId of productIds) {
+          const product = await fetchProductById(productId);
+          items.push({ ...product, quantity: cart[productId] });
+        }
+        setCartItems(items);
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+      }
+    };
+
+    fetchCartItems();
+  }, []);
+
+  const handleAddToCart = (productId, quantity) => {
+    addToCart(productId, quantity);
+    setCartItems((prevCartItems) => {
+      const existingItemIndex = prevCartItems.findIndex((item) => item.id === productId);
+      if (existingItemIndex !== -1) {
+        const updatedCartItems = [...prevCartItems];
+        updatedCartItems[existingItemIndex].quantity = quantity;
+        return updatedCartItems;
+      } else {
+        const newCartItem = fetchProductById(productId).then((product) => ({
+          ...product,
+          quantity,
+        }));
+        return [...prevCartItems, newCartItem];
+      }
+    });
+  };
+
+  const handleRemoveFromCart = (productId) => {
+    removeFromCart(productId);
+    setCartItems((prevCartItems) =>
+      prevCartItems.filter((item) => item.id !== productId)
+    );
+  };
 
   const decreaseQuantity = (id) => {
-    const updatedCartItems = cartItems.map(item =>
+    const updatedCartItems = cartItems.map((item) =>
       item.id === id ? { ...item, quantity: Math.max(1, item.quantity - 1) } : item
+    );
+    setCartItems(updatedCartItems);
+    updateCart(id, Math.max(1, cartItems.find((item) => item.id === id).quantity - 1));
+  };
+
+  const increaseQuantity = (id) => {
+    const updatedCartItems = cartItems.map(item =>
+      item.id === id ? { ...item, quantity: item.quantity + 1 } : item
     );
     setCartItems(updatedCartItems);
   };
 
-  const increaseQuantity = (id) => {
-    const updatedCartItems = cartItems.map(item => {
-      if (item.id === id) {
-        return { ...item, quantity: item.quantity + 1 };
-      }
-      return item;
-    });
-    setCartItems(updatedCartItems);
-    updateCart(updatedCartItems);
-  };
-
-  const decreaseQuantity = (id) => {
-    const updatedCartItems = cartItems.map(item => {
-      if (item.id === id && item.quantity > 1) {
-        return { ...item, quantity: item.quantity - 1 };
-      }
-      return item;
-    });
-    setCartItems(updatedCartItems);
-    updateCart(updatedCartItems);
-  };
-
   const removeItem = (id) => {
-    const updatedCartItems = cartItems.filter(item => item.id !== id);
+    removeFromCart(id);
+    const updatedCartItems = cartItems.filter((item) => item.id !== id);
     setCartItems(updatedCartItems);
     updateCart(updatedCartItems);
   };
@@ -52,7 +83,34 @@ const ShoppingCartPage = () => {
     Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
 
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  const updateCart = (productId, quantity) => {
+    const cart = Cookies.get('cart') || '{}';
+    let cartObject = {};
+    try {
+      cartObject = JSON.parse(cart);
+    } catch (error) {
+      console.error('Error parsing cart JSON:', error);
+    }
+    cartObject[productId] = quantity;
+    Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
+  };
+
+  const removeFromCart = (productId) => {
+    const cartString = Cookies.get('cart') || '{}';
+    let cart = JSON.parse(cartString);
+    delete cart[productId];
+    Cookies.set('cart', JSON.stringify(cart), { expires: 7 });
+  };
+
+  const fetchProductById = async (productId) => {
+    try {
+      const response = await axios.get(`/api/products/${productId}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching product:', error);
+      throw error;
+    }
+  };
 
   return (
     <div className="shopping-cart-container">
@@ -87,11 +145,11 @@ const ShoppingCartPage = () => {
             </div>
           ))}
           <div className="total-price">
-            <h3>Total Price: ${totalPrice.toFixed(2)}</h3>
-          </div>
-          <div className="action-buttons">
-            <Link to="/product" className="back-button">Back to Products</Link>
-            <Link to="/checkout" className="checkout-button">Proceed to Checkout</Link>
+            <h3>Total Price: ${totalPrice}</h3>
+            <div className="action-buttons">
+              <Link to="/product" className="back-button">Back to Products</Link>
+              <Link to="/checkout" className="checkout-button">Proceed to Checkout</Link>
+            </div>
           </div>
         </div>
       )}

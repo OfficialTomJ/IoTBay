@@ -25,6 +25,9 @@ app.use(morgan('dev'));
 app.use('/api/user', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/order', require('./routes/orderRoutes'));
+app.use('/api/shipment', require('./routes/shipmentRoutes'));
+app.use('/api/cart', require('./routes/cartRoutes'));
+app.use('/api/payment', require('./routes/paymentRoutes'));
 
 
 

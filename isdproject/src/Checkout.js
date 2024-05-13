@@ -20,14 +20,14 @@ const CheckoutPage = () => {
             <h1 className="page-title">Checkout</h1>
             <div className="section">
                 <div className="bubble">
-                    <h2 className="section-title">Shipment</h2> {/* Make title bold */}
-                    <ShippingComponent/>
+                    <h2 className="section-title">Shipment</h2>
+                    <ShippingComponent />
                 </div>
             </div>
             <div className="section">
                 <div className="bubble">
-                    <h2 className="section-title">Payment</h2> {/* Make title bold */}
-                    <PaymentComponent/>
+                    <h2 className="section-title">Payment</h2>
+                    <PaymentComponent />
                 </div>
             </div>
             <div className="section">
