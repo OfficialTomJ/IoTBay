@@ -8,33 +8,21 @@ const ShoppingCartPage = () => {
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    const fetchCartItems = async () => {
-      try {
-        const cartString = Cookies.get('cart') || '{}';
-        const cart = JSON.parse(cartString);
-        const productIds = Object.keys(cart);
-        const itemsFromCart = [];
+    // Initialize cart with sample products when component mounts
+    const initializeCart = () => {
+      const sampleProducts = [
+        { id: '1', name: 'Sample Product 1', price: 10, quantity: 1 },
+        { id: '2', name: 'Sample Product 2', price: 10, quantity: 1 },
+        { id: '3', name: 'Sample Product 3', price: 10, quantity: 1 },
+        { id: '4', name: 'Sample Product 4', price: 10, quantity: 1 },
+        { id: '5', name: 'Sample Product 5', price: 10, quantity: 1 },
+      ];
 
-        for (const productId of productIds) {
-          const product = await fetchProductById(productId);
-          itemsFromCart.push({ ...product, quantity: cart[productId] });
-        }
-
-        setCartItems(itemsFromCart);
-      } catch (error) {
-        console.error('Error fetching cart items:', error);
-      }
+      setCartItems(sampleProducts);
+      saveCartToCookies(sampleProducts);
     };
 
-    fetchCartItems();
-  }, []);
-
-  useEffect(() => {
-    console.error('This should be run in /Checkout.js');
-  }, []);
-
-  useEffect(() => {
-    console.error('This should be run in /Checkout.js');
+    initializeCart();
   }, []);
 
   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -55,7 +43,7 @@ const ShoppingCartPage = () => {
     updateCart(id, cartItems.find((item) => item.id === id).quantity + 5);
   };
 
-  // Remove a product from the cart
+  // Remove item from cart
   const removeItem = (id) => {
     const updatedCartItems = cartItems.filter(item => item.id !== id);
     setCartItems(updatedCartItems);
@@ -73,7 +61,8 @@ const ShoppingCartPage = () => {
     Cookies.set('cart', JSON.stringify(cartObject), { expires: 7 });
   };
 
-  // Rest of your component code...
+  // Calculate total price of items in cart
+  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className="shopping-cart-container">
@@ -108,11 +97,11 @@ const ShoppingCartPage = () => {
             </div>
           ))}
           <div className="total-price">
-            <h3>Total Price: ${totalPrice.toFixed(2)}</h3>
-            <div className="action-buttons">
-              <Link to="/product" className="back-button">Back to Products</Link>
-              <Link to="/checkout" className="checkout-button">Proceed to Checkout</Link>
-            </div>
+            {/* Calculate and display total price */}
+          </div>
+          <div className="action-buttons">
+            <Link to="/product" className="back-button">Back to Products</Link>
+            <Link to="/checkout" className="checkout-button">Proceed to Checkout</Link>
           </div>
         </div>
       )}
