@@ -52,10 +52,25 @@ const CheckoutPage = () => {
             console.log('Order created:', orderResponse);
             // Clear cart cookie
             Cookies.remove('cart');
+            // Display success message to the user
+            alert('Your order has been submitted successfully!');
             // Redirect to success/thank you page or perform other actions
         } catch (error) {
-            setError('Error during checkout'); // Set error if there's an issue during checkout
+            console.error('Error during checkout:', error);
+            setError('Error during checkout');
         }
+    };
+    
+
+    const handleQuantityChange = (itemId, newQuantity) => {
+        const updatedCartItems = cartItems.map(item =>
+            item.id === itemId ? { ...item, quantity: newQuantity } : item
+        );
+        setCartItems(updatedCartItems);
+
+        // Recalculate total cost
+        const cost = updatedCartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+        setTotalCost(cost);
     };
 
     return (
@@ -91,7 +106,7 @@ const CheckoutPage = () => {
             {error && <div className="error-message">{error}</div>} {/* Display error message if error state is set */}
             <div className="action-buttons">
                 <Link to="/shoppingcart" className="back-button">Back to Shopping Cart</Link>
-                <button className="submit-button" onClick={handleCheckout}>Checkout</button> {/* Change Link to button for checkout */}
+                <button className="submit-button" onClick={handleCheckout}>Checkout</button>
             </div>
         </div>
     );
