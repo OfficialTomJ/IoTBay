@@ -22,8 +22,18 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:8080/api/auth/login', formData);
+
       const { token } = res.data;
       Cookies.set('token', token, { expires: 1 / 24 }); // Expires in 1 hour
+        try {
+          const res = await axios.get('http://localhost:8080/api/user/profile', {
+            headers: {
+              Authorization: `${token}`
+            }
+          });
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
       navigate('/profile');
     } catch (err) {
       console.error(err.response); // Handle error response
@@ -59,7 +69,7 @@ const Login = () => {
     <form onSubmit={onSubmit}>
       <div className='loginText'> Login </div>
       <div className='inline'> Don't have an account? </div> 
-      <button onClick={navigateSignUp} className='registerText' > Register </button>
+      <button type="button" onClick={navigateSignUp} className='registerText' > Register </button>
       <div className='emailText'> Email </div>
       <input
         type="email"
@@ -83,7 +93,7 @@ const Login = () => {
       {error && <div className='errorText'>The account or password is wrong, please try again.</div>} 
       <div><input type="checkbox"/> <div className='inline'> Remember me</div> 
       
-      <button onClick={handleForgotPassword} className='forgotPw' >Forgot Password</button>
+      <button type="button" onClick={handleForgotPassword} className='forgotPw' >Forgot Password</button>
       {resetLink && (
         <div>
           <p>{resetLink.msg}</p>

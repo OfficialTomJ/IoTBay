@@ -1,106 +1,46 @@
 import React from 'react';
+import NavigationBar from './components/NavigationBar'; 
+import { Link } from 'react-router-dom'; 
 
-//image address
-const imageUrl = '/1.png';
-
-const NavigationBar = () => {
-  const navBarStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    padding: '1rem',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-    zIndex: 1000,
-  };
-//Navigation container style
-  const navContainerStyle = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '100%',
-    maxWidth: '1200px',
-  };
-//Navigation item style
-  const navItemStyle = {
-    margin: '0 15px',
-    color: '#0047ab',
-    textDecoration: 'none',
-  };
-
-  return (
-    <nav style={navBarStyle}>
-      <div style={navContainerStyle}>
-        <div></div> {/* The empty div on the left is used to balance the layout */}
-        {/* Middle navigation link */}
-        <div>
-          <a href="/menu" style={navItemStyle}>Menu</a>
-          <a href="/contact" style={navItemStyle}>Contact</a>
-          <a href="/about" style={navItemStyle}>About Us</a>
-        </div>
-        {/* Login and registration links on the right */}
-        <div>
-          <a href="/login" style={navItemStyle}>Login</a>
-          <a href="/SignUp" style={navItemStyle}>Register</a>
-        </div>
-      </div>
-    </nav>
-  );
-};
-
-function Logout() {
+const LogoutPage = () => {
   const containerStyle = {
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
     height: '100vh',
-    textAlign: 'left',
+    textAlign: 'center',
     backgroundColor: '#FFFFFF',
-    padding: '0 10%',
     color: '#0047ab',
-    marginTop: '4rem', // Make space for navigation bar
   };
 
-  const textContainerStyle = {
-    maxWidth: '40%',
+  const textStyle = {
+    fontSize: '24px',
+    margin: '20px 0',
   };
 
-  const logoutStyle = {
-    fontSize: '152px',
-    margin: '0 0 24px 0',
-    fontWeight: 'bold',
-  };
-
-  const successfulStyle = {
-    fontSize: '44px',
-    margin: '0 0 24px 0',
-  };
-
-  const imageStyle = {
-    height: '100%',
-    width: 'auto',
-    objectFit: 'cover',
-    maxHeight: '1000px',
-    maxWidth: '1000px',
+  const buttonStyle = {
+    padding: '12px 24px',
+    fontSize: '18px',
+    backgroundColor: '#0047ab',
+    color: 'white',
+    border: 'none',
+    borderRadius: '20px',
+    outline: 'none',
+    textDecoration: 'none',
   };
 
   return (
     <div>
       <NavigationBar />
       <div style={containerStyle}>
-        <div style={textContainerStyle}>
-          <h1 style={logoutStyle}>Logout</h1>
-          <p style={successfulStyle}>Successful</p>
-        </div>
-        <div>
-          <img src={imageUrl} alt="Decorative" style={imageStyle} />
-        </div>
+        <h1 style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '20px' }}>You have been logged out</h1>
+        <p style={textStyle}>Thank you for visiting. We hope to see you again soon!</p>
+        <Link to="/" style={buttonStyle}>Go to Home</Link> 
       </div>
     </div>
   );
 }
 
-export default Logout;
+export default LogoutPage;
+
