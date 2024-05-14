@@ -2,15 +2,15 @@ const Payment = require('../models/Payment');
 const AccessLog = require('../models/AccessLog');
 
 exports.createPayment = async (req, res) => {
-  const { transactionId, userCardNum, userCardExpiry, user_CCV } = req.body;
-  console.log(transactionId);
+  const { transactionId, userCardNum, userCardExpiry, userCVV } = req.body;
+  console.log(req.body);
   try {
     // Create a new payment record
     const payment = await Payment.create({
       transactionId,
       userCardNum,
       userCardExpiry,
-      user_CCV,
+      userCVV,
       userID: req.user.id
     });
 
