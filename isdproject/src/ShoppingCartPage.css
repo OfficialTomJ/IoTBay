@@ -87,7 +87,7 @@ body {
 
 .back-button,
 .checkout-button {
-  background-color: #2f0def; /* Blue button */
+  background-color: #4000ff; /* Blue button */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -100,5 +100,5 @@ body {
 
 .back-button:hover,
 .checkout-button:hover {
-  background-color: #986efa;
+  background-color: #690072;
 }

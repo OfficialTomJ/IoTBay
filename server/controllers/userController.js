@@ -57,6 +57,35 @@ exports.registerUser = async (req, res) => {
     }
 };
 
+exports.registerStaff = async (req, res) => {
+    const { fullName, email, password, phone } = req.body;
+
+    try { // Check if the user already exists
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ msg: 'Staff already exists' });
+        }
+
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        user = new User({   //Create a new user record
+            fullName,
+            email,
+            password: hashedPassword,
+            phone,
+            role: 'Staff' //The default role is Staff
+        });
+
+        await user.save();
+
+        res.status(201).json({ msg: 'Staff registration successful. You can now log in.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ msg: 'Server error' });
+    }
+};
+
 // @route   POST api/users/verify-email
 // @desc    Verify user's email with the code sent to their email
 // @access  Public

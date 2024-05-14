@@ -1,12 +1,13 @@
-import './tailwind.css';
 import React, { useState } from 'react';
 import NavigationBar from './components/NavigationBar';
 import PaginationLogic from './components/PaginationLogic';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook to redirect after adding to cart
 
 function ProductPage() {
-  const products = Array.from({ length: 300 }, (_, index) => index + 1); //Set up virtual goods
+  const products = Array.from({ length: 300 }, (_, index) => index + 1); // Set up virtual goods
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 30; //Set how many products are on a page
+  const productsPerPage = 30; // Set how many products are on a page
+  const navigate = useNavigate(); // Create history object for redirection
 
   const handleClick = (number) => {
     if (number === "...") {
@@ -14,6 +15,16 @@ function ProductPage() {
     } else {
       setCurrentPage(number);
     }
+  };
+
+  const handleBuyNow = (productId) => {
+    // Add logic to add product to cart here (e.g., using cookies or global state management)
+    // For demonstration purposes, let's assume we are using cookies to store the cart
+    const cart = JSON.parse(localStorage.getItem('cart')) || {};
+    cart[productId] = cart[productId] ? cart[productId] + 1 : 1;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    // Redirect to shopping cart page after adding to cart
+    navigate('/Shoppingcart');
   };
 
   const indexOfLastProduct = currentPage * productsPerPage;
@@ -38,6 +49,7 @@ function ProductPage() {
                 <p className="mt-2 text-gray-600 text-center">Product {product}</p>
                 <p className="mt-1 text-gray-700 text-center">Price: $XX.XX</p>
                 <button 
+                  onClick={() => handleBuyNow(product)} // Pass product ID to handleBuyNow function
                   className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
                   Buy Now
@@ -73,20 +85,3 @@ function ProductPage() {
 }
 
 export default ProductPage;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
