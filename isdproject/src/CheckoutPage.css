@@ -83,3 +83,15 @@
     margin-bottom: 10px; /* Add spacing between input fields */
 }
 
+.submit-button {
+  background-color: green; /* Set the background color to green */
+  color: rgb(254, 254, 254); /* Set the text color to white */
+  border: none; /* Remove the border */
+  padding: 10px 20px; /* Add padding */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  border-radius: 5px; /* Add some border radius for rounded corners */
+}
+
+.submit-button:hover {
+  background-color: darkgreen; /* Darken the background color on hover */
+}
