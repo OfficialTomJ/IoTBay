@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PaymentComponent from './components/PaymentComponent';
-import ShippingComponent from './ShipmentComponent';
+import ShippingComponent from './components/ShipmentComponent';
 import { Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { createShipment, createPayment, createOrder } from './api';
