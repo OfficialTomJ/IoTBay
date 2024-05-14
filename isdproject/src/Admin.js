@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './Admin.css';
 
 const Admin = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ const Admin = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Register Form</h2>
       <form onSubmit={onSubmit}>
         <div>
@@ -51,7 +52,7 @@ const Admin = () => {
             <option value="Staff">Staff</option>
           </select>
         </div>
-        <button type="submit">Register</button>
+        <button type="submit" className="register">Register</button>
       </form>
       {successMessage && <p>{successMessage}</p>}
     </div>

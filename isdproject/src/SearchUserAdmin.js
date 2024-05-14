@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import './SearchUserAdmin.css';
 
 const SearchUserAdmin = () => {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [role, setRole] = useState('');
   const [foundUser, setFoundUser] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
   const [error, setError] = useState('');
@@ -17,11 +18,12 @@ const SearchUserAdmin = () => {
 
     try {
       const response = await axios.get(`http://localhost:8080/api/admin/profile?name=${encodedName}&phone=${encodedPhone}`);
-      if (response.data && response.data.user) { 
+      if (response.data && response.data.user) {
         setFoundUser(response.data.user);
         setName(response.data.user.fullName);
         setPhone(response.data.user.phone);
         setEmail(response.data.user.email);
+        setRole(response.data.user.role);
         setError('');
         setIsEditable(false);
       } else {
@@ -44,12 +46,12 @@ const SearchUserAdmin = () => {
       const response = await axios.put(`http://localhost:8080/api/admin/profile/${foundUser._id}`, {
         fullName: name,
         phone: phone,
-        email: email
-      }
-      );
+        email: email,
+        role: role
+      });
 
       if (response.data) {
-        setFoundUser(response.data);
+        setFoundUser(response.data.user);
         setIsEditable(false);
         setError('User information is successfully updated');
       }
@@ -58,6 +60,7 @@ const SearchUserAdmin = () => {
       setError('Failed to update user data');
     }
   };
+
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       try {
@@ -72,9 +75,9 @@ const SearchUserAdmin = () => {
       }
     }
   };
-  
+
   return (
-    <div>
+    <div className="container">
       <h2>Search User</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -85,28 +88,36 @@ const SearchUserAdmin = () => {
           <label>Phone:</label>
           <input type="text" placeholder="Phone Number" value={phone} onChange={e => setPhone(e.target.value)} required />
         </div>
-        <button type="submit">Search</button>
+        <button type="submit" className="search">Search</button>
       </form>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p className="error">{error}</p>}
       {foundUser && (
-        <div>
+        <div className="user-details">
           <h3>User Found:</h3>
           {isEditable ? (
             <>
-             <div>
-              <label>Full Name:</label>
-              <input type="text" value={name} onChange={e => setName(e.target.value)} />
-             </div>
-             <div>
-              <label>Phone:</label>
-              <input type="text" value={phone} onChange={e => setPhone(e.target.value)} />
-             </div>
-             <div>
-             <label>Email:</label>
-              <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
-             </div>
+              <div>
+                <label>Full Name:</label>
+                <input type="text" value={name} onChange={e => setName(e.target.value)} />
+              </div>
+              <div>
+                <label>Phone:</label>
+                <input type="text" value={phone} onChange={e => setPhone(e.target.value)} />
+              </div>
+              <div>
+                <label>Email:</label>
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+              </div>
+              <div>
+                <label>User Role:</label>
+                <select value={role} onChange={e => setRole(e.target.value)}>
+                  <option value="User">User</option>
+                  <option value="Staff">Staff</option>
+                  <option value="Deactivated">Deactivated</option>
+                </select>
+              </div>
               <button onClick={handleSave}>Save</button>
-              <button onClick={handleDelete} style={{ marginLeft: "10px", backgroundColor: "red", color: "white" }}>Delete</button>
+              <button onClick={handleDelete} className="delete" style={{ marginLeft: "10px" }}>Delete</button>
             </>
           ) : (
             <>

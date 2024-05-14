@@ -10,6 +10,8 @@ import WelcomePage from './WelcomePage';
 import LogoutPage from './Logout';
 import Admin from './Admin';
 import SearchUserAdmin from './SearchUserAdmin';
+import UserLogAdmin from './UserLogAdmin';
+import AdminDashboard from './AdminDashboard';
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
         <Route path="/logout" element={<LogoutPage/>} />
         <Route path="/admin" element={<Admin/>} />
         <Route path="/searchuseradmin" element={<SearchUserAdmin/>} />
+        <Route path="/userlogadmin" element={<UserLogAdmin/>} />
+        <Route path="/admindashboard" element={<AdminDashboard/>} />
         <Route path="*" element={<ErrorPage/>} />
       </Routes>
     </Router>
