@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { useAlert } from "react-alert";
 
 
 const Profile = () => {
@@ -22,6 +23,10 @@ const Profile = () => {
     tracking: "",
     date: "",
   });
+  const [editingShipments, setEditingShipments] = useState(
+    Array(shipments.length).fill(false)
+  ); // State to track editing status of shipments
+
   const navigate = useNavigate();
 
   const alert = useAlert();
@@ -211,6 +216,49 @@ const Profile = () => {
     }
   };
 
+  const handleSearchOrderHistory = async () => {
+    try {
+      const token = Cookies.get('token');
+      const response = await axios.get('http://localhost:8080/api/order/history', {
+        headers: {
+          Authorization: `${token}`
+        },
+        params: {
+          orderId: orderIdSearch,
+          date: dateSearch
+        }
+      });
+      setOrderHistory(response.data.orderHistory);
+    } catch (error) {
+      console.error('Error searching order history:', error);
+    }
+  };
+
+  const handleResetOrderHistorySearch = () => {
+    setOrderIdSearch('');
+    setDateSearch('');
+    generateSampleOrderHistory(); // Reset order history to initial state
+  };
+
+  // Function to generate sample order history data
+  const generateSampleOrderHistory = () => {
+    const sampleData = [];
+    const currentYear = new Date().getFullYear();
+    for (let i = 20; i >= 1; i--) {
+      // Generate a random date between January 2023 and December 2024
+      const randomYear = currentYear - (Math.floor((20 - i) / 12));
+      const randomMonth = (12 - ((20 - i) % 12)) || 12;
+      const randomDay = Math.floor(Math.random() * 28) + 1; // Assuming all months have 28 days for simplicity
+      const randomDate = new Date(`${randomYear}-${randomMonth}-${randomDay}`);
+      sampleData.push({
+        orderId: `Order ${i}`,
+        date: randomDate.toISOString(),
+        description: `Description for Order ${i}`
+      });
+    }
+    setOrderHistory(sampleData);
+  };
+  
   // Functions to handle changes in shipment details
   const handleShipmentMethodChange = (e, index) => {
     const { value } = e.target;
@@ -390,49 +438,6 @@ const Profile = () => {
     fetchUserShipments();
   };
 
-  const handleSearchOrderHistory = async () => {
-    try {
-      const token = Cookies.get('token');
-      const response = await axios.get('http://localhost:8080/api/order/history', {
-        headers: {
-          Authorization: `${token}`
-        },
-        params: {
-          orderId: orderIdSearch,
-          date: dateSearch
-        }
-      });
-      setOrderHistory(response.data.orderHistory);
-    } catch (error) {
-      console.error('Error searching order history:', error);
-    }
-  };
-
-  const handleResetOrderHistorySearch = () => {
-    setOrderIdSearch('');
-    setDateSearch('');
-    generateSampleOrderHistory(); // Reset order history to initial state
-  };
-
-  // Function to generate sample order history data
-  const generateSampleOrderHistory = () => {
-    const sampleData = [];
-    const currentYear = new Date().getFullYear();
-    for (let i = 20; i >= 1; i--) {
-      // Generate a random date between January 2023 and December 2024
-      const randomYear = currentYear - (Math.floor((20 - i) / 12));
-      const randomMonth = (12 - ((20 - i) % 12)) || 12;
-      const randomDay = Math.floor(Math.random() * 28) + 1; // Assuming all months have 28 days for simplicity
-      const randomDate = new Date(`${randomYear}-${randomMonth}-${randomDay}`);
-      sampleData.push({
-        orderId: `Order ${i}`,
-        date: randomDate.toISOString(),
-        description: `Description for Order ${i}`
-      });
-    }
-    setOrderHistory(sampleData);
-  };
-  
   return (
     <div
       style={{ backgroundColor: "#e3f2fd", minHeight: "100vh", padding: 20 }}
