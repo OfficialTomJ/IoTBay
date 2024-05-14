@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PaymentComponent from './components/PaymentComponent';
-import ShippingComponent from './components/ShipmentComponent';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
-import './CheckoutPage.css'; // Import the CSS file for styling
+import ShippingComponent from './ShipmentComponent';
+import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { createShipment, createPayment, createOrder } from './api';
+import './CheckoutPage.css';
 
 const CheckoutPage = () => {
     const [shippingAddress, setShippingAddress] = useState('');
