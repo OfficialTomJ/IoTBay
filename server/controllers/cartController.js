@@ -66,3 +66,30 @@ exports.removeFromCart = async (req, res) => {
   }
 };
 
+exports.updateCartItem = async (req, res) => {
+  try {
+    const { quantity } = req.body;
+    if (!quantity) {
+      throw new Error('Quantity is required');
+    }
+    // Logic to update item quantity in the cart
+    res.status(200).json(order);
+  } catch (error) {
+    console.error('Error updating cart:', error);
+    res.status(500).json({ error: 'Failed to update cart' });
+  }
+};
+
+exports.addItemToCart = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    if (!productId) {
+      throw new Error('Product ID is required');
+    }
+    // Logic to add item to the cart
+    res.status(201).json(newOrder);
+  } catch (error) {
+    console.error('Error adding item to cart:', error);
+    res.status(500).json({ error: 'Failed to add item to cart' });
+  }
+};
