@@ -1,0 +1,97 @@
+.checkout-page-container {
+    display: flex;
+    flex-direction: column; /* Stack sections vertically */
+    align-items: center; /* Center items horizontally */
+    padding: 20px;
+  }
+  
+  .page-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .section {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+  
+  .bubble {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Add shadow effect */
+  }
+  
+  .section-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 20px; /* Make title slightly bigger */
+  }
+  
+  .cart-box {
+    border: 1px solid #eaeaea;
+    border-radius: 5px;
+    padding: 20px;
+  }
+  
+  .cart-items {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .cart-item {
+    margin-bottom: 10px; /* Space out the cart items */
+  }
+  
+  .total-price {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 18px; /* Make total price slightly bigger */
+  }
+  
+  /* Style select option boxes */
+  select, input {
+    border: 1px solid #333; /* Make border darker */
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 16px;
+  }
+  .shipping-input {
+    border: 1px solid #333; /* Make border darker */
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%; /* Ensure input fields take up full width */
+    margin-bottom: 10px; /* Add spacing between input fields */
+}
+.bubble {
+    background-color: #f0f0f0; /* Light gray background */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 10px; /* Rounded corners */
+    padding: 20px; /* Add padding */
+    margin-bottom: 20px; /* Add margin bottom */
+}
+
+.shipping-input {
+    border: 1px solid #333; /* Make border darker */
+    border-radius: 5px;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%; /* Ensure input fields take up full width */
+    margin-bottom: 10px; /* Add spacing between input fields */
+}
+
+.submit-button {
+  background-color: green; /* Set the background color to green */
+  color: rgb(254, 254, 254); /* Set the text color to white */
+  border: none; /* Remove the border */
+  padding: 10px 20px; /* Add padding */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  border-radius: 5px; /* Add some border radius for rounded corners */
+}
+
+.submit-button:hover {
+  background-color: darkgreen; /* Darken the background color on hover */
+}

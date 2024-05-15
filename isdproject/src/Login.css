@@ -63,3 +63,10 @@
     font-weight: bold;
     margin-top: 10px;
 }
+.inputBox.error {
+    border: 1px solid red;
+  } 
+.errorText {
+    color: red;
+    margin-top: 10px;
+  }
