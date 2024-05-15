@@ -10,6 +10,7 @@ import ResetPassword from './ResetPassword';
 import WelcomePage from './WelcomePage';
 import LogoutPage from './Logout';
 import ProductPage from './ProductPage';
+import PaymentPage from './PaymentPage';
 import ShoppingCart from './ShoppingCart';
 import Checkout from './Checkout';
 import UserAuthentication from './UserAuthentication';
@@ -25,6 +26,7 @@ function App() {
         <Route path="/" element={<WelcomePage/>} />
         <Route path="/signup" element={<Signup/>} />
         <Route path="/login" element={<Login/>} />
+        <Route path="/payment" element={<PaymentPage/>} />
         <Route path="/profile" element={<Profile/>} /> {}
         <Route path="/reset-password/:token" element={<ResetPassword/>} />
         {/* Provide a 404 error page for all undefined routes */}

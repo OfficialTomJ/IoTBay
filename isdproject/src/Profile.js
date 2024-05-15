@@ -1006,6 +1006,24 @@ const Profile = () => {
           </button>
         </Link>
       </div>
+
+       {/* Button to go to Payments page */}
+       <div style={{ marginTop: "20px", textAlign: "center" }}>
+        <Link to="/payment">
+          <button
+            style={{
+              backgroundColor: "#007bff",
+              color: "#fff",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "4px",
+              fontSize: "16px",
+            }}
+          >
+            My Payments
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }  
