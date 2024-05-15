@@ -1,7 +1,6 @@
 const mongoose = require('mongoose'); //mock database
 const bcrypt = require('bcryptjs'); //password hash encryption
 const User = require('../models/User');
-const AccessLog = require('../models/AccessLog');
 const sendEmail = require('../utils/mailer');
 const UserVerification = require('../models/userVerification');
 const {registerUser, registerStaff, deleteAccount, updateUserProfile,} = require('../controllers/userController');
