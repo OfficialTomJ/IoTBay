@@ -8,19 +8,19 @@ const paymentSchema = new mongoose.Schema({
     },
     transactionId: {
         type: Number,
-        
+
     },
     userCardNum: {
         type: Number,
-        
+
     },
     userCardExpiry: {
         type: Number,
-       
+
     },
     userCVV: {
         type: Number,
-       
+
     }
 });
 
