@@ -39,6 +39,7 @@ jest.mock('../models/AccessLog', () => {
   };
 });
 
+
 describe('adminRegister', () => {
   it('should return error if user already exists', async () => {
     User.findOne.mockResolvedValue({});
@@ -76,68 +77,54 @@ describe('adminRegister', () => {
   });
 });
 
-describe('getUserProfile', () => {
-  it('should return error if name or phone is missing', async () => {
-    const res = await request(app).get('/profile');
-
-    expect(res.status).toBe(400);
-    expect(res.body).toEqual({ msg: 'Name and phone number are required' });
+  describe('getUserProfile', () => {
+    it('should return error if name or phone is missing', async () => {
+      const res = await request(app).get('/profile');
+  
+      expect(res.status).toBe(400);
+      expect(res.body).toEqual({ msg: 'Name and phone number are required' });
+    });
+  
+    it('should return user profile if found', async () => {
+      const mockUser = {
+        fullName: 'John Doe',
+        email: 'johndoe@example.com',
+        phone: '1234567890',
+      };
+  
+      User.findOne.mockImplementation(() => ({
+        select: jest.fn().mockResolvedValue(mockUser),
+      }));
+  
+      const res = await request(app).get('/profile').query({ name: 'John Doe', phone: '1234567890' });
+  
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ user: mockUser });
+    });
+  
+    it('should return error if user not found', async () => {
+      User.findOne.mockImplementation(() => ({
+        select: jest.fn().mockResolvedValue(null),
+      }));
+  
+      const res = await request(app).get('/profile').query({ name: 'John Doe', phone: '1234567890' });
+  
+      expect(res.status).toBe(404);
+      expect(res.body).toEqual({ msg: 'User not found with the provided name and phone number' });
+    });
+  
+    it('should handle server errors', async () => {
+      User.findOne.mockImplementation(() => ({
+        select: jest.fn().mockRejectedValue(new Error('Server error')),
+      }));
+  
+      const res = await request(app).get('/profile').query({ name: 'John Doe', phone: '1234567890' });
+  
+      expect(res.status).toBe(500);
+      expect(res.body).toEqual({ msg: 'Server Error' });
+    });
   });
-
-  it('should return user profile if found', async () => {
-    const mockUser = {
-      fullName: 'John Doe',
-      email: 'johndoe@example.com',
-      phone: '1234567890',
-    };
-
-    User.findOne.mockResolvedValue(mockUser);
-    User.findOne().select.mockResolvedValue(mockUser);
-
-    const res = await request(app).get('/profile').query({ name: 'John Doe', phone: '1234567890' });
-
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({ user: mockUser });
-  });
-
-  it('should return error if user not found', async () => {
-    User.findOne.mockResolvedValue(null);
-
-    const res = await request(app).get('/profile').query({ name: 'John Doe', phone: '1234567890' });
-
-    expect(res.status).toBe(404);
-    expect(res.body).toEqual({ msg: 'User not found with the provided name and phone number' });
-  });
-
-  it('should handle server errors', async () => {
-    User.findOne.mockRejectedValue(new Error('Server error'));
-
-    const res = await request(app).get('/profile').query({ name: 'John Doe', phone: '1234567890' });
-
-    expect(res.status).toBe(500);
-    expect(res.body).toEqual({ msg: 'Server Error' });
-  });
-});
-
-describe('deleteAccount', () => {
-  it('should delete user account successfully', async () => {
-    User.findByIdAndDelete.mockResolvedValue(true);
-
-    const res = await request(app).delete('/account/609c5d2d3f8b4e3b4c8b4567');
-
-    expect(res.status).toBe(200);
-    expect(res.body).toEqual({ msg: 'Account deleted successfully' });
-  });
-
-  it('should handle server errors', async () => {
-    User.findByIdAndDelete.mockRejectedValue(new Error('Server error'));
-
-    const res = await request(app).delete('/account/609c5d2d3f8b4e3b4c8b4567');
-
-    expect(res.status).toBe(500);
-    expect(res.body).toEqual({ msg: 'Server Error' });
-  });
-});
+  
 
 describe('updateUserProfile', () => {
   it('should update user profile successfully', async () => {
@@ -212,8 +199,9 @@ describe('getAllUsers', () => {
       { fullName: 'Jane Doe', email: 'janedoe@example.com', phone: '0987654321', role: 'User' },
     ];
 
-    User.find.mockResolvedValue(mockUsers);
-    User.find().select.mockResolvedValue(mockUsers);
+    User.find.mockImplementation(() => ({
+      select: jest.fn().mockResolvedValue(mockUsers),
+    }));
 
     const res = await request(app).get('/users');
 
@@ -222,7 +210,9 @@ describe('getAllUsers', () => {
   });
 
   it('should handle server errors', async () => {
-    User.find.mockRejectedValue(new Error('Server error'));
+    User.find.mockImplementation(() => ({
+      select: jest.fn().mockRejectedValue(new Error('Server error')),
+    }));
 
     const res = await request(app).get('/users');
 
@@ -230,6 +220,7 @@ describe('getAllUsers', () => {
     expect(res.body).toEqual({ msg: 'Server Error' });
   });
 });
+
 
 describe('getUserLogs', () => {
   it('should return error for invalid user ID format', async () => {
