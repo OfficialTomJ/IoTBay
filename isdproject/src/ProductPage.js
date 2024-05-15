@@ -43,6 +43,18 @@ function ProductPage() {
     }
   };
 
+  /* -- Cart in local storage MAIN code --
+  const handleBuyNow = (productId) => {
+    // Add logic to add product to cart here (e.g., using cookies or global state management)
+    // For demonstration purposes, let's assume we are using cookies to store the cart
+    const cart = JSON.parse(localStorage.getItem('cart')) || {};
+    cart[productId] = cart[productId] ? cart[productId] + 1 : 1;
+    localStorage.setItem('cart', JSON.stringify(cart));
+    // Redirect to shopping cart page after adding to cart
+    navigate('/Shoppingcart');
+  };
+  */
+  
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
