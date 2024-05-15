@@ -551,17 +551,22 @@ const Profile = () => {
                   )}
                 </div>
                 <div style={{ marginBottom: 20 }}>
-                  <label
-                    style={{
-                      display: "block",
-                      fontSize: 18,
-                      fontWeight: "bold",
-                      marginBottom: 5,
-                    }}
-                  >
-                    Role:
-                  </label>{" "}
-                  {user.role}
+                  <label style={{ display: 'block', fontSize: 18, fontWeight: 'bold', marginBottom: 5 }}>Role:</label> 
+                  {user.role} 
+                  {user.role === 'Admin' && (
+                    <Link to="/admindashboard">
+                      <button style={{
+                        backgroundColor: '#007bff',
+                        color: '#fff',
+                        border: 'none',
+                        padding: '8px 16px',
+                        borderRadius: 4,
+                        marginLeft: 10
+                      }}>
+                        Admin Dashboard
+                      </button>
+                    </Link>
+                  )}
                 </div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <button
