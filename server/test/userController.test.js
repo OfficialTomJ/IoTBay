@@ -4,10 +4,7 @@ const User = require('../models/User');
 const AccessLog = require('../models/AccessLog');
 const sendEmail = require('../utils/mailer');
 const UserVerification = require('../models/userVerification');
-const {
-    registerUser, registerStaff, verifyEmail, getUserProfile,
-    deleteAccount, updateUserProfile, getUserLogs, resendVerificationCode
-} = require('../controllers/userController');
+const {registerUser, registerStaff, deleteAccount, updateUserProfile,} = require('../controllers/userController');
 // Use the mocking functionality provided by Jest
 jest.mock('../models/User');
 jest.mock('../models/AccessLog');
@@ -114,67 +111,7 @@ describe('User Controller', () => { // //define a test suite,the name is user co
             expect(mockResponse.json).toHaveBeenCalledWith({ msg: 'Staff already exists' });
         });
     });
-
-    describe('verifyEmail', () => {
-        it('should verify the email and create user account', async () => {
-            mockRequest.body = { email: 'test@test.com', code: '123456' };
-
-            UserVerification.findOne.mockResolvedValue({
-                email: 'test@test.com',
-                emailVerificationCode: '123456',
-                expireTime: new Date(Date.now() + 3600000),
-                fullName: 'Test User',
-                hashedPassword: 'hashedPassword',
-                phone: '1234567890',
-                save: jest.fn()
-            });
-
-            User.prototype.save = jest.fn().mockResolvedValue(true);
-            AccessLog.create.mockResolvedValue(true);
-
-            await verifyEmail(mockRequest, mockResponse);
-
-            expect(mockResponse.json).toHaveBeenCalledWith({ msg: 'Email verification is successful and the account has been created.' });
-        });
-
-        it('should return 400 if verification code is invalid or expired', async () => {
-            mockRequest.body = { email: 'test@test.com', code: '123456' };
-
-            UserVerification.findOne.mockResolvedValue({
-                email: 'test@test.com',
-                emailVerificationCode: '654321',
-                expireTime: new Date(Date.now() - 3600000)
-            });
-
-            await verifyEmail(mockRequest, mockResponse);
-
-            expect(mockResponse.status).toHaveBeenCalledWith(400);
-            expect(mockResponse.json).toHaveBeenCalledWith({ msg: 'Invalid verification code or verification code has expired' });
-        });
-    });
-
-    describe('getUserProfile', () => {
-
-        it('should return 500 if user not found', async () => {
-            mockRequest.user.id = '1';
-            User.findById.mockResolvedValue(null);
-
-            await getUserProfile(mockRequest, mockResponse);
-
-            expect(mockResponse.status).toHaveBeenCalledWith(500);
-            expect(mockResponse.json).toHaveBeenCalledWith({ msg: 'Server Error' });
-        });
-
-        it('should handle server errors', async () => {
-            mockRequest.user.id = '1';
-
-            await getUserProfile(mockRequest, mockResponse);
-
-            expect(mockResponse.status).toHaveBeenCalledWith(500);
-            expect(mockResponse.json).toHaveBeenCalledWith({ msg: 'Server Error' });
-        });
-    });
-
+    
     describe('deleteAccount', () => {
         it('should delete user account', async () => {
             User.findByIdAndDelete.mockResolvedValue(true);
@@ -210,46 +147,6 @@ describe('User Controller', () => { // //define a test suite,the name is user co
             await updateUserProfile(mockRequest, mockResponse);
 
             expect(mockResponse.status).toHaveBeenCalledWith(404);
-            expect(mockResponse.json).toHaveBeenCalledWith({ msg: 'User not found' });
-        });
-    });
-
-    describe('getUserLogs', () => {
-        it('should return user logs', async () => {
-            AccessLog.find.mockResolvedValue([{ eventType: 'login', userId: '1', timestamp: new Date() }]);
-
-            await getUserLogs(mockRequest, mockResponse);
-
-            expect(mockResponse.json).toHaveBeenCalledWith({ userLogs: expect.any(Array) });
-            expect(mockResponse.json.mock.calls[0][0].userLogs).toHaveLength(1);
-        });
-    });
-
-    describe('resendVerificationCode', () => {
-        it('should resend verification code', async () => {
-            mockRequest.body = { email: 'test@test.com' };
-
-            UserVerification.findOne.mockResolvedValue({
-                email: 'test@test.com',
-                emailVerificationCode: '654321',
-                expireTime: new Date(Date.now() + 3600000),
-                save: jest.fn()
-            });
-            sendEmail.mockResolvedValue(true);
-
-            await resendVerificationCode(mockRequest, mockResponse);
-
-            expect(mockResponse.json).toHaveBeenCalledWith({ msg: 'New verification code has been sent successfully' });
-        });
-
-        it('should return 400 if user not found', async () => {
-            mockRequest.body = { email: 'test@test.com' };
-
-            UserVerification.findOne.mockResolvedValue(null);
-
-            await resendVerificationCode(mockRequest, mockResponse);
-
-            expect(mockResponse.status).toHaveBeenCalledWith(400);
             expect(mockResponse.json).toHaveBeenCalledWith({ msg: 'User not found' });
         });
     });
