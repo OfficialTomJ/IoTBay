@@ -138,6 +138,6 @@ exports.toggleUserStatus = async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error('Error toggling user status:', error);
-    res.status(500).json({ msg: 'Server error' });
+    res.status(500).json({ msg: 'Server Error' });
   }
 };
