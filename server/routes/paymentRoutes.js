@@ -4,8 +4,13 @@ const auth = require('../middleware/auth');
 
 const paymentController = require('../controllers/paymentController');
 
-
 router.post('/create', auth, paymentController.createPayment);
-router.get('/user-payments', auth, paymentController.getUserPayments);
+// Route to generate sample payments
+router.post('/generate-sample-payments', auth, paymentController.generateSamplePayments);
 
 module.exports = router;
+
+
+
+
+
