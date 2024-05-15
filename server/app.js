@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-require('dotenv').config();
-
-
+const adminRoutes = require('./routes/adminRoutes'); // Adjust the path as necessary
+require("dotenv").config();
+// app
 const app = express();
 
 
@@ -26,6 +26,7 @@ app.use('/api/user', require('./routes/userRoutes'));
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/order', require('./routes/orderRoutes'));
 app.use('/api/shipment', require('./routes/shipmentRoutes'));
+app.use('/api/admin', adminRoutes);
 app.use('/api/product', require('./routes/productRoutes'));
 app.use('/api/cart', require('./routes/cartRoutes'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
