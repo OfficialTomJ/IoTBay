@@ -52,7 +52,6 @@ function UserAuthentication() {
     }
   };
 
-
   return (
     <div className="flex justify-center items-center w-full h-screen">
       <form className="flex flex-col items-center p-6 space-y-4 bg-white shadow-lg rounded-md" onSubmit={handleSubmit}>
