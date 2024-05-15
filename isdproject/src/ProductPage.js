@@ -1,13 +1,39 @@
-import React, { useState } from 'react';
+// tailwind.css import statement remains unchanged
+
+import React, { useState, useEffect } from 'react';
 import NavigationBar from './components/NavigationBar';
 import PaginationLogic from './components/PaginationLogic';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook to redirect after adding to cart
+
+// Simulated cart
+let cart = [];
+
+// Function to add a product to the cart
+function addToCart(productId) {
+    // Push the product ID to the cart array
+    cart.push(productId);
+    // Update the UI or perform other actions as needed
+    console.log("Product added to cart:", productId);
+    console.log("Cart:", cart);
+}
+
+// Function to initialize the buy buttons
+function initializeBuyButtons() {
+    // Add event listener to all buy buttons
+    const buyButtons = document.querySelectorAll('.buy-button');
+    buyButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Retrieve the product ID from the data attribute
+            const productId = this.getAttribute('data-product-id');
+            // Call the addToCart function with the product ID
+            addToCart(productId);
+        });
+    });
+}
 
 function ProductPage() {
-  const products = Array.from({ length: 300 }, (_, index) => index + 1); // Set up virtual goods
+  const products = Array.from({ length: 300 }, (_, index) => index + 1); //Set up virtual goods
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 30; // Set how many products are on a page
-  const navigate = useNavigate(); // Create history object for redirection
+  const productsPerPage = 30; //Set how many products are on a page
 
   const handleClick = (number) => {
     if (number === "...") {
@@ -17,6 +43,7 @@ function ProductPage() {
     }
   };
 
+  /* -- Cart in local storage MAIN code --
   const handleBuyNow = (productId) => {
     // Add logic to add product to cart here (e.g., using cookies or global state management)
     // For demonstration purposes, let's assume we are using cookies to store the cart
@@ -26,12 +53,17 @@ function ProductPage() {
     // Redirect to shopping cart page after adding to cart
     navigate('/Shoppingcart');
   };
-
+  */
+  
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
   const totalPages = Math.ceil(products.length / productsPerPage);
   const { startPage, endPage } = PaginationLogic({ totalPages, currentPage });
+
+  useEffect(() => {
+    initializeBuyButtons(); // Initialize buy buttons when component mounts
+  }, []); // Empty dependency array ensures the effect runs only once
 
   return (
     <div>
@@ -47,10 +79,10 @@ function ProductPage() {
                   className="w-full h-auto rounded"
                 />
                 <p className="mt-2 text-gray-600 text-center">Product {product}</p>
-                <p className="mt-1 text-gray-700 text-center">Price: $XX.XX</p>
+                <p className="mt-1 text-gray-700 text-center">Price: $10.00</p>
                 <button 
-                  onClick={() => handleBuyNow(product)} // Pass product ID to handleBuyNow function
-                  className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded buy-button"
+                  data-product-id={product} // Add data-product-id attribute
                 >
                   Buy Now
                 </button>

@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { useAlert } from "react-alert";
 
+
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [fullName, setFullName] = useState("");
