@@ -4,7 +4,6 @@ const bcrypt = require('bcryptjs');
 const { adminRegister, deleteAccount, getUserProfile, updateUserProfile, getAllUsers, getUserLogs, toggleUserStatus } = require('../controllers/adminController');
 const User = require('../models/User');
 const AccessLog = require('../models/AccessLog');
-
 const app = express();
 
 app.use(express.json());
@@ -47,10 +46,10 @@ describe('adminRegister', () => {
     const res = await request(app)
       .post('/register')
       .send({
-        fullName: 'John Doe',
-        email: 'johndoe@example.com',
-        password: 'password123',
-        phone: '1234567890',
+        fullName: 'Admin User',
+        email: 'admin@user.com',
+        password: 'password',
+        phone: '112233',
         role: 'Admin',
       });
 
@@ -65,10 +64,10 @@ describe('adminRegister', () => {
     const res = await request(app)
       .post('/register')
       .send({
-        fullName: 'John Doe',
-        email: 'johndoe@example.com',
-        password: 'password123',
-        phone: '1234567890',
+        fullName: 'Admin User',
+        email: 'admin@user.com',
+        password: 'password',
+        phone: '112233',
         role: 'Admin',
       });
 
@@ -87,16 +86,16 @@ describe('adminRegister', () => {
   
     it('should return user profile if found', async () => {
       const mockUser = {
-        fullName: 'John Doe',
-        email: 'johndoe@example.com',
-        phone: '1234567890',
+        fullName: 'Admin User',
+        email: 'admin@user.com',
+        phone: '112233',
       };
   
       User.findOne.mockImplementation(() => ({
         select: jest.fn().mockResolvedValue(mockUser),
       }));
   
-      const res = await request(app).get('/profile').query({ name: 'John Doe', phone: '1234567890' });
+      const res = await request(app).get('/profile').query({ name: 'Admin User', phone: '112233' });
   
       expect(res.status).toBe(200);
       expect(res.body).toEqual({ user: mockUser });
@@ -107,7 +106,7 @@ describe('adminRegister', () => {
         select: jest.fn().mockResolvedValue(null),
       }));
   
-      const res = await request(app).get('/profile').query({ name: 'John Doe', phone: '1234567890' });
+      const res = await request(app).get('/profile').query({ name: 'Admin User', phone: '112233' });
   
       expect(res.status).toBe(404);
       expect(res.body).toEqual({ msg: 'User not found with the provided name and phone number' });
@@ -118,21 +117,40 @@ describe('adminRegister', () => {
         select: jest.fn().mockRejectedValue(new Error('Server error')),
       }));
   
-      const res = await request(app).get('/profile').query({ name: 'John Doe', phone: '1234567890' });
+      const res = await request(app).get('/profile').query({ name: 'Admin User', phone: '112233' });
   
       expect(res.status).toBe(500);
       expect(res.body).toEqual({ msg: 'Server Error' });
     });
   });
   
+  describe('deleteAccount', () => {
+    it('should delete user account successfully', async () => {
+      User.findByIdAndDelete.mockResolvedValue(true);
+  
+      const res = await request(app).delete('/account/609c5d2d3f8b4e3b4c8b4567');
+  
+      expect(res.status).toBe(200);
+      expect(res.body).toEqual({ msg: 'Account deleted successfully' });
+    });
+  
+    it('should handle server errors', async () => {
+      User.findByIdAndDelete.mockRejectedValue(new Error('Server error'));
+  
+      const res = await request(app).delete('/account/609c5d2d3f8b4e3b4c8b4567');
+  
+      expect(res.status).toBe(500);
+      expect(res.body).toEqual({ msg: 'Server Error' });
+    });
+  });
 
 describe('updateUserProfile', () => {
   it('should update user profile successfully', async () => {
     const mockUser = {
       save: jest.fn().mockResolvedValue(true),
-      fullName: 'Jane Doe',
-      email: 'janedoe@example.com',
-      phone: '0987654321',
+      fullName: 'User',
+      email: 'user@user.com',
+      phone: '11223344',
       role: 'User',
     };
 
@@ -141,20 +159,20 @@ describe('updateUserProfile', () => {
     const res = await request(app)
       .put('/profile/609c5d2d3f8b4e3b4c8b4567')
       .send({
-        fullName: 'John Doe',
-        email: 'johndoe@example.com',
-        phone: '1234567890',
-        role: 'Admin',
+        fullName: 'Staff',
+        email: 'staff@user.com',
+        phone: '1122334455',
+        role: 'Staff',
       });
 
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       msg: 'User profile updated successfully',
       user: {
-        fullName: 'John Doe',
-        email: 'johndoe@example.com',
-        phone: '1234567890',
-        role: 'Admin',
+        fullName: 'Staff',
+        email: 'staff@user.com',
+        phone: '1122334455',
+        role: 'Staff',
       },
     });
   });
@@ -165,9 +183,9 @@ describe('updateUserProfile', () => {
     const res = await request(app)
       .put('/profile/609c5d2d3f8b4e3b4c8b4567')
       .send({
-        fullName: 'John Doe',
-        email: 'johndoe@example.com',
-        phone: '1234567890',
+        fullName: 'Admin User',
+        email: 'admin@user.com',
+        phone: '112233',
         role: 'Admin',
       });
 
@@ -181,9 +199,9 @@ describe('updateUserProfile', () => {
     const res = await request(app)
       .put('/profile/609c5d2d3f8b4e3b4c8b4567')
       .send({
-        fullName: 'John Doe',
-        email: 'johndoe@example.com',
-        phone: '1234567890',
+        fullName: 'Admin User',
+        email: 'admin@user.com',
+        phone: '112233',
         role: 'Admin',
       });
 
@@ -195,8 +213,8 @@ describe('updateUserProfile', () => {
 describe('getAllUsers', () => {
   it('should retrieve all users successfully', async () => {
     const mockUsers = [
-      { fullName: 'John Doe', email: 'johndoe@example.com', phone: '1234567890', role: 'Admin' },
-      { fullName: 'Jane Doe', email: 'janedoe@example.com', phone: '0987654321', role: 'User' },
+      { fullName: 'Admin User', email: 'admin@user.com', phone: '112233', role: 'Admin' },
+      { fullName: 'User', email: 'user@user.com', phone: '11223344', role: 'User' },
     ];
 
     User.find.mockImplementation(() => ({
@@ -297,3 +315,5 @@ describe('toggleUserStatus', () => {
     expect(res.body).toEqual({ msg: 'Server Error' });
   });
 });
+
+
