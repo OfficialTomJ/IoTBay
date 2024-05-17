@@ -315,5 +315,3 @@ describe('toggleUserStatus', () => {
     expect(res.body).toEqual({ msg: 'Server Error' });
   });
 });
-
-
